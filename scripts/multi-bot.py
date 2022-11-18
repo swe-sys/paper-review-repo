@@ -34,7 +34,10 @@ class robot(object):
         self.y = msg.pose.pose.position.y
         self.rot_q = msg.pose.pose.orientation
         euler = euler_from_quaternion([self.rot_q.x , self.rot_q.y , self.rot_q.z , self.rot_q.w ])
+        
         self.yaw = euler[2]
+        if self.yaw < 0:
+            self.yaw += 2 * pi
 
     def detect_bots(self,data):
         """ Odometry of all bots"""
@@ -66,41 +69,38 @@ class robot(object):
         
         # Gradient of Bearing
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h        
-
+        self.disij = []
+        self.delij = []
         # Distance between bots       
         for odom in self.bot_odom:            
             self.disij.append(sqrt((odom.pose.pose.position.y - self.y)**2 + (odom.pose.pose.position.x - self.x)**2))
             # print(self.disij)
             self.delij.append(atan2((odom.pose.pose.position.y - self.y),(odom.pose.pose.position.x - self.x)))
             # print(self.delij)        
-
-        if (self.dis_err) >= 0.75:
+        if (self.dis_err) >= 0.6:
             temp = []
             vap = []
-            booleasad = False
-            print(self.dis_err)
             for i,z in enumerate(self.disij):
                 d = self.delij[i]
-                if (z >= 0.75 or d >= pi/2.1) or z == 0:
+                if (z >= 1.0 or d >= pi/2.1) or z == 0:
                     v = 0.22
                     w = K*np.sign(self.dtheta)
-                    #print(z,self.delij[i]*(180/pi),'1')
-                    booleasad = False                                   
+                    #print(z,self.delij[i]*(180/pi),'1')                                
                 else:
                     t = rospy.get_time()
-                    v = np.max(0.18-(400-t)*2.1,0)
-                    #v = 0.11
-                    w = K*np.sign(self.dtheta)- 5.6*np.sign(self.delij)
-                    #print(z,self.delij[i]*(180/pi),'2')
-                    booleasad = True
+                    v = max((0.22-(100-t)*0.001),0)                    
+                    w = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
                     temp.append(w)
-                    vap.append(v)                                      
-            w = np.average(w)
-            v = np.average(v)
+                    vap.append(v)
+            if temp:
+                w = np.mean(temp)
+                v = np.mean(vap)
+                print(temp,vap,"temp_vap")
         else:
             #print("Clustered!!")
             v = 0.0
-            w = 0.0
+            w = 0.0        
+        
         print('W:',w,'v',v)
         self.speed.linear.x = v
         self.speed.angular.z = w
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     while not rospy.is_shutdown() and k < 4000:
         k = k+1
         h = 0.25
-        K = 0.6
+        K = 0.3
         l.append((k+1)/10) # Time
         bot.control(k)
         # bot.cmd_vel.publish(bot.speed)  
