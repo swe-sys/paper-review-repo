@@ -77,12 +77,12 @@ class robot(object):
             # print(self.disij)
             self.delij.append(atan2((odom.pose.pose.position.y - self.y),(odom.pose.pose.position.x - self.x)))
             # print(self.delij)        
-        if (self.dis_err) >= 0.6:
+        if (self.dis_err) >= 1:
             temp = []
             vap = []
             for i,z in enumerate(self.disij):
                 d = self.delij[i]
-                if (z >= 1.0 or d >= pi/2.1) or z == 0:
+                if (z >= 0.65 or d >= pi/2.1) or z == 0:
                     v = 0.22
                     w = K*np.sign(self.dtheta)
                     #print(z,self.delij[i]*(180/pi),'1')                                
