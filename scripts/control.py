@@ -76,10 +76,7 @@ class robot(object):
         self.dis_err = (sqrt(self.incx**2+self.incy**2))
         
         # Gradient of Bearing
-        self.dtheta = (self.bearing[k] - self.bearing[k-1])/h    
-               
-        self.disij = []
-        self.delij = []       
+        self.dtheta = (self.bearing[k] - self.bearing[k-1])/h           
             
         if (self.dis_err) >= 0.1:
             print(self.dis_err,'distance error')
