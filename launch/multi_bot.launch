@@ -22,7 +22,7 @@
   <arg name="third_tb3_yaw"   default=" 0.0"/>
 
   <arg name="fourth_tb3_x_pos" default=" -1.0"/>
-  <arg name="fourth_tb3_y_pos" default=" -1.0"/>
+  <arg name="fourth_tb3_y_pos" default=" -9.0"/>
   <arg name="fourth_tb3_z_pos" default=" 0.0"/>
   <arg name="fourth_tb3_yaw"   default=" 0.0"/>
 

@@ -56,12 +56,14 @@ class robot(object):
             self.delij.append(atan2((odom.pose.pose.position.y - self.y),(odom.pose.pose.position.x - self.x)))
             # print(self.delij)
             self.goal = Point()
-            if (self.disij) <= 4:
-                self.neigh = self.disij
-                c = sum(self.neigh)/len(self.neigh)
-                self.goal = Point(self.x+c,self.y+c,0.0)
-            else:
-                self.goal = Point(self.x,self.y,0.0)              
+            for i,z in enumerate(self.disij):
+                if z >= 4:
+                    self.neigh.append(self.disij[i])
+                    print(self.neigh,'Neighbors')
+                    c = sum(self.neigh)/len(self.neigh)
+                    self.goal = Point(self.x+c,self.y+c,0.0)
+                else:
+                    self.goal = Point(self.x,self.y,0.0)              
 
     def control(self,k):
         """control law for bot"""
