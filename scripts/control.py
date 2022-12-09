@@ -18,7 +18,7 @@ class robot(object):
         self.total_bots = no_of_bots
         self.speed = Twist()
         self.botpose = rospy.Subscriber('/obs_data',botPose,self.detect_bots)
-        self.odom = rospy.Subscriber("/odom",Odometry,self.update_Odom)
+        self.odom_sub = rospy.Subscriber("/odom",Odometry,self.update_Odom)
         self.cmd_vel = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
         self.bot_odom = [Odometry() for i in range(self.total_bots)]
         self.yaw = [0 for i in range(self.total_bots)]
@@ -26,9 +26,13 @@ class robot(object):
         self.delij = []
         self.neigh = []      
         self.bearing = [0]
+        self.goal = Point()
+        self.done = False
+        self.odom = None
         
     def update_Odom(self,msg):
         """ Odometry of current bot"""
+        self.odom = msg
         self.x = msg.pose.pose.position.x 
         self.y = msg.pose.pose.position.y
         self.rot_q = msg.pose.pose.orientation
@@ -43,54 +47,68 @@ class robot(object):
         bot_id = data.bot_id
         odoms = data.botpose
         self.bot_odom = odoms
-        self.cur_bot_id_indx = bot_id.index(self.namespace)                 
+        #print(self.bot_odom, '1')
+        self.cur_bot_id_indx = bot_id.index(self.namespace)              
 
     def set_goal(self):
         """ sets goal for bot"""
         self.neigh = []
+        self.disij = []
+        self.delij = []
 
         # Distance between bots   
-        for odom in self.bot_odom:            
+        for odom in self.bot_odom:
             self.disij.append(sqrt((odom.pose.pose.position.y - self.y)**2 + (odom.pose.pose.position.x - self.x)**2))
-            # print(self.disij)
+            # print(odom.pose.pose.position.y,'y')
             self.delij.append(atan2((odom.pose.pose.position.y - self.y),(odom.pose.pose.position.x - self.x)))
             # print(self.delij)
-            self.goal = Point()
-            for i,z in enumerate(self.disij):
-                if z >= 4:
-                    self.neigh.append(self.disij[i])
-                    print(self.neigh,'Neighbors')
-                    c = sum(self.neigh)/len(self.neigh)
-                    self.goal = Point(self.x+c,self.y+c,0.0)
-                else:
-                    self.goal = Point(self.x,self.y,0.0)              
 
+        # Neighbour Set
+        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i]<=5 and self.disij[i]>1]
+        self.neigh.append(self.odom)
+        print(len(self.neigh),self.namespace,self.done)
+        if len(self.neigh) >= 2 and not self.done:
+            self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
+            self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
+            self.done = True
+        else:
+            if self.goal.x == 0.0 and self.goal.y == 0.0:
+                print("random goal alloted")
+                self.goal.x = np.random.uniform(low=self.x - 5,high=self.x + 5)
+                self.goal.y = np.random.uniform(low=self.y - 5,high=self.y + 5)
+
+
+        
     def control(self,k):
         """control law for bot"""
         self.set_goal()
-        self.incx = (self.goal.x - self.x)        
+        print(self.goal,'Goal')
+        self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
 
         # Bearing of bot
         self.bearing.append(atan2(self.incy,self.incx))
-        
+
         # Distance Error
         self.dis_err = (sqrt(self.incx**2+self.incy**2))
-        
+
         # Gradient of Bearing
-        self.dtheta = (self.bearing[k] - self.bearing[k-1])/h           
-            
-        if (self.dis_err) >= 0.1:
+        self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
+
+        if (self.dis_err) >= 0.5:
             print(self.dis_err,'distance error')
             self.speed.linear.x  = 0.22
             self.speed.angular.z = K*np.sign(self.dtheta)
-            print(self.speed.angular.z,'Angular')
         else:
-            print('Done!!')
-            print(self.dis_err,'distance error')
-            self.speed.linear.x = 0
-            self.speed.angular.z = 0 
-        
+            if len(self.neigh) == 1 and not self.done:
+                print("aas pass koi nahi!!")
+                self.goal = Point(0,0,0)
+            else:               
+                self.speed.linear.x = 0
+                self.speed.angular.z = 0
+                self.done = True
+                print(self.done,"aggreated")
+
         self.cmd_vel.publish(self.speed)
 
 if __name__ == '__main__':
@@ -107,3 +125,5 @@ if __name__ == '__main__':
         l.append((k+1)/10) # Time
         bot.control(k)
         r.sleep()
+        # if bot.done:
+        #     break 
