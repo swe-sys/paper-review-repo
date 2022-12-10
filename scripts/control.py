@@ -27,7 +27,6 @@ class robot(object):
         self.neigh = []      
         self.bearing = [0]
         self.goal = Point()
-        self.done = False
         self.odom = Odometry()
         self.initial_no = -1
         
@@ -66,20 +65,16 @@ class robot(object):
             # print(self.delij)
 
         # Neighbour Set
-        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i]<=5 and self.disij[i]>0.1]
+        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i]<=3.5 and self.disij[i]>0.1 and self.delij[i] <= pi/3]
         self.neigh.append(self.odom)
         print(len(self.neigh),self.namespace,self.done)
         no_neigh = len(self.neigh)
-        
-        if no_neigh > self.initial_no:
-            print("i did false")
-            self.done = False 
-        if no_neigh >= 2 and not self.done:
+
+        if no_neigh >= 2:
             self.initial_no = no_neigh
             print(self.initial_no,no_neigh,"i and no")
             self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
-            self.done = True          
         else:
             if self.goal.x == 0.0 and self.goal.y == 0.0:
                 print("random goal alloted")
@@ -102,19 +97,18 @@ class robot(object):
         # Gradient of Bearing
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
-        if (self.dis_err) >= 0.5:
+        if (self.dis_err) >= 0.75:
             print(self.dis_err,'distance error')
             self.speed.linear.x  = 0.22
             self.speed.angular.z = K*np.sign(self.dtheta)
         else:
             if len(self.neigh) == 1 and not self.done:
-                print("aas pass koi nahi!!")
+                print("Aas pass koi nahi!!")
                 self.goal = Point(0,0,0)
             else:               
-                self.speed.linear.x = 0
-                self.speed.angular.z = 0
-                self.done = True
-                print(self.done,"aggreated")
+                self.speed.linear.x = 0.0
+                self.speed.angular.z = 0.0
+                print("Aggreated")
 
         self.cmd_vel.publish(self.speed)
 
@@ -132,5 +126,6 @@ if __name__ == '__main__':
         l.append((k+1)/10) # Time
         bot.control(k)
         r.sleep()
-        # if bot.done:
-        #     break 
+
+
+        
