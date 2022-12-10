@@ -19,12 +19,14 @@ class Obstacles:
         rospy.Subscriber('/tb3_2/odom', Odometry, self.callback_odom, '/tb3_2/')
         rospy.Subscriber('/tb3_3/odom', Odometry, self.callback_odom, '/tb3_3/')
         rospy.Subscriber('/tb3_4/odom', Odometry, self.callback_odom, '/tb3_4/')
+        rospy.Subscriber('/tb3_5/odom', Odometry, self.callback_odom, '/tb3_5/')
         self.obs = {}
         self.obs['/tb3_0/'] = Odometry()
         self.obs['/tb3_1/'] = Odometry()
         self.obs['/tb3_2/'] = Odometry()
         self.obs['/tb3_3/'] = Odometry()
         self.obs['/tb3_4/'] = Odometry()
+        self.obs['/tb3_5/'] = Odometry()
 
         #comment following lines if trying to gazebo simulation
         # self.prev_pose = {}

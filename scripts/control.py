@@ -28,11 +28,13 @@ class robot(object):
         self.bearing = [0]
         self.goal = Point()
         self.done = False
-        self.odom = None
+        self.odom = Odometry()
+        self.initial_no = -1
         
     def update_Odom(self,msg):
         """ Odometry of current bot"""
         self.odom = msg
+        #print(type(msg))
         self.x = msg.pose.pose.position.x 
         self.y = msg.pose.pose.position.y
         self.rot_q = msg.pose.pose.orientation
@@ -64,20 +66,25 @@ class robot(object):
             # print(self.delij)
 
         # Neighbour Set
-        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i]<=5 and self.disij[i]>1]
+        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i]<=5 and self.disij[i]>0.1]
         self.neigh.append(self.odom)
         print(len(self.neigh),self.namespace,self.done)
-        if len(self.neigh) >= 2 and not self.done:
+        no_neigh = len(self.neigh)
+        
+        if no_neigh > self.initial_no:
+            print("i did false")
+            self.done = False 
+        if no_neigh >= 2 and not self.done:
+            self.initial_no = no_neigh
+            print(self.initial_no,no_neigh,"i and no")
             self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
-            self.done = True
+            self.done = True          
         else:
             if self.goal.x == 0.0 and self.goal.y == 0.0:
                 print("random goal alloted")
-                self.goal.x = np.random.uniform(low=self.x - 5,high=self.x + 5)
-                self.goal.y = np.random.uniform(low=self.y - 5,high=self.y + 5)
-
-
+                self.goal.x = np.random.uniform(low=-10,high=10)
+                self.goal.y = np.random.uniform(low=-10,high=10)
         
     def control(self,k):
         """control law for bot"""
@@ -116,7 +123,7 @@ if __name__ == '__main__':
     l = [] #l is time
     rospy.init_node("Task2_controller")
     r = rospy.Rate(4)
-    bot = robot(5)
+    bot = robot(6)
 
     while not rospy.is_shutdown() and k < 4000:
         k = k+1
