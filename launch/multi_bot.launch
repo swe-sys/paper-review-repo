@@ -58,6 +58,7 @@
     <node pkg="swarm_aggregation" type="control.py" name="multi_bot1" output="screen">
       <remap from="/odom" to="/$(arg first_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg first_tb3)/cmd_vel"/>
+      <remap from="/goal" to="/$(arg first_tb3)/goal"/>
     </node>
   </group>
 
@@ -74,6 +75,7 @@
     <node pkg="swarm_aggregation" type="control.py" name="multi_bot2" output="screen">
       <remap from="/odom" to="/$(arg second_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg second_tb3)/cmd_vel"/>
+      <remap from="/goal" to="/$(arg second_tb3)/goal"/>
     </node>
   </group>
 
@@ -89,6 +91,7 @@
     <node pkg="swarm_aggregation" type="control.py" name="multi_bot3" >
       <remap from="/odom" to="/$(arg third_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg third_tb3)/cmd_vel"/>
+      <remap from="/goal" to="/$(arg third_tb3)/goal"/>
     </node>
   </group>
 
@@ -104,6 +107,7 @@
     <node pkg="swarm_aggregation" type="control.py" name="multi_bot4" >
       <remap from="/odom" to="/$(arg fourth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg fourth_tb3)/cmd_vel"/>
+      <remap from="/goal" to="/$(arg fourth_tb3)/goal"/>
     </node>
   </group>
 
@@ -119,6 +123,7 @@
     <node pkg="swarm_aggregation" type="control.py" name="multi_bot5" >
       <remap from="/odom" to="/$(arg fifth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg fifth_tb3)/cmd_vel"/>
+      <remap from="/goal" to="/$(arg fifth_tb3)/goal"/>
     </node>
   </group>
 
@@ -134,9 +139,11 @@
     <node pkg="swarm_aggregation" type="control.py" name="multi_bot6" >
       <remap from="/odom" to="/$(arg sixth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg sixth_tb3)/cmd_vel"/>
+      <remap from="/goal" to="/$(arg sixth_tb3)/goal"/>
     </node>
   </group> 
 
   <node pkg="swarm_aggregation" type="detect_bot.py" name="obs_data"/>
+  <node pkg="swarm_aggregation" type="plott.py" name="animator"/>
 
 </launch>

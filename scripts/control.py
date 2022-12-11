@@ -3,6 +3,7 @@ import rospy
 import numpy as np
 from geometry_msgs.msg import Point, Twist
 from nav_msgs.msg import Odometry
+from std_msgs.msg import String
 from tf.transformations import euler_from_quaternion
 from math import atan2, sqrt, pi
 import matplotlib.pyplot as plt
@@ -19,7 +20,9 @@ class robot(object):
         self.speed = Twist()
         self.botpose = rospy.Subscriber('/obs_data',botPose,self.detect_bots)
         self.odom_sub = rospy.Subscriber("/odom",Odometry,self.update_Odom)
-        self.cmd_vel = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
+        self.cmd_vel = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
+        #self.pubo = rospy.Publisher('/'+self.namespace +'/odom2',Odometry,queue_size=10)
+        self.pubg = rospy.Publisher('/goal', Point,queue_size=10)
         self.bot_odom = [Odometry() for i in range(self.total_bots)]
         self.yaw = [0 for i in range(self.total_bots)]
         self.disij = []
@@ -51,7 +54,7 @@ class robot(object):
         #print(self.bot_odom, '1')
         self.cur_bot_id_indx = bot_id.index(self.namespace)              
 
-    def set_goal(self):
+    def set_goal(self,r,ca):
         """ sets goal for bot"""
         self.neigh = []
         self.disij = []
@@ -65,14 +68,14 @@ class robot(object):
             # print(self.delij)
 
         # Neighbour Set
-        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i]<=3.5 and self.disij[i]>0.1 and self.delij[i] <= pi/3]
+        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i] <= r and self.disij[i]>0.1 and self.delij[i] <= ca]
         self.neigh.append(self.odom)
-        print(len(self.neigh),self.namespace,self.done)
+        print(len(self.neigh),self.namespace)
         no_neigh = len(self.neigh)
 
         if no_neigh >= 2:
             self.initial_no = no_neigh
-            print(self.initial_no,no_neigh,"i and no")
+            #print(self.initial_no,no_neigh,"i and no")
             self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
         else:
@@ -83,7 +86,8 @@ class robot(object):
         
     def control(self,k):
         """control law for bot"""
-        self.set_goal()
+
+        self.set_goal(2.15,pi/3)
         print(self.goal,'Goal')
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
@@ -102,7 +106,7 @@ class robot(object):
             self.speed.linear.x  = 0.22
             self.speed.angular.z = K*np.sign(self.dtheta)
         else:
-            if len(self.neigh) == 1 and not self.done:
+            if len(self.neigh) == 1:
                 print("Aas pass koi nahi!!")
                 self.goal = Point(0,0,0)
             else:               
@@ -111,12 +115,14 @@ class robot(object):
                 print("Aggreated")
 
         self.cmd_vel.publish(self.speed)
+        #self.botpose.publish(self.bot_odom)
+        self.pubg.publish(self.goal)
 
 if __name__ == '__main__':
     k = 0
     l = [] #l is time
     rospy.init_node("Task2_controller")
-    r = rospy.Rate(4)
+    rate = rospy.Rate(4)
     bot = robot(6)
 
     while not rospy.is_shutdown() and k < 4000:
@@ -125,7 +131,4 @@ if __name__ == '__main__':
         K = 0.3
         l.append((k+1)/10) # Time
         bot.control(k)
-        r.sleep()
-
-
-        
+        rate.sleep()
