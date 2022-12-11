@@ -12,7 +12,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-
+plt.ion()
 class yolo():
     def __init__(self):
         self.odom = {}
@@ -49,23 +49,24 @@ if __name__ == '__main__':
     y=yolo()
     print(y.goal)
     rate = rospy.Rate(10) # 10hz
+    #count = 0
     
     while not rospy.is_shutdown():
         plt.clf()
         # fig.canvas.draw()
         # fig.canvas
-        col = {'/tb3_0/':'r','/tb3_2/':'b','/tb3_3/':'g','/tb3_4/':'y','/tb3_5/':'k','/tb3_1/':'c'}
+        col = {'/tb3_0/':'r','/tb3_2/':'b','/tb3_3/':'g','/tb3_4/':'y','/tb3_5/':'m','/tb3_1/':'c'}
         
         try:
             for i in y.bot_id:
-                plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",markersize=125, alpha=0.3,color=col[i])
+                plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",markersize=155, alpha=0.1,color=col[i])
                 plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",color=col[i])
                 plt.plot(y.goal[i].x,y.goal[i].y,"x",color=col[i])
         except KeyError:
             print("chalna aage")
         #plt.legend(col.keys())
-        plt.ylim([-10,10])
-        plt.xlim([-10,10])
-        
-        plt.pause(0.01)
+        plt.ylim([-15,15])
+        plt.xlim([-15,15])
+        plt.pause(0.01)     
+
         rate.sleep()

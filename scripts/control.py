@@ -81,13 +81,13 @@ class robot(object):
         else:
             if self.goal.x == 0.0 and self.goal.y == 0.0:
                 print("random goal alloted")
-                self.goal.x = np.random.uniform(low=-10,high=10)
-                self.goal.y = np.random.uniform(low=-10,high=10)
+                self.goal.x = np.random.uniform(low= -10,high= 10)
+                self.goal.y = np.random.uniform(low= -10,high= 10)
         
     def control(self,k):
         """control law for bot"""
 
-        self.set_goal(2.15,pi/3)
+        self.set_goal(3,pi/3)
         print(self.goal,'Goal')
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
