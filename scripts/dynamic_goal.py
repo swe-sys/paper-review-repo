@@ -13,6 +13,7 @@ class robot(object):
     def __init__(self,no_of_bots):
         self.x = 0
         self.y = 0
+        r = 3
         self.cur_bot_id_indx = 0
         self.node_name = rospy.get_name()
         self.namespace = rospy.get_namespace()
@@ -29,7 +30,7 @@ class robot(object):
         self.delij = []
         self.neigh = []      
         self.bearing = [0]
-        self.goal = Point()
+        self.goal = Point(self.x+r, self.y+r, 0.0)
         self.odom = Odometry()
         self.initial_no = -1
         
@@ -79,15 +80,15 @@ class robot(object):
             self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
         else:
-            if self.goal.x == 0.0 and self.goal.y == 0.0:
+            if self.goal.x == 0 and self.goal.y == 0:
                 print("random goal alloted")
                 self.goal.x = np.random.uniform(low= -10,high= 10)
                 self.goal.y = np.random.uniform(low= -10,high= 10)
         
-    def control(self,k):
+    def control(self,k,r):
         """control law for bot"""
 
-        self.set_goal(3,pi/3)
+        self.set_goal(r,pi/3)
         print(self.goal,'Goal')
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
@@ -102,7 +103,7 @@ class robot(object):
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
         if (self.dis_err) >= 0.75:
-            print(self.dis_err,'distance error')
+            #print(self.dis_err,'distance error')
             self.speed.linear.x  = 0.22
             self.speed.angular.z = K*np.sign(self.dtheta)
         else:
@@ -115,7 +116,6 @@ class robot(object):
                 print("Aggreated")
 
         self.cmd_vel.publish(self.speed)
-        #self.botpose.publish(self.bot_odom)
         self.pubg.publish(self.goal)
 
 if __name__ == '__main__':
@@ -129,6 +129,7 @@ if __name__ == '__main__':
         k = k+1
         h = 0.25
         K = 0.3
+        r  = 3
         l.append((k+1)/10) # Time
-        bot.control(k)
+        bot.control(k,r)
         rate.sleep()

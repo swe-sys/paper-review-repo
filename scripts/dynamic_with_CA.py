@@ -13,6 +13,7 @@ class robot(object):
     def __init__(self,no_of_bots):
         self.x = 0
         self.y = 0
+        r = 3
         self.cur_bot_id_indx = 0
         self.node_name = rospy.get_name()
         self.namespace = rospy.get_namespace()
@@ -29,7 +30,7 @@ class robot(object):
         self.delij = []
         self.neigh = []      
         self.bearing = [0]
-        self.goal = Point()
+        self.goal = Point(self.x+r, self.y+r, 0.0)
         self.odom = Odometry()
         self.initial_no = -1
         
@@ -105,33 +106,29 @@ class robot(object):
             temp = []
             vap = []
             for i,z in enumerate(self.disij):
-                if len(self.neigh) >= 2 and 3>z>0.5:
-                    v = 0.22
-                    w = K*np.sign(self.dtheta)
-                    print(z,self.delij[i]*(180/pi),'1')
-                elif len(self.neigh) < 2 and z>3:
-                    self.goal = Point(0,0,0)                              
+                if z >= 0.5:
+                    self.speed.linear.x = 0.22
+                    self.speed.angular.z = K*np.sign(self.dtheta)
+                    #print(z,self.delij[i]*(180/pi),'1')                                         
                 else:
                     t = rospy.get_time()
-                    v = max((0.22-(100-t)*0.001),0)                    
-                    w = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
-                    temp.append(w)
-                    vap.append(v)
+                    self.speed.linear.x = max((0.22-(100-t)*0.001),0)                    
+                    self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
+                    temp.append(self.speed.angular.z)
+                    vap.append(self.speed.linear.x)
             if temp:
-                w = np.mean(temp)
-                v = np.mean(vap)
-                print(temp,vap,"temp_vap")            
+                self.speed.angular.z = np.mean(temp)
+                self.speed.linear.x = np.mean(vap)
+                #print(temp,vap,"temp_vap")            
         else:
             if len(self.neigh) == 1:
                 print("Aas pass koi nahi!!")
                 self.goal = Point(0,0,0)
             else:               
-                v= 0.0
-                w = 0.0
+                self.speed.linear.x = 0.0
+                self.speed.angular.z = 0.0
                 print("Aggreated")
 
-        self.speed.linear.x = v
-        self.speed.angular.z = w        
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)
 

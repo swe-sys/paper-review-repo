@@ -31,7 +31,8 @@ class yolo():
     def pose_listener(self,data):
         """ Odometry of all bots"""
         self.bot_id = data.bot_id
-        bot_odom = data.botpose
+        bot_odom = data.botpose        
+        
         for i,z in zip(self.bot_id,bot_odom):
             self.odom[i] = z
     
@@ -48,20 +49,24 @@ if __name__ == '__main__':
 
     y=yolo()
     print(y.goal)
-    rate = rospy.Rate(10) # 10hz
-    #count = 0
+    rate = rospy.Rate(10) # 10hz    
     
     while not rospy.is_shutdown():
         plt.clf()
         # fig.canvas.draw()
         # fig.canvas
-        col = {'/tb3_0/':'r','/tb3_2/':'b','/tb3_3/':'g','/tb3_4/':'y','/tb3_5/':'m','/tb3_1/':'c'}
+        col = {'/tb3_0/':'r','/tb3_2/':'b','/tb3_3/':'g','/tb3_4/':'y','/tb3_5/':'m','/tb3_1/':'c'}        
         
         try:
             for i in y.bot_id:
-                plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",markersize=155, alpha=0.1,color=col[i])
+                euler = euler_from_quaternion([y.odom[i].pose.pose.orientation.x,y.odom[i].pose.pose.orientation.y,y.odom[i].pose.pose.orientation.z,y.odom[i].pose.pose.orientation.w])        
+                yaw = euler[2]
+                if yaw < 0:
+                    yaw += 2 * pi
+                plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",markersize=100, alpha=0.1,color=col[i])
                 plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",color=col[i])
                 plt.plot(y.goal[i].x,y.goal[i].y,"x",color=col[i])
+                plt.quiver(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,cos(yaw),sin(yaw),units='xy',width=0.05,headwidth=2.,headlength=1.,color=col[i])
         except KeyError:
             print("chalna aage")
         #plt.legend(col.keys())
