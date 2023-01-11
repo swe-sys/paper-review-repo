@@ -1,0 +1,27 @@
+\begin{algorithm}
+    \caption{Pseudo-Code for Algorithm}
+    \label{pc}
+    \setstretch{1.35}
+        \begin{algorithmic}[1]
+        \State $x_{g_i} \gets rand(-boundary, boundary) $
+        \State $y_{g_i} \gets rand(-boundary, boundary) $
+        \If{$m_i < 1$}
+            \State {$v_i \gets Constant~linear~velocity $}
+            \State $ \omega_i \gets  K_i sgn(\Dot{\theta_i})$
+            \If{$dis~err \leq safe~distance$}
+                \State $x_{g_i} \gets rand(-boundary, boundary)$
+                \State $y_{g_i} \gets rand(-boundary, boundary)$
+            \EndIf
+        \Else
+            \State $v_i \gets max(v_i(t^i_e)- (t - t^i_e)\lambda_i,0)$
+            \State $ \omega_i \gets \beta_i sgn(\Dot{\theta_i}) - K_i sgn(\delta_{ij})$
+            \State $ x_{g_i} \gets \frac{\Sigma~(x_{N_{B_i}}) + x_i}{m_i+1}$
+            \State $ y_{g_i} \gets \frac{\Sigma~(y_{N_{B_i}}) + y_i}{m_i+1}$
+            \If{$dis~err \leq safe~distance$}
+                \State $v_i \gets 0 $
+                \State $\omega_i \gets 0 $
+            \EndIf
+        \EndIf
+        \end{algorithmic}
+    \end{algorithm}
+    
