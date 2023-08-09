@@ -12,115 +12,66 @@
   <arg name="tenth_tb3"  default="tb3_9"/>
   <arg name="eleventh_tb3"  default="tb3_10"/>
   <arg name="twelfth_tb3"  default="tb3_11"/>
-  <arg name="tera_tb3"  default="tb3_12"/>
-  <arg name="fourteen_tb3"  default="tb3_13"/>
-  <arg name="fifteen_tb3"  default="tb3_14"/>
-  <arg name="sixteen_tb3"  default="tb3_15"/>
-  <arg name="seventeen_tb3"  default="tb3_16"/>
-  <arg name="eighteen_tb3"  default="tb3_17"/>
-  <arg name="nineteen_tb3"  default="tb3_18"/>
-  <arg name="bees_tb3"  default="tb3_19"/>  
 
-  <arg name="first_tb3_x_pos" default=" 16.0"/>
-  <arg name="first_tb3_y_pos" default=" 1.5"/>
+   <arg name="first_tb3_x_pos" default=" 7.0"/>
+  <arg name="first_tb3_y_pos" default=" 6.5"/>
   <arg name="first_tb3_z_pos" default=" 0.0"/>
   <arg name="first_tb3_yaw"   default=" 0.0"/>
 
-  <arg name="second_tb3_x_pos" default=" 4.0"/>
+  <arg name="second_tb3_x_pos" default=" 8.0"/>
   <arg name="second_tb3_y_pos" default=" 2.0"/>
   <arg name="second_tb3_z_pos" default=" 0.0"/>
   <arg name="second_tb3_yaw"   default=" 0.0"/>
 
-  <arg name="third_tb3_x_pos" default=" 10.5"/>
-  <arg name="third_tb3_y_pos" default=" 0.0"/>
+  <arg name="third_tb3_x_pos" default=" 5.5"/>
+  <arg name="third_tb3_y_pos" default=" 4.5"/>
   <arg name="third_tb3_z_pos" default=" 0.0"/>
   <arg name="third_tb3_yaw"   default=" 0.0"/>
 
-  <arg name="fourth_tb3_x_pos" default=" 12.0"/>
-  <arg name="fourth_tb3_y_pos" default=" 10.0"/>
+  <arg name="fourth_tb3_x_pos" default=" -7.0"/>
+  <arg name="fourth_tb3_y_pos" default=" 5.0"/>
   <arg name="fourth_tb3_z_pos" default=" 0.0"/>
   <arg name="fourth_tb3_yaw"   default=" 0.0"/>
 
-  <arg name="fifth_tb3_x_pos" default=" 7.0"/>
-  <arg name="fifth_tb3_y_pos" default=" 20.0"/>
+  <arg name="fifth_tb3_x_pos" default=" 3.0"/>
+  <arg name="fifth_tb3_y_pos" default=" -9.0"/>
   <arg name="fifth_tb3_z_pos" default=" 0.0"/>
   <arg name="fifth_tb3_yaw"   default=" 0.0"/>
 
-  <arg name="sixth_tb3_x_pos" default=" 13.0"/>
-  <arg name="sixth_tb3_y_pos" default=" 0.0"/>
+  <arg name="sixth_tb3_x_pos" default=" -5.0"/>
+  <arg name="sixth_tb3_y_pos" default=" -8.0"/>
   <arg name="sixth_tb3_z_pos" default=" 0.0"/>
   <arg name="sixth_tb3_yaw"   default=" 0.0"/>
 
   <arg name="seventh_tb3_x_pos" default=" -11.0"/>
-  <arg name="seventh_tb3_y_pos" default=" 14.0"/>
+  <arg name="seventh_tb3_y_pos" default=" -8.0"/>
   <arg name="seventh_tb3_z_pos" default=" 0.0"/>
   <arg name="seventh_tb3_yaw"   default=" 0.0"/>
 
   <arg name="eighth_tb3_x_pos" default=" -5.0"/>
-  <arg name="eighth_tb3_y_pos" default=" 6.0"/>
+  <arg name="eighth_tb3_y_pos" default=" -15.0"/>
   <arg name="eighth_tb3_z_pos" default=" 0.0"/>
   <arg name="eighth_tb3_yaw"   default=" 0.0"/>
 
-  <arg name="nineth_tb3_x_pos" default=" -18.0"/>
-  <arg name="nineth_tb3_y_pos" default=" 0.0"/>
+  <arg name="nineth_tb3_x_pos" default=" 9.0"/>
+  <arg name="nineth_tb3_y_pos" default=" 14.0"/>
   <arg name="nineth_tb3_z_pos" default=" 0.0"/>
   <arg name="nineth_tb3_yaw"   default=" 0.0"/>
 
-  <arg name="tenth_tb3_x_pos" default=" -14.0"/>
-  <arg name="tenth_tb3_y_pos" default=" 4.0"/>
+  <arg name="tenth_tb3_x_pos" default=" 6.0"/>
+  <arg name="tenth_tb3_y_pos" default=" 13.0"/>
   <arg name="tenth_tb3_z_pos" default=" 0.0"/>
   <arg name="tenth_tb3_yaw"   default=" 0.0"/>
 
-  <arg name="eleventh_tb3_x_pos" default=" -7.0"/>
-  <arg name="eleventh_tb3_y_pos" default=" 20.0"/>
+  <arg name="eleventh_tb3_x_pos" default=" 16.0"/>
+  <arg name="eleventh_tb3_y_pos" default=" -8.0"/>
   <arg name="eleventh_tb3_z_pos" default=" 0.0"/>
   <arg name="eleventh_tb3_yaw"   default=" 0.0"/>
 
-  <arg name="twelfth_tb3_x_pos" default=" -6.0"/>
-  <arg name="twelfth_tb3_y_pos" default=" -3.0"/>
+  <arg name="twelfth_tb3_x_pos" default=" -12.0"/>
+  <arg name="twelfth_tb3_y_pos" default=" 18.0"/>
   <arg name="twelfth_tb3_z_pos" default=" 0.0"/>
   <arg name="twelfth_tb3_yaw"   default=" 0.0"/>
-
-  <arg name="tera_tb3_x_pos" default=" -18.0"/>
-  <arg name="tera_tb3_y_pos" default=" -7.0"/>
-  <arg name="tera_tb3_z_pos" default=" 0.0"/>
-  <arg name="tera_tb3_yaw"   default=" 0.0"/>
-
-  <arg name="fourteen_tb3_x_pos" default=" -10.0"/>
-  <arg name="fourteen_tb3_y_pos" default=" -19.0"/>
-  <arg name="fourteen_tb3_z_pos" default=" 0.0"/>
-  <arg name="fourteen_tb3_yaw"   default=" 0.0"/>
-
-  <arg name="fifteen_tb3_x_pos" default=" -9.0"/>
-  <arg name="fifteen_tb3_y_pos" default=" -16.0"/>
-  <arg name="fifteen_tb3_z_pos" default=" 0.0"/>
-  <arg name="fifteen_tb3_yaw"   default=" 0.0"/>
-
-  <arg name="sixteen_tb3_x_pos" default=" 16.0"/>
-  <arg name="sixteen_tb3_y_pos" default=" -10.0"/>
-  <arg name="sixteen_tb3_z_pos" default=" 0.0"/>
-  <arg name="sixteen_tb3_yaw"   default=" 0.0"/>
-
-  <arg name="seventeen_tb3_x_pos" default=" 12.0"/>
-  <arg name="seventeen_tb3_y_pos" default=" -2.0"/>
-  <arg name="seventeen_tb3_z_pos" default=" 0.0"/>
-  <arg name="seventeen_tb3_yaw"   default=" 0.0"/>
-
-  <arg name="eighteen_tb3_x_pos" default=" 8.0"/>
-  <arg name="eighteen_tb3_y_pos" default=" -8.0"/>
-  <arg name="eighteen_tb3_z_pos" default=" 0.0"/>
-  <arg name="eighteen_tb3_yaw"   default=" 0.0"/>
-
-  <arg name="nineteen_tb3_x_pos" default=" 0.0"/>
-  <arg name="nineteen_tb3_y_pos" default=" -18.0"/>
-  <arg name="nineteen_tb3_z_pos" default=" 0.0"/>
-  <arg name="nineteen_tb3_yaw"   default=" 0.0"/>
-
-  <arg name="bees_tb3_x_pos" default=" 2.0"/>
-  <arg name="bees_tb3_y_pos" default=" -15.0"/>
-  <arg name="bees_tb3_z_pos" default=" 0.0"/>
-  <arg name="bees_tb3_yaw"   default=" 0.0"/>
- 
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <!-- <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/turtlebot3_house.world"/> -->
@@ -226,7 +177,7 @@
       <remap from="/cmd_vel" to="/$(arg sixth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg sixth_tb3)/goal"/>
     </node>
-  </group>
+  </group> 
 
   <group ns = "$(arg seventh_tb3)">
     <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
@@ -237,7 +188,7 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg seventh_tb3) -x $(arg seventh_tb3_x_pos) -y $(arg seventh_tb3_y_pos) -z $(arg seventh_tb3_z_pos) -Y $(arg seventh_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot7" >
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot6" >
       <remap from="/odom" to="/$(arg seventh_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg seventh_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg seventh_tb3)/goal"/>
@@ -253,7 +204,7 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg eighth_tb3) -x $(arg eighth_tb3_x_pos) -y $(arg eighth_tb3_y_pos) -z $(arg eighth_tb3_z_pos) -Y $(arg eighth_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot8" >
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot6" >
       <remap from="/odom" to="/$(arg eighth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg eighth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg eighth_tb3)/goal"/>
@@ -269,7 +220,7 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg nineth_tb3) -x $(arg nineth_tb3_x_pos) -y $(arg nineth_tb3_y_pos) -z $(arg nineth_tb3_z_pos) -Y $(arg nineth_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot9" >
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot6" >
       <remap from="/odom" to="/$(arg nineth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg nineth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg nineth_tb3)/goal"/>
@@ -285,7 +236,7 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg tenth_tb3) -x $(arg tenth_tb3_x_pos) -y $(arg tenth_tb3_y_pos) -z $(arg tenth_tb3_z_pos) -Y $(arg tenth_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot10" >
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot6" >
       <remap from="/odom" to="/$(arg tenth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg tenth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg tenth_tb3)/goal"/>
@@ -301,7 +252,7 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg eleventh_tb3) -x $(arg eleventh_tb3_x_pos) -y $(arg eleventh_tb3_y_pos) -z $(arg eleventh_tb3_z_pos) -Y $(arg eleventh_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot11" >
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot6" >
       <remap from="/odom" to="/$(arg eleventh_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg eleventh_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg eleventh_tb3)/goal"/>
@@ -317,138 +268,10 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg twelfth_tb3) -x $(arg twelfth_tb3_x_pos) -y $(arg twelfth_tb3_y_pos) -z $(arg twelfth_tb3_z_pos) -Y $(arg twelfth_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot12" >
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot6" >
       <remap from="/odom" to="/$(arg twelfth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg twelfth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg twelfth_tb3)/goal"/>
-    </node>
-  </group>
-
-  <group ns = "$(arg tera_tb3)">
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg tera_tb3)" />
-    </node>
-    
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg tera_tb3) -x $(arg tera_tb3_x_pos) -y $(arg tera_tb3_y_pos) -z $(arg tera_tb3_z_pos) -Y $(arg tera_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot13" >
-      <remap from="/odom" to="/$(arg tera_tb3)/odom"/>
-      <remap from="/cmd_vel" to="/$(arg tera_tb3)/cmd_vel"/>
-      <remap from="/goal" to="/$(arg tera_tb3)/goal"/>
-    </node>
-  </group>
-
-  <group ns = "$(arg fourteen_tb3)">
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg fourteen_tb3)" />
-    </node>
-    
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg fourteen_tb3) -x $(arg fourteen_tb3_x_pos) -y $(arg fourteen_tb3_y_pos) -z $(arg fourteen_tb3_z_pos) -Y $(arg fourteen_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot14" >
-      <remap from="/odom" to="/$(arg fourteen_tb3)/odom"/>
-      <remap from="/cmd_vel" to="/$(arg fourteen_tb3)/cmd_vel"/>
-      <remap from="/goal" to="/$(arg fourteen_tb3)/goal"/>
-    </node>
-  </group>
-
-  <group ns = "$(arg fifteen_tb3)">
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg fifteen_tb3)" />
-    </node>
-    
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg fifteen_tb3) -x $(arg fifteen_tb3_x_pos) -y $(arg fifteen_tb3_y_pos) -z $(arg fifteen_tb3_z_pos) -Y $(arg fifteen_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot15" >
-      <remap from="/odom" to="/$(arg fifteen_tb3)/odom"/>
-      <remap from="/cmd_vel" to="/$(arg fifteen_tb3)/cmd_vel"/>
-      <remap from="/goal" to="/$(arg fifteen_tb3)/goal"/>
-    </node>
-  </group>
-
-  <group ns = "$(arg sixteen_tb3)">
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg sixteen_tb3)" />
-    </node>
-    
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg sixteen_tb3) -x $(arg sixteen_tb3_x_pos) -y $(arg sixteen_tb3_y_pos) -z $(arg sixteen_tb3_z_pos) -Y $(arg sixteen_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot16" >
-      <remap from="/odom" to="/$(arg sixteen_tb3)/odom"/>
-      <remap from="/cmd_vel" to="/$(arg sixteen_tb3)/cmd_vel"/>
-      <remap from="/goal" to="/$(arg sixteen_tb3)/goal"/>
-    </node>
-  </group>
-
-  <group ns = "$(arg seventeen_tb3)">
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg seventeen_tb3)" />
-    </node>
-    
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg seventeen_tb3) -x $(arg seventeen_tb3_x_pos) -y $(arg seventeen_tb3_y_pos) -z $(arg seventeen_tb3_z_pos) -Y $(arg seventeen_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot17" >
-      <remap from="/odom" to="/$(arg seventeen_tb3)/odom"/>
-      <remap from="/cmd_vel" to="/$(arg seventeen_tb3)/cmd_vel"/>
-      <remap from="/goal" to="/$(arg seventeen_tb3)/goal"/>
-    </node>
-  </group>
-
-  <group ns = "$(arg eighteen_tb3)">
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg eighteen_tb3)" />
-    </node>
-    
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg eighteen_tb3) -x $(arg eighteen_tb3_x_pos) -y $(arg eighteen_tb3_y_pos) -z $(arg eighteen_tb3_z_pos) -Y $(arg eighteen_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot18" >
-      <remap from="/odom" to="/$(arg eighteen_tb3)/odom"/>
-      <remap from="/cmd_vel" to="/$(arg eighteen_tb3)/cmd_vel"/>
-      <remap from="/goal" to="/$(arg eighteen_tb3)/goal"/>
-    </node>
-  </group>
-
-  <group ns = "$(arg nineteen_tb3)">
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg nineteen_tb3)" />
-    </node>
-    
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg nineteen_tb3) -x $(arg nineteen_tb3_x_pos) -y $(arg nineteen_tb3_y_pos) -z $(arg nineteen_tb3_z_pos) -Y $(arg nineteen_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot19" >
-      <remap from="/odom" to="/$(arg nineteen_tb3)/odom"/>
-      <remap from="/cmd_vel" to="/$(arg nineteen_tb3)/cmd_vel"/>
-      <remap from="/goal" to="/$(arg nineteen_tb3)/goal"/>
-    </node>
-  </group>
-
-  <group ns = "$(arg bees_tb3)">
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg bees_tb3)" />
-    </node>
-    
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg bees_tb3) -x $(arg bees_tb3_x_pos) -y $(arg bees_tb3_y_pos) -z $(arg bees_tb3_z_pos) -Y $(arg bees_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot20" >
-      <remap from="/odom" to="/$(arg bees_tb3)/odom"/>
-      <remap from="/cmd_vel" to="/$(arg bees_tb3)/cmd_vel"/>
-      <remap from="/goal" to="/$(arg bees_tb3)/goal"/>
     </node>
   </group>
 
