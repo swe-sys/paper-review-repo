@@ -10,6 +10,7 @@ from math import atan2, sqrt, pi, cos, sin,inf,isinf
 from collections import deque
 import math as m
 from swarm_aggregation.msg import obs
+import rospkg
 
 class obstacle(Pose2D):
     def __init__(self, x,y,theta,dist,min_dis):
@@ -65,6 +66,9 @@ class robot(object):
         self.obs_pub = rospy.Publisher('/obs',obs, queue_size=1)
 
         self.obsplot.bot_id = self.namespace
+        self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
+        # with open('{}/scripts/Communities/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #     f.write("time,goal_x,goal_y,x,y\n" )
 
     def update_Odom(self,odom):
         """ Odometry of current bot"""        
@@ -110,7 +114,7 @@ class robot(object):
             self.hist.append([self.obs])
         except (IndexError):
             self.obs = []
-        print("obs",self.obs,self.namespace)
+        #print("obs",self.obs,self.namespace)
 
     # def is_inside_circle(self, center_position, radius):
     #     """Checks if a robot's position is inside a circular region """  
@@ -143,9 +147,12 @@ class robot(object):
     def set_goal(self): #,random=False
         """outputs required = goal, input = neighbour set, using mean(self+ neighbour_set/2)"""
         # self.scanner()
+        # with open('{}/scripts/Communities/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
+
         no_neigh = len(self.obs)
         try:  
-            if no_neigh >= 1: #and not random:
+            if no_neigh >= 2: #and not random:
                 self.goal.x = (self.x + np.mean([i.x for i in self.obs]))/2
                 self.goal.y = (self.y + np.mean([i.y for i in self.obs]))/2
                 # now activating the safe zone and then getting the co-ordinates for circular zone
@@ -204,7 +211,7 @@ class robot(object):
                         # print('Free')                                         
                     else:
                         t = rospy.get_time()
-                        self.speed.linear.x = max((0.10 -(5000-t)*0.0001),0)                    
+                        self.speed.linear.x = max((0.18 -(5000-t)*0.0001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij)
                         temp.append(self.speed.angular.z)
                         vap.append(self.speed.linear.x)
@@ -215,7 +222,7 @@ class robot(object):
                 self.speed.linear.x = np.mean(vap)               
         else:
             # if self.is_inside_circle(self.safe_zone[0:2],self.safe_zone[2]):
-            if len(self.obs) < 1: 
+            if len(self.obs) < 2: 
                 self.goal = Point(np.random.uniform(-10,10),np.random.uniform(-10,10),0)
                 print("Alone", len(self.obs))
             else:               
@@ -239,7 +246,7 @@ if __name__ == '__main__':
     k = 0
     l = [] #l is time
     rate = rospy.Rate(4)
-    bot = robot(6)     
+    bot = robot(12)     
     rospy.sleep(6)
     # bot.set_goal()
     while not rospy.is_shutdown() and k < 5000:
