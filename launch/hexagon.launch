@@ -160,6 +160,6 @@
   </group>
 
   
- <node pkg="swarm_aggregation" type="visual.py" name="animator"/>
+ <!-- <node pkg="swarm_aggregation" type="visual.py" name="animator"/> -->
 
 </launch>
