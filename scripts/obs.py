@@ -103,7 +103,7 @@ class robot(object):
                 angle = np.mean(np.array(i)[:,0])*(pi/180)
                 distance = np.mean(np.array(i)[:,1])
                 min_dis = np.min(np.array(i)[:,1])
-                if distance < 3 and ( -60*pi/180 < angle < 60*pi/180):
+                if distance < 2 and ( -60*pi/180 < angle < 60*pi/180):
                     obs_x = distance*cos(angle)
                     obs_y = distance*sin(angle)
                     global_x = self.x + (obs_x*cos(-self.yaw) + obs_y*sin(-self.yaw))
