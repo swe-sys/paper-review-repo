@@ -48,7 +48,7 @@ class robot(object):
         self.robot = []
         self.safe_zone = [0,0,0]
         self.initial_no = -1                      
-        self.goal = Point(np.random.uniform(-20,20), np.random.uniform(-20,20), 0.0)
+        self.goal = Point(np.random.uniform(-12,12), np.random.uniform(-12,12), 0.0)
         self.odom = Odometry()
         self.obsplot = obs()
         self.speed = Twist()        
@@ -103,7 +103,7 @@ class robot(object):
                 angle = np.mean(np.array(i)[:,0])*(pi/180)
                 distance = np.mean(np.array(i)[:,1])
                 min_dis = np.min(np.array(i)[:,1])
-                if distance < 2 and ( -60*pi/180 < angle < 60*pi/180):
+                if distance < 4 and ( -60*pi/180 < angle < 60*pi/180):
                     obs_x = distance*cos(angle)
                     obs_y = distance*sin(angle)
                     global_x = self.x + (obs_x*cos(-self.yaw) + obs_y*sin(-self.yaw))
@@ -162,8 +162,8 @@ class robot(object):
             else :
                 if self.goal.x == 0 and self.goal.y == 0:
                     print("andar gya")
-                    self.goal.x = np.random.uniform(-20,20)
-                    self.goal.y = np.random.uniform(-20,20)
+                    self.goal.x = np.random.uniform(-12,12)
+                    self.goal.y = np.random.uniform(-12,12)
                 # self.safezone_active = False
                 # self.safe_zone = [0,0,0]
         except (AttributeError):
@@ -222,7 +222,7 @@ class robot(object):
             #     self.speed.linear.x = np.mean(vap)               
         else:
             # if self.is_inside_circle(self.safe_zone[0:2],self.safe_zone[2]):
-            if len(self.obs) > 1: 
+            if len(self.obs) >= 1: 
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
                 print("Aggreated")                
@@ -247,7 +247,7 @@ if __name__ == '__main__':
     k = 0
     l = [] #l is time
     rate = rospy.Rate(4)
-    bot = robot(20)     
+    bot = robot(12)     
     rospy.sleep(6)
     # bot.set_goal()
     while not rospy.is_shutdown() and k < 5000:
