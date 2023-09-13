@@ -257,3 +257,4 @@ if __name__ == '__main__':
         l.append((k+1)/10) # Time
         bot.controller(k)            
         rate.sleep()
+        
