@@ -39,7 +39,7 @@ class robot(object):
         self.range = [0]
         self.time = 0
         self.angle = 0
-        self.ang_min = 0
+        self.ang_max = 0
         self.ang_inc = 0
         self.disij = []
         self.delij = []             
@@ -48,7 +48,7 @@ class robot(object):
         self.robot = []
         self.safe_zone = [0,0,0]
         self.initial_no = -1                      
-        self.goal = Point(np.random.uniform(-6,6), np.random.uniform(-6,6), 0.0)
+        self.goal = Point(np.random.uniform(-12,12), np.random.uniform(-12,12), 0.0)
         self.odom = Odometry()
         self.obsplot = obs()
         self.speed = Twist()        
@@ -67,8 +67,8 @@ class robot(object):
 
         self.obsplot.bot_id = self.namespace
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("time,goal_x,goal_y,x,y\n" )
+        with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+            f.write("time,goal_x,goal_y,x,y\n" )
 
     def update_Odom(self,odom):
         """ Odometry of current bot"""        
@@ -82,7 +82,7 @@ class robot(object):
 
     def scanner(self,msg):       
         self.range = msg.ranges
-        self.ang_min = msg.angle_min
+        self.ang_max = msg.angle_max
         self.ang_inc = msg.angle_increment
         self.obs = []
         pairs = []
@@ -90,11 +90,11 @@ class robot(object):
         # creating the pairs
         for i in range(len(self.range)):
             if not isinf(self.range[i]):
-                if i <= 180:
-                    j=i
+                if i <= abs(self.ang_max)*180/pi:
+                    j=i-abs(self.ang_max)*180/pi
                 else:
-                    j= i -360
-                pairs.append([j,self.range[i]])        
+                    j=i
+                pairs.append([self.ang_inc*j*180/pi,self.range[i]])        
         # spliting the pairs into the cones
 
         self.cones = self.split_list(pairs)        
@@ -103,7 +103,7 @@ class robot(object):
                 angle = np.mean(np.array(i)[:,0])*(pi/180)
                 distance = np.mean(np.array(i)[:,1])
                 min_dis = np.min(np.array(i)[:,1])
-                if distance < 1 and ( -60*pi/180 < angle < 60*pi/180):
+                if distance < 3 and (-60*pi/180 < angle < 60*pi/180):
                     obs_x = distance*cos(angle)
                     obs_y = distance*sin(angle)
                     global_x = self.x + (obs_x*cos(-self.yaw) + obs_y*sin(-self.yaw))
@@ -131,7 +131,7 @@ class robot(object):
             for item in input_list:
                 degree, _ = item
 
-                if prev_degree is None or abs(degree - prev_degree) <= 3:
+                if prev_degree is None or abs(degree - prev_degree) <= self.ang_inc*3:
                     sublist.append(item)
                 else:
                     sublists.append(sublist)
@@ -147,8 +147,8 @@ class robot(object):
     def set_goal(self): #,random=False
         """outputs required = goal, input = neighbour set, using mean(self+ neighbour_set/2)"""
         # self.scanner()
-        # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
+        with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+            f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         no_neigh = len(self.obs)
         try:  
@@ -162,8 +162,8 @@ class robot(object):
             else :
                 if self.goal.x == 0 and self.goal.y == 0:
                     print("andar gya")
-                    self.goal.x = np.random.uniform(-6,6)
-                    self.goal.y = np.random.uniform(-6,6)
+                    self.goal.x = np.random.uniform(-12,12)
+                    self.goal.y = np.random.uniform(-12,12)
                 # self.safezone_active = False
                 # self.safe_zone = [0,0,0]
         except (AttributeError):
@@ -247,7 +247,7 @@ if __name__ == '__main__':
     k = 0
     l = [] #l is time
     rate = rospy.Rate(4)
-    bot = robot(12)     
+    bot = robot(20)     
     rospy.sleep(6)
     # bot.set_goal()
     while not rospy.is_shutdown() and k < 5000:
