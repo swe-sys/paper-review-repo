@@ -1,2 +1,5 @@
-\Data
-*.vscode
+*csv
+*.mp4
+*.png
+/Data
+

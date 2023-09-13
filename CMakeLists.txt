@@ -54,6 +54,7 @@ add_message_files(
   FILES
   bot.msg
   botPose.msg
+  obs.msg
  )
 
 ## Generate services in the 'srv' folder
