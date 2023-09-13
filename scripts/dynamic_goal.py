@@ -112,8 +112,7 @@ class robot(object):
                 self.goal = Point(0,0,0)
             else:               
                 self.speed.linear.x = 0.0
-                self.speed.angular.z = 0.0
-                print("Aggreated")
+                self.speed.angular.z = 0.0                
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)

@@ -20,6 +20,21 @@ class Obstacles:
         rospy.Subscriber('/tb3_3/odom', Odometry, self.callback_odom, '/tb3_3/')
         rospy.Subscriber('/tb3_4/odom', Odometry, self.callback_odom, '/tb3_4/')
         rospy.Subscriber('/tb3_5/odom', Odometry, self.callback_odom, '/tb3_5/')
+        rospy.Subscriber('/tb3_6/odom', Odometry, self.callback_odom, '/tb3_6/')
+        rospy.Subscriber('/tb3_7/odom', Odometry, self.callback_odom, '/tb3_7/')
+        rospy.Subscriber('/tb3_8/odom', Odometry, self.callback_odom, '/tb3_8/')
+        rospy.Subscriber('/tb3_9/odom', Odometry, self.callback_odom, '/tb3_9/')
+        rospy.Subscriber('/tb3_10/odom', Odometry, self.callback_odom,'/tb3_10/')
+        rospy.Subscriber('/tb3_11/odom', Odometry, self.callback_odom,'/tb3_11/')
+        rospy.Subscriber('/tb3_12/odom', Odometry, self.callback_odom,'/tb3_12/')
+        rospy.Subscriber('/tb3_13/odom', Odometry, self.callback_odom,'/tb3_13/')
+        rospy.Subscriber('/tb3_14/odom', Odometry, self.callback_odom,'/tb3_14/')
+        rospy.Subscriber('/tb3_15/odom', Odometry, self.callback_odom,'/tb3_15/')
+        rospy.Subscriber('/tb3_16/odom', Odometry, self.callback_odom,'/tb3_16/')
+        rospy.Subscriber('/tb3_17/odom', Odometry, self.callback_odom,'/tb3_17/')
+        rospy.Subscriber('/tb3_18/odom', Odometry, self.callback_odom,'/tb3_18/')
+        rospy.Subscriber('/tb3_19/odom', Odometry, self.callback_odom,'/tb3_19/')        
+        
         self.obs = {}
         self.obs['/tb3_0/'] = Odometry()
         self.obs['/tb3_1/'] = Odometry()
@@ -27,6 +42,20 @@ class Obstacles:
         self.obs['/tb3_3/'] = Odometry()
         self.obs['/tb3_4/'] = Odometry()
         self.obs['/tb3_5/'] = Odometry()
+        self.obs['/tb3_6/'] = Odometry()
+        self.obs['/tb3_7/'] = Odometry()
+        self.obs['/tb3_8/'] = Odometry()
+        self.obs['/tb3_9/'] = Odometry()
+        self.obs['/tb3_10/'] = Odometry()
+        self.obs['/tb3_11/'] = Odometry()
+        self.obs['/tb3_12/'] = Odometry()
+        self.obs['/tb3_13/'] = Odometry()
+        self.obs['/tb3_14/'] = Odometry()
+        self.obs['/tb3_15/'] = Odometry()
+        self.obs['/tb3_16/'] = Odometry()
+        self.obs['/tb3_17/'] = Odometry()
+        self.obs['/tb3_18/'] = Odometry()
+        self.obs['/tb3_19/'] = Odometry()
 
         #comment following lines if trying to gazebo simulation
         # self.prev_pose = {}
@@ -70,7 +99,7 @@ class Obstacles:
 if __name__ == '__main__':
     rospy.init_node('collision_cone_obstacles', anonymous = True)
     s = Obstacles()
-    r = rospy.Rate(50)
+    r = rospy.Rate(4)
     while not rospy.is_shutdown():
         obs = []
         bot_id = []
