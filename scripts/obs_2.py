@@ -68,8 +68,7 @@ class robot(object):
         self.cmd_vel = rospy.Publisher("/cmd_vel", Twist, queue_size=10)            
         self.pubg = rospy.Publisher('/goal', Point, queue_size=10)
         self.rad_pub = rospy.Publisher('/radius', Point, queue_size=10)
-        self.obs_pub = rospy.Publisher('/obs',obs, queue_size=10)
-        
+        self.obs_pub = rospy.Publisher('/obs',obs, queue_size=10)        
 
     def update_Odom(self,odom):
         """ Odometry of current bot"""        
@@ -77,7 +76,7 @@ class robot(object):
         self.y = odom.pose.pose.position.y
         self.rot_q = odom.pose.pose.orientation
         euler = euler_from_quaternion([self.rot_q.x , self.rot_q.y , self.rot_q.z , self.rot_q.w ])
-        self.yaw = euler[2]
+        self.yaw = atan2(sin(euler[2]),cos(euler[2])) 
         # if self.yaw < 0:
         #     self.yaw += 2 * pi 
         self.odom = Pose2D(self.x,self.y,self.yaw)
@@ -86,7 +85,7 @@ class robot(object):
     def scanner(self,msg):       
         self.range = msg.ranges
         self.ang_min = msg.angle_min
-        self.ang_inc = msg.angle_increment
+        self.ang_inc = msg.angle_increment        
 
     def circle(self,center, radius):    
         self.coordinates = []
@@ -99,6 +98,28 @@ class robot(object):
             y = center.y + radius * sin(angle)
             self.coordinates.append((x, y))
 
+    def split_list(self,input_list):        
+        sublists = []
+        sublist = []
+        prev_degree = None
+
+        try:
+            for item in input_list:
+                degree, _ = item
+
+                if prev_degree is None or degree - prev_degree <= 3:
+                    sublist.append(item)
+                else:
+                    sublists.append(sublist)
+                    sublist = [item]
+                prev_degree = degree
+
+            sublists.append(sublist)
+        except (ValueError, TypeError) as e:
+            print("Error occurred while splitting the list:", str(e))
+
+        return sublists
+
     def detector(self):
         """Outputs = object position, inputs = angle, estimate the detected 
         object position using geometry"""
@@ -108,15 +129,17 @@ class robot(object):
         pairs = []
         sobs = []   
         
-        # print("detector")
+        print("detector",len(self.range))
         for i in range(len(self.range)):
             if not isinf(self.range[i]):
                 if i <= 180:
                     j=i
                 else:
                     j= i -360
+                print(j,i)
                 pairs.append([j,self.range[i]])      
-        self.cones = self.split_list(pairs)        
+        self.cones = self.split_list(pairs)
+        print(self.cones)       
         try:
             for i in self.cones:
                 angle = np.mean(np.array(i)[:,0])*(pi/180)
@@ -140,36 +163,14 @@ class robot(object):
             for i in range(len(self.obs)):
                 self.Diameter = min_dis*0.75
                 self.ekbar = False            
-        print(self.obs,'obs',self.Diameter/2, "radius")               
+        # print(self.obs,'obs',self.Diameter/2, "radius")               
 
-    def is_inside_circle(self, center_position, radius):
-        """Checks if a robot's position is inside a circular region """
+    # def is_inside_circle(self, center_position, radius):
+    #     """Checks if a robot's position is inside a circular region """
         
-        dis = [sqrt((center_position.x - i.x)**2 + (center_position.y - i.y)**2) for i in self.obs]        
-        print("distance between goal and other bot",dis)                    
-        return any(dis <= radius)                        
-
-    def split_list(self,input_list):        
-        sublists = []
-        sublist = []
-        prev_degree = None
-
-        try:
-            for item in input_list:
-                degree, _ = item
-
-                if prev_degree is None or degree - prev_degree <= 3:
-                    sublist.append(item)
-                else:
-                    sublists.append(sublist)
-                    sublist = [item]
-                prev_degree = degree
-
-            sublists.append(sublist)
-        except (ValueError, TypeError) as e:
-            print("Error occurred while splitting the list:", str(e))
-
-        return sublists 
+    #     dis = [sqrt((center_position.x - i.x)**2 + (center_position.y - i.y)**2) for i in self.obs]        
+    #     print("distance between goal and other bot",dis)                    
+    #     return any(dis <= radius) 
 
     def set_goal(self):
         """outputs required = goal, input = neighbour set, using mean(self+ neighbour_set/2)"""
@@ -205,7 +206,7 @@ class robot(object):
             self.goal.x = np.random.uniform(-10,10)
             self.goal.y = np.random.uniform(-10,10)
             
-        print(self.goal,no_neigh,"Goal")
+        # print(self.goal,no_neigh,"Goal")
 
     def controller(self,k):
         """control law for bot inputs required = disij, delij"""
@@ -242,15 +243,15 @@ class robot(object):
                     if z >= 0.85:
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
-                        print('Free')                                         
+                        # print('Free')                                         
                     else:
                         t = rospy.get_time()
                         self.speed.linear.x = max((0.10 -(5000-t)*0.00001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij)
                         temp.append(self.speed.angular.z)
                         vap.append(self.speed.linear.x)
-                        print('Engaged')                    
-            print(temp)        
+                        # print('Engaged')                    
+            # print(temp)        
             if temp:
                 self.speed.angular.z = np.mean(temp)
                 self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
@@ -258,19 +259,18 @@ class robot(object):
             if len(self.obs) == 0: 
                 self.goal = Point(0,0,0)
                 self.Diameter = 0
-                print("Alone")
+                # print("Alone")
             else:
-                if self.is_inside_circle(self.goal, self.Diameter/2):
-                    print("The neighbor is inside the safe zone, Robot")         
-                    self.speed.linear.x = 0.0
-                    self.speed.angular.z = 0.0
-                    self.neigh = len(self.obs)
-                    print("Aggregated")
-                else:
-                    self.goal = Point(0,0,0)
-                    self.Diameter = 0
-                    self.speed.linear.x = 0.0
-                    self.speed.angular.z = max(-K*np.sign(self.dtheta),0.0)               
+                # if self.is_inside_circle(self.goal, self.Diameter/2):
+                #     print("The neighbor is inside the safe zone, Robot")         
+                #     self.speed.linear.x = 0.0
+                #     self.speed.angular.z = 0.0
+                #     self.neigh = len(self.obs)
+                #     print("Aggregated")                
+                self.goal = Point(np.random.uniform(-10,10),np.random.uniform(-10,10),0)
+                self.Diameter = 0
+                self.speed.linear.x = 0.0
+                self.speed.angular.z = max(-K*np.sign(self.dtheta),0.0)               
                 # self.sleep = True                 
                 # self.go_to_sleep()                
 

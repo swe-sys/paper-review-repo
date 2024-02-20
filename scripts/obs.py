@@ -48,7 +48,7 @@ class robot(object):
         self.robot = []
         self.safe_zone = [0,0,0]
         self.initial_no = -1                      
-        self.goal = Point(np.random.uniform(-6,6), np.random.uniform(-6,6), 0.0)
+        self.goal = Point(np.random.uniform(-2.4,2.72), np.random.uniform(-2.49,2.65), 0.0)
         self.odom = Odometry()
         self.obsplot = obs()
         self.speed = Twist()        
@@ -68,7 +68,7 @@ class robot(object):
         self.obsplot.bot_id = self.namespace
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
         # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("time,goal_x,goal_y,x,y\n" )
+            # f.write("time,goal_x,goal_y,x,y\n" )
 
     def update_Odom(self,odom):
         """ Odometry of current bot"""        
@@ -90,10 +90,10 @@ class robot(object):
         # creating the pairs
         for i in range(len(self.range)):
             if not isinf(self.range[i]):
-                if i <= 180:
-                    j=i
-                else:
-                    j= i -360
+                # if i <= 180:
+                #     j=i
+                # else:
+                j= i - 60
                 pairs.append([j,self.range[i]])        
         # spliting the pairs into the cones
 
@@ -103,7 +103,7 @@ class robot(object):
                 angle = np.mean(np.array(i)[:,0])*(pi/180)
                 distance = np.mean(np.array(i)[:,1])
                 min_dis = np.min(np.array(i)[:,1])
-                if distance < 1 and ( -60*pi/180 < angle < 60*pi/180):
+                if distance < 1.6 and ( -60*pi/180 < angle < 60*pi/180):
                     obs_x = distance*cos(angle)
                     obs_y = distance*sin(angle)
                     global_x = self.x + (obs_x*cos(-self.yaw) + obs_y*sin(-self.yaw))
@@ -148,7 +148,7 @@ class robot(object):
         """outputs required = goal, input = neighbour set, using mean(self+ neighbour_set/2)"""
         # self.scanner()
         # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
+            # f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         no_neigh = len(self.obs)
         try:  
@@ -162,8 +162,8 @@ class robot(object):
             else :
                 if self.goal.x == 0 and self.goal.y == 0:
                     print("andar gya")
-                    self.goal.x = np.random.uniform(-6,6)
-                    self.goal.y = np.random.uniform(-6,6)
+                    self.goal.x = np.random.uniform(-2.4,2.72)
+                    self.goal.y = np.random.uniform(-2.49,2.65)
                 # self.safezone_active = False
                 # self.safe_zone = [0,0,0]
         except (AttributeError):
@@ -196,7 +196,7 @@ class robot(object):
             self.disij.append(dist)
             self.delij.append(ang)  
 
-        if (self.dis_err) >= 0.850:
+        if (self.dis_err) >= 0.50:
             #print("loop",self.disij)
             temp = []
             vap = []            
@@ -205,7 +205,7 @@ class robot(object):
                 self.speed.angular.z = K*np.sign(self.dtheta)
             else:
                 for i,z in enumerate(self.disij):
-                    if z >= 0.75:
+                    if z >= 0.4:
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
                         # print('Free')                                         
@@ -246,8 +246,8 @@ if __name__ == '__main__':
     rospy.loginfo("Chal Gye badde")
     k = 0
     l = [] #l is time
-    rate = rospy.Rate(4)
-    bot = robot(12)     
+    rate = rospy.Rate(30)
+    bot = robot(6)     
     rospy.sleep(6)
     # bot.set_goal()
     while not rospy.is_shutdown() and k < 5000:
