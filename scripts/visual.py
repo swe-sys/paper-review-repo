@@ -94,10 +94,10 @@ if __name__ == '__main__':
                 # plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",markersize=100, alpha=0.2,color=col[i])
                 ax.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",color=col[i])
                 ax.plot(y.goal[i].x,y.goal[i].y,"x",color=col[i])
-                # for j in y.balma[i]:
-                #     ax.plot(j.x, j.y,'*',markersize=10,color=col[i])
-                # p = patches.Circle((y.goal[i].x,y.goal[i].y), radius=y.radius[i].x,fill=False)
-                # ax.add_patch(p)
+                for j in y.balma[i]:
+                    ax.plot(j.x, j.y,'*',markersize=10,color=col[i])
+                p = patches.Circle((y.goal[i].x,y.goal[i].y), radius=y.radius[i].x,fill=False)
+                ax.add_patch(p)
                 #plt.quiver(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,cos(yaw),sin(yaw),units='xy',width=0.05,headwidth=2.,headlength=1.,color=col[i])
         except KeyError:
             print("chalna aage")

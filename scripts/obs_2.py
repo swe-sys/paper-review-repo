@@ -165,12 +165,13 @@ class robot(object):
                 self.ekbar = False            
         # print(self.obs,'obs',self.Diameter/2, "radius")               
 
-    # def is_inside_circle(self, center_position, radius):
-    #     """Checks if a robot's position is inside a circular region """
+    def is_inside_circle(self, center_position, radius):
+        """Checks if a robot's position is inside a circular region """
         
-    #     dis = [sqrt((center_position.x - i.x)**2 + (center_position.y - i.y)**2) for i in self.obs]        
-    #     print("distance between goal and other bot",dis)                    
-    #     return any(dis <= radius) 
+        dis = [sqrt((center_position.x - i.x)**2 + (center_position.y - i.y)**2) for i in self.obs]   
+        print("distance between goal and other bot",dis)
+        return dis                  
+        # return any(dis <= radius) 
 
     def set_goal(self):
         """outputs required = goal, input = neighbour set, using mean(self+ neighbour_set/2)"""
@@ -192,19 +193,21 @@ class robot(object):
             if no_neigh >= 1:
                 self.goal.x = (self.x + np.mean([i.x for i in self.obs]))/2
                 self.goal.y = (self.y + np.mean([i.y for i in self.obs]))/2
-                self.ekbar = True
-                # if self.is_inside_circle(self.goal, self.Diameter/2):
+                # self.ekbar = True
+                # self.dis = min(self.is_inside_circle(self.goal, self.Diameter/2))
+                # if self.dis <= self.Diameter/2:
                 #     print("The neighbor is inside the safe zone, Robot")
                 #     self.speed.linear.x = 0.0
                 #     self.speed.angular.z = 0.0
             else:
-                if self.goal.x == 0 and self.goal.y == 0:             
+                if self.goal.x == 0 and self.goal.y == 0:
                     self.goal.x = np.random.uniform(-10,10)
                     self.goal.y = np.random.uniform(-10,10)
         except (AttributeError):
             # if self.goal.x == 0 and self.goal.y == 0: 
-            self.goal.x = np.random.uniform(-10,10)
-            self.goal.y = np.random.uniform(-10,10)
+            # self.goal.x = np.random.uniform(-10,10)
+            # self.goal.y = np.random.uniform(-10,10)
+            print("Attribute Error")
             
         # print(self.goal,no_neigh,"Goal")
 
@@ -248,29 +251,32 @@ class robot(object):
                         t = rospy.get_time()
                         self.speed.linear.x = max((0.10 -(5000-t)*0.00001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij)
-                        temp.append(self.speed.angular.z)
-                        vap.append(self.speed.linear.x)
-                        # print('Engaged')                    
-            # print(temp)        
-            if temp:
-                self.speed.angular.z = np.mean(temp)
-                self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
+            #             temp.append(self.speed.angular.z)
+            #             vap.append(self.speed.linear.x)
+            #             # print('Engaged')                    
+            # # print(temp)        
+            # if temp:
+            #     self.speed.angular.z = np.mean(temp)
+            #     self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
         else:
-            if len(self.obs) == 0: 
+            if len(self.obs) < 1: 
                 self.goal = Point(0,0,0)
                 self.Diameter = 0
                 # print("Alone")
             else:
-                # if self.is_inside_circle(self.goal, self.Diameter/2):
-                #     print("The neighbor is inside the safe zone, Robot")         
-                #     self.speed.linear.x = 0.0
-                #     self.speed.angular.z = 0.0
-                #     self.neigh = len(self.obs)
-                #     print("Aggregated")                
-                self.goal = Point(np.random.uniform(-10,10),np.random.uniform(-10,10),0)
-                self.Diameter = 0
+                # if self.dis <= self.Diameter/2:
                 self.speed.linear.x = 0.0
-                self.speed.angular.z = max(-K*np.sign(self.dtheta),0.0)               
+                self.speed.angular.z = 0.0                    
+                print("The neighbor is inside the safe zone, Robot")                   
+                print("Aggregated")                
+                # self.neigh = len(self.obs) 
+                # self.Diameter = 0
+                # self.speed.linear.x = 0.0
+                # self.speed.angular.z = max(-K*np.sign(self.dtheta),0.0)               
+                # self.goal = Point(np.random.uniform(-10,10),np.random.uniform(-10,10),0)
+                # self.Diameter = 0
+                # self.speed.linear.x = 0.0
+                # self.speed.angular.z = max(-K*np.sign(self.dtheta),0.0)               
                 # self.sleep = True                 
                 # self.go_to_sleep()                
 
