@@ -7,18 +7,18 @@
   <arg name="fifth_tb3"  default="tb3_5"/>
   <arg name="sixth_tb3"  default="tb3_6"/>
 
-  <arg name="first_tb3_x_pos" default=" -0.53"/>
+  <arg name="first_tb3_x_pos" default=" -4.53"/>
   <arg name="first_tb3_y_pos" default=" -0.0"/>
   <arg name="first_tb3_z_pos" default=" 0.0"/>
   <arg name="first_tb3_yaw"   default=" 1.23"/>
 
-  <arg name="second_tb3_x_pos" default=" 1.57"/>
-  <arg name="second_tb3_y_pos" default=" -0.77"/>
+  <arg name="second_tb3_x_pos" default=" -7.57"/>
+  <arg name="second_tb3_y_pos" default=" -3.77"/>
   <arg name="second_tb3_z_pos" default=" 0.0"/>
   <arg name="second_tb3_yaw"   default=" -1.23"/>
 
-  <arg name="third_tb3_x_pos" default=" -1.53"/>
-  <arg name="third_tb3_y_pos" default=" 1.55"/>
+  <arg name="third_tb3_x_pos" default=" -4.53"/>
+  <arg name="third_tb3_y_pos" default=" 7.55"/>
   <arg name="third_tb3_z_pos" default=" 0.0"/>
   <arg name="third_tb3_yaw"   default=" 2.0"/>
 
@@ -27,12 +27,12 @@
   <arg name="fourth_tb3_z_pos" default=" 0.0"/>
   <arg name="fourth_tb3_yaw"   default=" -1.87"/>
 
-  <arg name="fifth_tb3_x_pos" default=" 1.41"/>
-  <arg name="fifth_tb3_y_pos" default=" -1.57"/>
+  <arg name="fifth_tb3_x_pos" default=" 0.41"/>
+  <arg name="fifth_tb3_y_pos" default=" -6.57"/>
   <arg name="fifth_tb3_z_pos" default=" 0.0"/>
   <arg name="fifth_tb3_yaw"   default=" 0.67"/>
 
-  <arg name="sixth_tb3_x_pos" default=" 1.618"/>
+  <arg name="sixth_tb3_x_pos" default=" 4.618"/>
   <arg name="sixth_tb3_y_pos" default=" 1.77"/>
   <arg name="sixth_tb3_z_pos" default=" 0.0"/>
   <arg name="sixth_tb3_yaw"   default=" -0.89"/>
@@ -160,6 +160,6 @@
   </group>
 
  <!-- <node pkg="swarm_aggregation" type="detect_bot.py" name="obs_data"/>  -->
- <node pkg="swarm_aggregation" type="visual.py" name="animator"/>
+ <!-- <node pkg="swarm_aggregation" type="visual.py" name="animator"/> -->
 
 </launch>

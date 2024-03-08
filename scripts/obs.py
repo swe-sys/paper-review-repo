@@ -48,7 +48,7 @@ class robot(object):
         self.robot = []
         self.safe_zone = [0,0,0]
         self.initial_no = -1                      
-        self.goal = Point(np.random.uniform(-12,12), np.random.uniform(-12,12), 0.0)
+        self.goal = Point(np.random.uniform(-6,6), np.random.uniform(-6,6), 0.0)
         self.odom = Odometry()
         self.obsplot = obs()
         self.speed = Twist()        
@@ -103,7 +103,7 @@ class robot(object):
                 angle = np.mean(np.array(i)[:,0])*(pi/180)
                 distance = np.mean(np.array(i)[:,1])
                 min_dis = np.min(np.array(i)[:,1])
-                if distance < 1 and ( -60*pi/180 < angle < 60*pi/180):
+                if distance < 3 and ( -60*pi/180 < angle < 60*pi/180):
                     obs_x = distance*cos(angle)
                     obs_y = distance*sin(angle)
                     global_x = self.x + (obs_x*cos(-self.yaw) + obs_y*sin(-self.yaw))
@@ -196,7 +196,7 @@ class robot(object):
             self.disij.append(dist)
             self.delij.append(ang)  
 
-        if (self.dis_err) >= 0.50:
+        if (self.dis_err) >= 1:
             #print("loop",self.disij)
             temp = []
             vap = []            
@@ -205,7 +205,7 @@ class robot(object):
                 self.speed.angular.z = K*np.sign(self.dtheta)
             else:
                 for i,z in enumerate(self.disij):
-                    if z >= 0.4:
+                    if z >= 0.85:
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
                         # print('Free')                                         
@@ -222,7 +222,7 @@ class robot(object):
             #     self.speed.linear.x = np.mean(vap)               
         else:
             # if self.is_inside_circle(self.safe_zone[0:2],self.safe_zone[2]):
-            if len(self.obs) >= 1: 
+            if len(self.obs) >= 4: 
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
                 print("Aggreated")                
@@ -247,7 +247,7 @@ if __name__ == '__main__':
     k = 0
     l = [] #l is time
     rate = rospy.Rate(4)
-    bot = robot(12)     
+    bot = robot(6)     
     rospy.sleep(6)
     # bot.set_goal()
     while not rospy.is_shutdown() and k < 5000:
