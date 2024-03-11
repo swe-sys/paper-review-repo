@@ -14,13 +14,13 @@ class Obstacles:
 
         self.obs_pub = rospy.Publisher('/obs_data', botPose, queue_size = 10)
         #uncomment following lines if using gazebo simulation
-        rospy.Subscriber('/tb3_0/odom', Odometry, self.callback_odom, '/tb3_0/')
+        # rospy.Subscriber('/tb3_0/odom', Odometry, self.callback_odom, '/tb3_0/')
         rospy.Subscriber('/tb3_1/odom', Odometry, self.callback_odom, '/tb3_1/')
         rospy.Subscriber('/tb3_2/odom', Odometry, self.callback_odom, '/tb3_2/')
         rospy.Subscriber('/tb3_3/odom', Odometry, self.callback_odom, '/tb3_3/')
         rospy.Subscriber('/tb3_4/odom', Odometry, self.callback_odom, '/tb3_4/')
         rospy.Subscriber('/tb3_5/odom', Odometry, self.callback_odom, '/tb3_5/')
-        # rospy.Subscriber('/tb3_6/odom', Odometry, self.callback_odom, '/tb3_6/')
+        rospy.Subscriber('/tb3_6/odom', Odometry, self.callback_odom, '/tb3_6/')
         # rospy.Subscriber('/tb3_7/odom', Odometry, self.callback_odom, '/tb3_7/')
         # rospy.Subscriber('/tb3_8/odom', Odometry, self.callback_odom, '/tb3_8/')
         # rospy.Subscriber('/tb3_9/odom', Odometry, self.callback_odom, '/tb3_9/')
@@ -36,13 +36,13 @@ class Obstacles:
         # rospy.Subscriber('/tb3_19/odom', Odometry, self.callback_odom,'/tb3_19/')        
         
         self.obs = {}
-        self.obs['/tb3_0/'] = Odometry()
+        # self.obs['/tb3_0/'] = Odometry()
         self.obs['/tb3_1/'] = Odometry()
         self.obs['/tb3_2/'] = Odometry()
         self.obs['/tb3_3/'] = Odometry()
         self.obs['/tb3_4/'] = Odometry()
         self.obs['/tb3_5/'] = Odometry()
-        # self.obs['/tb3_6/'] = Odometry()
+        self.obs['/tb3_6/'] = Odometry()
         # self.obs['/tb3_7/'] = Odometry()
         # self.obs['/tb3_8/'] = Odometry()
         # self.obs['/tb3_9/'] = Odometry()
