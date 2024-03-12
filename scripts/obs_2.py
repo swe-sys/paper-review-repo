@@ -157,38 +157,26 @@ class robot(object):
         except (IndexError):
             self.obs = []
 
-        if self.ekbar:
-            for i in range(len(self.obs)):
-                self.Diameter = min_dis*0.75
-                self.ekbar = False            
+        # if self.ekbar:
+        #     for i in range(len(self.obs)):
+        #         self.Diameter = min_dis*0.75
+        #         self.ekbar = False            
         # print(self.obs,'obs',self.Diameter/2, "radius")               
 
-    def is_inside_circle(self, center_position, radius):
-        """Checks if a robot's position is inside a circular region """
+    # def is_inside_circle(self, center_position, radius):
+    #     """Checks if a robot's position is inside a circular region """
         
-        dis = [sqrt((center_position.x - i.x)**2 + (center_position.y - i.y)**2) for i in self.obs]   
-        print("distance between goal and other bot",dis)
-        return dis                  
+    #     dis = [sqrt((center_position.x - i.x)**2 + (center_position.y - i.y)**2) for i in self.obs]   
+    #     print("distance between goal and other bot",dis)
+    #     return dis                  
         # return any(dis <= radius)
     
-    def distance(self, obs):
-        return math.sqrt((self.x - obs.x)**2 + (self.y - obs.y)**2)
+    # def distance(self, obs):
+    #     return math.sqrt((self.x - obs.x)**2 + (self.y - obs.y)**2)
 
     def set_goal(self):
         """outputs required = goal, input = neighbour set, using mean(self+ neighbour_set/2)"""
-
-        self.disij = []
-        self.delij = []
-
-        for obs_element in self.obs:
-            x_diff = obs_element.x -self.x
-            y_diff = obs_element.y -self.y
-            
-            dist = sqrt(x_diff**2 + y_diff**2)
-            ang = atan2(y_diff, x_diff)
-            
-            self.disij.append(dist)
-            self.delij.append(ang)            
+        
         no_neigh = len(self.obs)     
         try:  
             if no_neigh >= 1:
@@ -216,36 +204,47 @@ class robot(object):
         """control law for bot inputs required = disij, delij"""
         
         self.detector()
-        self.set_goal() 
-        # self.identify()       
-        
+        self.set_goal()
+
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
 
         # Bearing of bot
-        self.bearing.append(atan2(self.incy,self.incx))
-        # for i,b in enumerate(self.bearing):
-        #     if b < 0:
-        #         b += 2 * pi
+        self.bearing.append(atan2(self.incy, self.incx))
 
         # Distance Error
-        self.dis_err = (sqrt(self.incx**2+self.incy**2))
-        #print(self.dis_err)        
+        self.dis_err = sqrt(self.incx**2 + self.incy**2)
 
         # Gradient of Bearing
-        self.dtheta = (self.bearing[k] - self.bearing[k-1])/h        
+        self.dtheta = (self.bearing[k] - self.bearing[k-1]) / h
 
-        if (self.dis_err) >= 1:
-            #print("loop",self.disij)            
-            obstacle_positions = [(-1.19337, -3.19166), (-5.69496, -8.0827), (-8.97007, 8.38229), (9.32507, 8.46808), (2.92682, 4.01995), (5.80621, -7.52947), (-5.45206, 3.21289), (7.94562, -0.962724)] 
-            obstacle_radius = 1.2  # Replace with actual obstacle radius                
-            obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)           
+        for obs_element in self.obs:
+            x_diff = obs_element.x -self.x
+            y_diff = obs_element.y -self.y
             
+            dist = sqrt(x_diff**2 + y_diff**2)
+            ang = atan2(y_diff, x_diff)
+            
+<<<<<<< HEAD
             if len(self.disij) == 0 or obstacle_distance > obstacle_radius:
+=======
+            self.disij.append(dist)
+            self.delij.append(ang)       
+
+        # Obstacle Avoidance
+        obstacle_positions = [(-3.0, 8.0), (0.0,0.0), (4.0,4.0), (-5.5, 3.0), (7.5,8.0), (7.8, -0.50), (3.5, -5.0), (-1.5, -8.5), (-7.0,-2.75)] 
+        obstacle_radius = 0.85
+
+        obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)
+
+        if self.dis_err >= 1:
+            if len(self.disij) == 0 or (any(z >= 0.85 for z in self.disij) and obstacle_distance > obstacle_radius):
+>>>>>>> 231aa1f092509c647af61f784f4b0d53809cd013
                 self.speed.linear.x = 0.18
-                self.speed.angular.z = K*np.sign(self.dtheta)
-                print(self.disij,self.namespace, obstacle_distance, self.dis_err,'disij')
+                self.speed.angular.z = K * np.sign(self.dtheta)
+                print("Free",self.namespace, self.disij, self.dis_err, obstacle_distance)
             else:
+<<<<<<< HEAD
                 self.speed.linear.x = 0.05
                 self.speed.angular.z = 0.5 * np.sign(self.delij)
                 print('Engaged1', obstacle_distance, self.namespace)
@@ -259,15 +258,63 @@ class robot(object):
                         self.speed.linear.x = max((0.10 -(5000-t)*0.00001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij)
                         print('Engaged', obstacle_distance, self.namespace)                        
+=======
+                t = rospy.get_time()
+                self.speed.linear.x = max((0.10 - (5000 - t) * 0.00001), 0)
+                self.speed.angular.z = K * np.sign(self.dtheta) - 0.866 * np.sign(self.delij)
+                print("Engaged",self.namespace, self.disij, self.dis_err, obstacle_distance)
+>>>>>>> 231aa1f092509c647af61f784f4b0d53809cd013
         else:
             if len(self.obs) >= 1: 
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
-                print("Aggreated",self.namespace)                
-            else:               
-                # self.set_goal()
+                print("Aggreated",self.namespace, self.obs)                
+            else:              
                 self.goal = Point(0.0,0.0,0.0)
-                print("Alone", len(self.obs),self.namespace)                
+                print("Alone", len(self.obs),self.namespace)
+              
+        
+        # self.incx = (self.goal.x - self.x)
+        # self.incy = (self.goal.y - self.y)
+
+        # # Bearing of bot
+        # self.bearing.append(atan2(self.incy,self.incx))
+        # # for i,b in enumerate(self.bearing):
+        # #     if b < 0:
+        # #         b += 2 * pi
+
+        # # Distance Error
+        # self.dis_err = (sqrt(self.incx**2+self.incy**2))
+        # #print(self.dis_err)        
+
+        # # Gradient of Bearing
+        # self.dtheta = (self.bearing[k] - self.bearing[k-1])/h        
+
+        # if (self.dis_err) >= 1:
+        #     #print("loop",self.disij)            
+        #     obstacle_positions = [(-1.19337, -3.19166), (-5.69496, -8.0827), (-8.97007, 8.38229), (9.32507, 8.46808), (2.92682, 4.01995), (5.80621, -7.52947), (-5.45206, 3.21289), (7.94562, -0.962724)] 
+        #     obstacle_radius = 1.2  # Replace with actual obstacle radius                
+        #     obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)           
+            
+        #     if len(self.disij) == 0 and obstacle_distance > obstacle_radius:
+        #         self.speed.linear.x = 0.18
+        #         self.speed.angular.z = K*np.sign(self.dtheta)
+        #         print(self.disij,self.namespace, obstacle_distance, self.dis_err,'disij')
+        #     else:
+        #         self.speed.linear.x = 0.05
+        #         self.speed.angular.z = 0.5 * np.sign(self.delij)
+        #         print('Engaged1', obstacle_distance, self.namespace)
+        #     for i,z in enumerate(self.disij):
+        #         if z >= 0.85 or obstacle_distance > obstacle_radius:
+        #             self.speed.linear.x = 0.18
+        #             self.speed.angular.z = K*np.sign(self.dtheta)
+        #             print('Free', obstacle_distance, self.namespace)                                         
+        #         else:
+        #             t = rospy.get_time()
+        #             self.speed.linear.x = max((0.10 -(5000-t)*0.00001),0)                    
+        #             self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij)
+        #             print('Engaged', obstacle_distance, self.namespace)                        
+        #                 
                 # self.neigh = len(self.obs) 
                 # self.Diameter = 0
                 # self.speed.linear.x = 0.0
@@ -281,8 +328,8 @@ class robot(object):
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)
-        self.rad_pub.publish(self.Diameter/2, 0.0, 0.0)
-        self.obs_pub.publish(self.obsplot)
+        # self.rad_pub.publish(self.Diameter/2, 0.0, 0.0)
+        # self.obs_pub.publish(self.obsplot)
         
 if __name__ == '__main__':
     rospy.init_node("obstacle_controller")

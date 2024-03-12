@@ -5,7 +5,7 @@ from geometry_msgs.msg import Point, Twist
 from nav_msgs.msg import Odometry
 from std_msgs.msg import String
 from tf.transformations import euler_from_quaternion
-from math import atan2, sqrt, pi
+from math import atan2, sqrt, pi, sin, cos
 import matplotlib.pyplot as plt
 from swarm_aggregation.msg import bot, botPose
 import rospkg
@@ -44,10 +44,11 @@ class robot(object):
         self.y = msg.pose.pose.position.y
         self.rot_q = msg.pose.pose.orientation
         euler = euler_from_quaternion([self.rot_q.x , self.rot_q.y , self.rot_q.z , self.rot_q.w ])
+        self.yaw = atan2(sin(euler[2]),cos(euler[2])) 
         
-        self.yaw = euler[2]
-        if self.yaw < 0:
-            self.yaw += 2 * pi
+        # self.yaw = euler[2]
+        # if self.yaw < 0:
+        #     self.yaw += 2 * pi
 
     def detect_bots(self,data):
         """ Odometry of all bots"""
@@ -78,6 +79,7 @@ class robot(object):
         self.neigh.append(self.odom)
         # print(len(self.neigh),self.namespace)
         no_neigh = len(self.neigh)
+        # print(self.neigh,"neighbors",self.namespace)
 
         if no_neigh >= 2:
             self.initial_no = no_neigh
@@ -91,15 +93,15 @@ class robot(object):
     def control(self,k):
         """control law for bot"""
  
-        self.set_goal(3,(2*pi/3))        
+        self.set_goal(3,(60*pi/180))        
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
 
         # Bearing of bot
         self.bearing.append(atan2(self.incy,self.incx))
-        for i,b in enumerate(self.bearing):
-            if b < 0:
-                b += 2 * pi
+        # for i,b in enumerate(self.bearing):
+        #     if b < 0:
+        #         b += 2 * pi
 
         # Distance Error
         self.dis_err = (sqrt(self.incx**2+self.incy**2))        
@@ -107,37 +109,43 @@ class robot(object):
         # Gradient of Bearing
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h        
 
-        if (self.dis_err) >= 0.875:
+        if (self.dis_err) >= 1:
             temp = []
             vap = []
+            obstacle_positions = [(-3.0, 8.0), (0.0,0.0), (4.0,4.0), (-5.5, 3.0), (7.5,8.0), (7.8, -0.50), (3.5, -5.0), (-1.5, -8.5), (-7.0,-2.75)] 
+            obstacle_radius = 0.875
+            obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)
+            
             excluded_bot = [self.cur_bot_id_indx]
-            print(self.cur_bot_id_indx)
+            # print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
                 if i not in excluded_bot:
-                    if z >= 0.775:
-                        self.speed.linear.x = 0.22
+                    if z > 0.875 and obstacle_distance > obstacle_radius:
+                        self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
-                        print(z,self.delij[i]*(180/pi),i,self.namespace,'1')                                         
-                    else:
+                        print('Free',self.goal, self.dis_err,self.namespace)
+                    elif obstacle_distance <= obstacle_radius:
+                        self.speed.linear.x = 0.05
+                        self.speed.angular.z = 0.15
+                        print("DANGER")                                         
+                    elif z <= 0.875:
                         t = rospy.get_time()
                         self.speed.linear.x = max((0.10 -(5000-t)*0.00001),0)                    
-                        self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
-                        temp.append(self.speed.angular.z)
-                        vap.append(self.speed.linear.x)
-                        print(z,self.delij[i]*(180/pi),i,self.namespace,'2',temp,vap)
-                if temp:
-                    self.speed.angular.z = np.mean(temp)
-                    self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
+                        self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij)
+                #         temp.append(self.speed.angular.z)
+                #         vap.append(self.speed.linear.x)
+                        print('Engaged', self.goal, self.dis_err,self.namespace)
+                # if temp:
+                #     self.speed.angular.z = np.mean(temp)
+                #     self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
         else:
-            if len(self.neigh) < 2: 
-                self.goal = Point(0,0,0)
-            else:               
+            if len(self.neigh) >= 2:
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
-                print("Aggreated")
-                # print(rospy.get_time())
-                # print(self.x,self.goal.x,'x')
-                # print(self.y,self.goal.y,'y')
+                print("Aggreated", self.dis_err,self.namespace)                
+            else:               
+                self.goal = Point(0,0,0)
+                print("Alone",self.namespace)                
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)
@@ -147,8 +155,8 @@ if __name__ == '__main__':
     l = [] #l is time
     rospy.init_node("Task2_controller")
     rate = rospy.Rate(4)
-    bot = robot(6)     
-
+    bot = robot(6)
+    rospy.sleep(6)
     while not rospy.is_shutdown() and k < 5000:
         k = k+1
         h = 0.25
