@@ -241,7 +241,7 @@ class robot(object):
             obstacle_radius = 1.2  # Replace with actual obstacle radius                
             obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)           
             
-            if len(self.disij) == 0 and obstacle_distance > obstacle_radius:
+            if len(self.disij) == 0 or obstacle_distance > obstacle_radius:
                 self.speed.linear.x = 0.18
                 self.speed.angular.z = K*np.sign(self.dtheta)
                 print(self.disij,self.namespace, obstacle_distance, self.dis_err,'disij')
@@ -250,7 +250,7 @@ class robot(object):
                 self.speed.angular.z = 0.5 * np.sign(self.delij)
                 print('Engaged1', obstacle_distance, self.namespace)
                 for i,z in enumerate(self.disij):
-                    if z >= 0.85 and obstacle_distance > obstacle_radius:
+                    if z >= 0.85 or obstacle_distance > obstacle_radius:
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
                         print('Free', obstacle_distance, self.namespace)                                         
