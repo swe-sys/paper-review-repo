@@ -62,6 +62,11 @@ class robot(object):
         self.disij = []
         self.delij = []
 
+        #Static Obstacles
+        obstacle_positions = [(-3.0, 8.0), (4.0, 1.0), (-2.5,-3.5), (3.5, -2.5), (0.0,0.0), (4.0,4.0), (-5.5, 3.0), (7.8, -0.50), (3.5, -5.0), (-1.5, -8.5), (-7.0,-2.75)] 
+        obstacle_radius = 0.875
+        obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)
+
         # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
         #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
@@ -84,7 +89,7 @@ class robot(object):
             self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
         else:
-            if self.goal.x == 0 and self.goal.y == 0:
+            if self.goal.x == 6.0 and self.goal.y == 6.0:
                 self.goal.x = np.random.uniform(-6,6)
                 self.goal.y = np.random.uniform(-6,6)
         
@@ -105,38 +110,42 @@ class robot(object):
         self.dis_err = (sqrt(self.incx**2+self.incy**2))        
 
         # Gradient of Bearing
-        self.dtheta = (self.bearing[k] - self.bearing[k-1])/h        
+        self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
+
+        #Static Obstacles
+        obstacle_positions = [(-3.0, 8.0), (4.0, 1.0), (-2.5,-3.5), (3.5, -2.5), (0.0,0.0), (4.0,4.0), (-5.5, 3.0), (7.8, -0.50), (3.5, -5.0), (-1.5, -8.5), (-7.0,-2.75)] 
+        obstacle_radius = 0.875
+        obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)        
 
         if (self.dis_err) >= 0.875:
             temp = []
             vap = []
 
-            obstacle_positions = [(-3.0, 8.0), (4.0, 1.0), (-2.5,-3.5), (3.5, -2.5), (0.0,0.0), (4.0,4.0), (-5.5, 3.0), (7.8, -0.50), (3.5, -5.0), (-1.5, -8.5), (-7.0,-2.75)] 
-            obstacle_radius = 1
-            obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)
-            
             excluded_bot = [self.cur_bot_id_indx]
-            print(self.cur_bot_id_indx)
+            # print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
                 if i not in excluded_bot:
                     if z >= 0.775 and obstacle_distance > obstacle_radius:
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
-                        print(z,self.delij[i]*(180/pi),i,self.namespace,'1')                                         
+                        print(z,self.delij[i]*(180/pi),i,self.namespace,'1',self.goal)                                         
                     else:
                         t = rospy.get_time()
+                        self.goal = Point(-self.goal.x,self.goal.y, 0.0)
                         self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
                         temp.append(self.speed.angular.z)
                         vap.append(self.speed.linear.x)
-                        print(z,self.delij[i]*(180/pi),i,self.namespace,'2',temp,vap)
+                        print(z,self.delij[i]*(180/pi),i,self.namespace,'2',self.goal)
                 if temp:
                     self.speed.angular.z = np.mean(temp)
                     self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
         else:
             if len(self.neigh) < 2: 
-                self.goal = Point(0,0,0)
-            else:               
+                self.goal = Point(6.0,6.0,0)
+            else:
+                if obstacle_distance < 1.5*obstacle_radius:
+                    self.goal = Point(6.0,6.0,0.0)                            
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
                 # print("Aggreated")
