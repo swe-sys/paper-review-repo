@@ -225,6 +225,9 @@ class robot(object):
             dist = sqrt(x_diff**2 + y_diff**2)
             ang = atan2(y_diff, x_diff)
             
+<<<<<<< HEAD
+            if len(self.disij) == 0 or obstacle_distance > obstacle_radius:
+=======
             self.disij.append(dist)
             self.delij.append(ang)       
 
@@ -236,14 +239,31 @@ class robot(object):
 
         if self.dis_err >= 1:
             if len(self.disij) == 0 or (any(z >= 0.85 for z in self.disij) and obstacle_distance > obstacle_radius):
+>>>>>>> 231aa1f092509c647af61f784f4b0d53809cd013
                 self.speed.linear.x = 0.18
                 self.speed.angular.z = K * np.sign(self.dtheta)
                 print("Free",self.namespace, self.disij, self.dis_err, obstacle_distance)
             else:
+<<<<<<< HEAD
+                self.speed.linear.x = 0.05
+                self.speed.angular.z = 0.5 * np.sign(self.delij)
+                print('Engaged1', obstacle_distance, self.namespace)
+                for i,z in enumerate(self.disij):
+                    if z >= 0.85 or obstacle_distance > obstacle_radius:
+                        self.speed.linear.x = 0.18
+                        self.speed.angular.z = K*np.sign(self.dtheta)
+                        print('Free', obstacle_distance, self.namespace)                                         
+                    else:
+                        t = rospy.get_time()
+                        self.speed.linear.x = max((0.10 -(5000-t)*0.00001),0)                    
+                        self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij)
+                        print('Engaged', obstacle_distance, self.namespace)                        
+=======
                 t = rospy.get_time()
                 self.speed.linear.x = max((0.10 - (5000 - t) * 0.00001), 0)
                 self.speed.angular.z = K * np.sign(self.dtheta) - 0.866 * np.sign(self.delij)
                 print("Engaged",self.namespace, self.disij, self.dis_err, obstacle_distance)
+>>>>>>> 231aa1f092509c647af61f784f4b0d53809cd013
         else:
             if len(self.obs) >= 1: 
                 self.speed.linear.x = 0.0
