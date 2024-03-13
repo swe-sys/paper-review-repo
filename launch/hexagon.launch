@@ -22,23 +22,23 @@
   <arg name="third_tb3_z_pos" default=" 0.0"/>
   <arg name="third_tb3_yaw"   default=" 2.0"/>
 
-  <arg name="fourth_tb3_x_pos" default=" 5.49"/>
-  <arg name="fourth_tb3_y_pos" default=" 0.035"/>
+  <arg name="fourth_tb3_x_pos" default=" 5.5"/>
+  <arg name="fourth_tb3_y_pos" default=" -0.4"/>
   <arg name="fourth_tb3_z_pos" default=" 0.0"/>
-  <arg name="fourth_tb3_yaw"   default=" -1.87"/>
+  <arg name="fourth_tb3_yaw"   default=" 0.020660"/>
 
   <arg name="fifth_tb3_x_pos" default=" 0.41"/>
   <arg name="fifth_tb3_y_pos" default=" -6.57"/>
   <arg name="fifth_tb3_z_pos" default=" 0.0"/>
   <arg name="fifth_tb3_yaw"   default=" 0.67"/>
 
-  <arg name="sixth_tb3_x_pos" default=" 4.618"/>
-  <arg name="sixth_tb3_y_pos" default=" 1.77"/>
+  <arg name="sixth_tb3_x_pos" default=" -0.33"/>
+  <arg name="sixth_tb3_y_pos" default=" 5.77"/>
   <arg name="sixth_tb3_z_pos" default=" 0.0"/>
   <arg name="sixth_tb3_yaw"   default=" -0.89"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/obs.world"/> 
+    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/obs1.world"/> 
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>
@@ -73,7 +73,7 @@
     </node>
 
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg second_tb3) -x $(arg second_tb3_x_pos) -y $(arg second_tb3_y_pos) -z $(arg second_tb3_z_pos) -Y $(arg second_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot2" output="screen">
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot2">
       <remap from="/odom" to="/$(arg second_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg second_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg second_tb3)/goal"/>
@@ -159,7 +159,8 @@
     </node>
   </group>
 
- <node pkg="swarm_aggregation" type="detect_bot.py" name="obs_data"/> 
+ <node pkg="swarm_aggregation" type="detect_bot.py" name="obs_data"/>
+ <node pkg="swarm_aggregation" type="synerzied.py" name="convergence_checker" output="screen"/> 
  <!-- <node pkg="swarm_aggregation" type="visual.py" name="animator"/> -->
 
 </launch>
