@@ -62,14 +62,11 @@ class robot(object):
         self.disij = []
         self.delij = []
 
-<<<<<<< HEAD
-=======
         #Static Obstacles
         obstacle_positions = [(-3.0, 8.0), (4.0, 1.0), (-2.5,-3.5), (3.5, -2.5), (0.0,0.0), (4.0,4.0), (-5.5, 3.0), (7.8, -0.50), (3.5, -5.0), (-1.5, -8.5), (-7.0,-2.75)] 
         obstacle_radius = 0.875
         obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)
 
->>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
         # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
         #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
@@ -92,11 +89,7 @@ class robot(object):
             self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
         else:
-<<<<<<< HEAD
-            if self.goal.x == 0 and self.goal.y == 0:
-=======
             if self.goal.x == 6.0 and self.goal.y == 6.0:
->>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
                 self.goal.x = np.random.uniform(-6,6)
                 self.goal.y = np.random.uniform(-6,6)
         
@@ -127,13 +120,6 @@ class robot(object):
         if (self.dis_err) >= 0.875:
             temp = []
             vap = []
-<<<<<<< HEAD
-            obstacle_positions = [(-3.0, 8.0), (0.0,0.0), (4.0,4.0), (-5.5, 3.0), (7.8, -0.50), (3.5, -5.0), (-1.5, -8.5), (-7.0,-2.75)] 
-            obstacle_radius = 0.875
-            obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)
-=======
-
->>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
             excluded_bot = [self.cur_bot_id_indx]
             # print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
@@ -144,10 +130,7 @@ class robot(object):
                         print(z,self.delij[i]*(180/pi),i,self.namespace,'1',self.goal)                                         
                     else:
                         t = rospy.get_time()
-<<<<<<< HEAD
-=======
                         self.goal = Point(-self.goal.x,self.goal.y, 0.0)
->>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
                         self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
                         temp.append(self.speed.angular.z)
@@ -158,15 +141,10 @@ class robot(object):
                     self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
         else:
             if len(self.neigh) < 2: 
-<<<<<<< HEAD
-                self.goal = Point(0,0,0)
-            else:               
-=======
                 self.goal = Point(6.0,6.0,0)
             else:
                 if obstacle_distance < 1.5*obstacle_radius:
                     self.goal = Point(6.0,6.0,0.0)                            
->>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
                 # print("Aggreated")
