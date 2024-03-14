@@ -121,7 +121,6 @@ class robot(object):
         if (self.dis_err) >= 0.875:
             temp = []
             vap = []
-
             excluded_bot = [self.cur_bot_id_indx]
             # print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
