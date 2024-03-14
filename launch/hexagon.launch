@@ -7,38 +7,38 @@
   <arg name="fifth_tb3"  default="tb3_5"/>
   <arg name="sixth_tb3"  default="tb3_6"/>
 
-  <arg name="first_tb3_x_pos" default=" -4.53"/>
-  <arg name="first_tb3_y_pos" default=" -0.0"/>
+  <arg name="first_tb3_x_pos" default=" -7.00"/>
+  <arg name="first_tb3_y_pos" default=" 3.0"/>
   <arg name="first_tb3_z_pos" default=" 0.0"/>
   <arg name="first_tb3_yaw"   default=" 1.23"/>
 
-  <arg name="second_tb3_x_pos" default=" -7.57"/>
-  <arg name="second_tb3_y_pos" default=" -3.77"/>
+  <arg name="second_tb3_x_pos" default=" -7.00"/>
+  <arg name="second_tb3_y_pos" default=" -3.0"/>
   <arg name="second_tb3_z_pos" default=" 0.0"/>
   <arg name="second_tb3_yaw"   default=" -1.23"/>
 
-  <arg name="third_tb3_x_pos" default=" -4.53"/>
-  <arg name="third_tb3_y_pos" default=" 7.55"/>
+  <arg name="third_tb3_x_pos" default=" -1.0"/>
+  <arg name="third_tb3_y_pos" default=" -2.0"/>
   <arg name="third_tb3_z_pos" default=" 0.0"/>
   <arg name="third_tb3_yaw"   default=" 2.0"/>
 
-  <arg name="fourth_tb3_x_pos" default=" 5.5"/>
-  <arg name="fourth_tb3_y_pos" default=" -0.4"/>
+  <arg name="fourth_tb3_x_pos" default=" -4.0"/>
+  <arg name="fourth_tb3_y_pos" default=" 1.0"/>
   <arg name="fourth_tb3_z_pos" default=" 0.0"/>
   <arg name="fourth_tb3_yaw"   default=" 0.020660"/>
 
-  <arg name="fifth_tb3_x_pos" default=" 0.41"/>
-  <arg name="fifth_tb3_y_pos" default=" -6.57"/>
+  <arg name="fifth_tb3_x_pos" default=" -4.5"/>
+  <arg name="fifth_tb3_y_pos" default=" -1.5"/>
   <arg name="fifth_tb3_z_pos" default=" 0.0"/>
   <arg name="fifth_tb3_yaw"   default=" 0.67"/>
 
-  <arg name="sixth_tb3_x_pos" default=" -0.33"/>
-  <arg name="sixth_tb3_y_pos" default=" 5.77"/>
+  <arg name="sixth_tb3_x_pos" default=" 4.5"/>
+  <arg name="sixth_tb3_y_pos" default=" -3.0"/>
   <arg name="sixth_tb3_z_pos" default=" 0.0"/>
   <arg name="sixth_tb3_yaw"   default=" -0.89"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/obs1.world"/> 
+    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/obs2.world"/> 
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>
