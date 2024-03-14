@@ -30,12 +30,12 @@ class robot(object):
         self.delij = []
         self.neigh = []      
         self.bearing = [0]
-        self.goal = Point(np.random.uniform(-20,20), np.random.uniform(-20,20), 0.0)
+        self.goal = Point(np.random.uniform(-6,6), np.random.uniform(-6,6), 0.0)
         self.odom = Odometry()
         self.initial_no = -1
-        self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        with open('{}/scripts/Communities/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-            f.write("time,goal_x,goal_y,x,y\n" )
+        # self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
+        # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #     f.write("time, goal_x, goal_y, x, y \n" )
         
     def update_Odom(self,msg):
         """ Odometry of current bot"""
@@ -62,8 +62,8 @@ class robot(object):
         self.disij = []
         self.delij = []
 
-        with open('{}/scripts/Communities/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-            f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
+        # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         # Distance between bots   
         for odom in self.bot_odom:
@@ -85,8 +85,8 @@ class robot(object):
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
         else:
             if self.goal.x == 0 and self.goal.y == 0:
-                self.goal.x = np.random.uniform(-20,20)
-                self.goal.y = np.random.uniform(-20,20)
+                self.goal.x = np.random.uniform(-6,6)
+                self.goal.y = np.random.uniform(-6,6)
         
     def control(self,k):
         """control law for bot"""
@@ -110,17 +110,20 @@ class robot(object):
         if (self.dis_err) >= 0.875:
             temp = []
             vap = []
+            obstacle_positions = [(-3.0, 8.0), (0.0,0.0), (4.0,4.0), (-5.5, 3.0), (7.8, -0.50), (3.5, -5.0), (-1.5, -8.5), (-7.0,-2.75)] 
+            obstacle_radius = 0.875
+            obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)
             excluded_bot = [self.cur_bot_id_indx]
             print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
                 if i not in excluded_bot:
-                    if z >= 0.775:
-                        self.speed.linear.x = 0.22
+                    if z >= 0.775 and obstacle_distance > obstacle_radius:
+                        self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
                         print(z,self.delij[i]*(180/pi),i,self.namespace,'1')                                         
                     else:
                         t = rospy.get_time()
-                        self.speed.linear.x = max((0.10 -(5000-t)*0.00001),0)                    
+                        self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
                         temp.append(self.speed.angular.z)
                         vap.append(self.speed.linear.x)
@@ -129,12 +132,12 @@ class robot(object):
                     self.speed.angular.z = np.mean(temp)
                     self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
         else:
-            if len(self.neigh) < 3: 
+            if len(self.neigh) < 2: 
                 self.goal = Point(0,0,0)
             else:               
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
-                print("Aggreated")
+                # print("Aggreated")
                 # print(rospy.get_time())
                 # print(self.x,self.goal.x,'x')
                 # print(self.y,self.goal.y,'y')
@@ -147,9 +150,10 @@ if __name__ == '__main__':
     l = [] #l is time
     rospy.init_node("Task2_controller")
     rate = rospy.Rate(4)
-    bot = robot(20)     
+    bot = robot(6)
+    rospy.sleep(10)     
 
-    while not rospy.is_shutdown() and k < 5000:
+    while not rospy.is_shutdown() and k < 4000:
         k = k+1
         h = 0.25
         K = 0.3

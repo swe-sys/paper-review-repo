@@ -48,7 +48,7 @@ class robot(object):
         self.robot = []
         self.safe_zone = [0,0,0]
         self.initial_no = -1                      
-        self.goal = Point(np.random.uniform(-12,12), np.random.uniform(-12,12), 0.0)
+        self.goal = Point(np.random.uniform(-6,6), np.random.uniform(-6,6), 0.0)
         self.odom = Odometry()
         self.obsplot = obs()
         self.speed = Twist()        
@@ -67,8 +67,8 @@ class robot(object):
 
         self.obsplot.bot_id = self.namespace
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-            f.write("time,goal_x,goal_y,x,y\n" )
+        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #     # f.write("time,goal_x,goal_y,x,y\n" )
 
     def update_Odom(self,odom):
         """ Odometry of current bot"""        
@@ -147,8 +147,8 @@ class robot(object):
     def set_goal(self): #,random=False
         """outputs required = goal, input = neighbour set, using mean(self+ neighbour_set/2)"""
         # self.scanner()
-        with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-            f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
+        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         no_neigh = len(self.obs)
         try:  
@@ -162,8 +162,8 @@ class robot(object):
             else :
                 if self.goal.x == 0 and self.goal.y == 0:
                     print("andar gya")
-                    self.goal.x = np.random.uniform(-12,12)
-                    self.goal.y = np.random.uniform(-12,12)
+                    self.goal.x = np.random.uniform(-6,6)
+                    self.goal.y = np.random.uniform(-6,6)
                 # self.safezone_active = False
                 # self.safe_zone = [0,0,0]
         except (AttributeError):
@@ -247,7 +247,7 @@ if __name__ == '__main__':
     k = 0
     l = [] #l is time
     rate = rospy.Rate(4)
-    bot = robot(20)     
+    bot = robot(6)     
     rospy.sleep(6)
     # bot.set_goal()
     while not rospy.is_shutdown() and k < 5000:
