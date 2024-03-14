@@ -60,12 +60,7 @@ class robot(object):
         """ sets goal for bot"""
         self.neigh = []
         self.disij = []
-        self.delij = []
-
-        #Static Obstacles
-        obstacle_positions = [(-3.0, 8.0), (4.0, 1.0), (-2.5,-3.5), (3.5, -2.5), (0.0,0.0), (4.0,4.0), (-5.5, 3.0), (7.8, -0.50), (3.5, -5.0), (-1.5, -8.5), (-7.0,-2.75)] 
-        obstacle_radius = 0.875
-        obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)
+        self.delij = []        
 
         # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
         #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
@@ -143,8 +138,8 @@ class robot(object):
             if len(self.neigh) < 2: 
                 self.goal = Point(6.0,6.0,0)
             else:
-                if obstacle_distance < 1.5*obstacle_radius:
-                    self.goal = Point(6.0,6.0,0.0)                            
+                # if obstacle_distance < 1.5*obstacle_radius:
+                #     self.goal = Point(6.0,6.0,0.0)                            
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
                 # print("Aggreated")
