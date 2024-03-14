@@ -16,7 +16,6 @@ class robot():
         self.rot_q = 0       
         self.speed = Twist()
         self.sub =  rospy.Subscriber("/odom",Odometry,self.newOdom)
-        #self.model_states = rospy.Subscriber("/gazebo/model_states",ModelStates,self.newModel)
         self.pub =  rospy.Publisher("/cmd_vel", Twist, queue_size = 1)
                     
     def newOdom(self,msg):
@@ -49,12 +48,12 @@ if __name__ == '__main__':
 		dis_err = 0
 		print('x :',bot.x,'y :',bot.y)
 
-		if (bot.y) > 0:
-			goal.x = 4
-			goal.y = 4
-		else:
-			goal.x = -4
-			goal.y = -4              
+		# if (bot.y) > 0:
+		goal.x = 2
+		goal.y = -2
+		# else:
+		# 	goal.x = -4
+		# 	goal.y = -4              
 
         #Distance Between goal and Bot    
 		incx = (goal.x - bot.x )

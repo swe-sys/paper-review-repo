@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+<<<<<<< HEAD
 import rospy
 import numpy as np
 from geometry_msgs.msg import Point, Twist, Pose2D
@@ -258,3 +259,12 @@ if __name__ == '__main__':
         l.append((k+1)/10) # Time
         bot.controller(k)            
         rate.sleep()        
+=======
+import os,glob,sys
+import rospy
+
+for i in range(5):
+    sys.system("./sim.sh")
+    #check for convergence
+    #kill all 
+>>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
