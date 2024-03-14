@@ -37,6 +37,7 @@
 >>>>>>> 0e27acf573d72a2318ce8d65bdc41b9b3ec872a8
   <arg name="fourth_tb3_z_pos" default=" 0.0"/>
   <arg name="fourth_tb3_yaw"   default=" 0.020660"/>
+>>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
 
   <arg name="fifth_tb3_x_pos" default=" -4.5"/>
   <arg name="fifth_tb3_y_pos" default=" -1.5"/>
@@ -83,7 +84,11 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg first_tb3) -x $(arg first_tb3_x_pos) -y $(arg first_tb3_y_pos) -z $(arg first_tb3_z_pos) -Y $(arg first_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot1" output="screen">
+<<<<<<< HEAD
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot1">
+=======
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot1" output="screen">
+>>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
       <remap from="/odom" to="/$(arg first_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg first_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg first_tb3)/goal"/>
@@ -102,7 +107,7 @@
     </node>
 
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg second_tb3) -x $(arg second_tb3_x_pos) -y $(arg second_tb3_y_pos) -z $(arg second_tb3_z_pos) -Y $(arg second_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot2" output="screen">
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot2" output="screen">
       <remap from="/odom" to="/$(arg second_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg second_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg second_tb3)/goal"/>
@@ -121,7 +126,11 @@
     </node>
 
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg third_tb3) -x $(arg third_tb3_x_pos) -y $(arg third_tb3_y_pos) -z $(arg third_tb3_z_pos) -Y $(arg third_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot3" output="screen">
+<<<<<<< HEAD
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot3" >
+=======
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot3" output="screen">
+>>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
       <remap from="/odom" to="/$(arg third_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg third_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg third_tb3)/goal"/>
@@ -140,7 +149,11 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg fourth_tb3) -x $(arg fourth_tb3_x_pos) -y $(arg fourth_tb3_y_pos) -z $(arg fourth_tb3_z_pos) -Y $(arg fourth_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot4" output="screen">
+<<<<<<< HEAD
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot4" >
+=======
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot4" output="screen">
+>>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
       <remap from="/odom" to="/$(arg fourth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg fourth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg fourth_tb3)/goal"/>
@@ -159,7 +172,11 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg fifth_tb3) -x $(arg fifth_tb3_x_pos) -y $(arg fifth_tb3_y_pos) -z $(arg fifth_tb3_z_pos) -Y $(arg fifth_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot5" output="screen">
+<<<<<<< HEAD
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot5" >
+=======
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot5" output="screen">
+>>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
       <remap from="/odom" to="/$(arg fifth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg fifth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg fifth_tb3)/goal"/>
@@ -178,7 +195,7 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg sixth_tb3) -x $(arg sixth_tb3_x_pos) -y $(arg sixth_tb3_y_pos) -z $(arg sixth_tb3_z_pos) -Y $(arg sixth_tb3_yaw) -param robot_description" />
-    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot6" output="screen" >
+    <node pkg="swarm_aggregation" type="dynamic_with_CA.py" name="multi_bot6" output="screen" >
       <remap from="/odom" to="/$(arg sixth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg sixth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg sixth_tb3)/goal"/>
@@ -188,7 +205,12 @@
     </node>
   </group>
 
- <!-- <node pkg="swarm_aggregation" type="detect_bot.py" name="obs_data"/> -->
+<<<<<<< HEAD
+ <node pkg="swarm_aggregation" type="detect_bot.py" name="obs_data"/> 
+=======
+ <node pkg="swarm_aggregation" type="detect_bot.py" name="obs_data"/>
  <node pkg="swarm_aggregation" type="synerzied.py" name="convergence_checker" output="screen"/> 
- <!-- <node pkg="swarm_aggregation" type="visual.py" name="animator"/> --> 
+>>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
+ <!-- <node pkg="swarm_aggregation" type="visual.py" name="animator"/> -->
+ <node pkg="swarm_aggregation" type="synerzied.py" name="convergence_checker" output="screen"/>
 </launch>
