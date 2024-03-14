@@ -60,7 +60,7 @@ class robot(object):
         """ sets goal for bot"""
         self.neigh = []
         self.disij = []
-        self.delij = []        
+        self.delij = []
 
         # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
         #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
@@ -107,11 +107,17 @@ class robot(object):
         # Gradient of Bearing
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
+        # Define wall positions and radii
+        wall_positions = [(-7.433189, self.y), (8.187240, self.y), (self.x, -3.801140), (self.x, 3.665870), (self.x, 0.820250), (self.x, -6.520260)]  # Example wall positions
+        
         #Static Obstacles
-        obstacle_positions = [(-3.0, 8.0), (4.0, 1.0), (-2.5,-3.5), (3.5, -2.5), (0.0,0.0), (4.0,4.0), (-5.5, 3.0), (7.8, -0.50), (3.5, -5.0), (-1.5, -8.5), (-7.0,-2.75)] 
-        obstacle_radius = 0.875
-        obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)        
+        obstacle_positions = [(-4.890534, 1.979073), (-2.257440, 1.979570), (-6.030783,-0.194047), (-3.652753, -0.278107), (-1.195860,-0.255087), (-5.061280,-2.457077), (-2.397236, -2.385923)] 
+        obstacle_radius = 1.0
 
+        # Combine wall positions with other obstacles
+        obstacle_positions += wall_positions
+        obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)    
+        
         if (self.dis_err) >= 0.875:
             temp = []
             vap = []

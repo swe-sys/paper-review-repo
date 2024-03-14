@@ -7,38 +7,67 @@
   <arg name="fifth_tb3"  default="tb3_5"/>
   <arg name="sixth_tb3"  default="tb3_6"/>
 
-  <arg name="first_tb3_x_pos" default=" -4.53"/>
-  <arg name="first_tb3_y_pos" default=" -0.0"/>
+  <arg name="first_tb3_x_pos" default=" -7.00"/>
+  <arg name="first_tb3_y_pos" default=" 3.0"/>
   <arg name="first_tb3_z_pos" default=" 0.0"/>
   <arg name="first_tb3_yaw"   default=" 1.23"/>
 
-  <arg name="second_tb3_x_pos" default=" -7.57"/>
-  <arg name="second_tb3_y_pos" default=" -3.77"/>
+  <arg name="second_tb3_x_pos" default=" -7.00"/>
+  <arg name="second_tb3_y_pos" default=" -3.0"/>
   <arg name="second_tb3_z_pos" default=" 0.0"/>
   <arg name="second_tb3_yaw"   default=" -1.23"/>
 
-  <arg name="third_tb3_x_pos" default=" -4.53"/>
-  <arg name="third_tb3_y_pos" default=" 7.55"/>
+  <arg name="third_tb3_x_pos" default=" -1.0"/>
+  <arg name="third_tb3_y_pos" default=" -2.0"/>
   <arg name="third_tb3_z_pos" default=" 0.0"/>
   <arg name="third_tb3_yaw"   default=" 2.0"/>
 
+<<<<<<< HEAD
+  <arg name="fourth_tb3_x_pos" default=" -4.0"/>
+  <arg name="fourth_tb3_y_pos" default=" 1.0"/>
+=======
+<<<<<<< HEAD
+  <arg name="fourth_tb3_x_pos" default=" 5.49"/>
+  <arg name="fourth_tb3_y_pos" default=" 0.035"/>
+  <arg name="fourth_tb3_z_pos" default=" 0.0"/>
+  <arg name="fourth_tb3_yaw"   default=" -1.87"/>
+=======
   <arg name="fourth_tb3_x_pos" default=" 5.5"/>
   <arg name="fourth_tb3_y_pos" default=" -0.4"/>
+>>>>>>> 0e27acf573d72a2318ce8d65bdc41b9b3ec872a8
   <arg name="fourth_tb3_z_pos" default=" 0.0"/>
   <arg name="fourth_tb3_yaw"   default=" 0.020660"/>
 
-  <arg name="fifth_tb3_x_pos" default=" 0.41"/>
-  <arg name="fifth_tb3_y_pos" default=" -6.57"/>
+  <arg name="fifth_tb3_x_pos" default=" -4.5"/>
+  <arg name="fifth_tb3_y_pos" default=" -1.5"/>
   <arg name="fifth_tb3_z_pos" default=" 0.0"/>
   <arg name="fifth_tb3_yaw"   default=" 0.67"/>
 
+<<<<<<< HEAD
+  <arg name="sixth_tb3_x_pos" default=" 4.5"/>
+  <arg name="sixth_tb3_y_pos" default=" -3.0"/>
+=======
+<<<<<<< HEAD
+  <arg name="sixth_tb3_x_pos" default=" 4.618"/>
+  <arg name="sixth_tb3_y_pos" default=" 1.77"/>
+=======
   <arg name="sixth_tb3_x_pos" default=" -0.33"/>
   <arg name="sixth_tb3_y_pos" default=" 5.77"/>
+>>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
+>>>>>>> 0e27acf573d72a2318ce8d65bdc41b9b3ec872a8
   <arg name="sixth_tb3_z_pos" default=" 0.0"/>
   <arg name="sixth_tb3_yaw"   default=" -0.89"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <!-- <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/obs.world"/>  -->
+<<<<<<< HEAD
+    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/obs2.world"/> 
+=======
+<<<<<<< HEAD
+    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/obs.world"/> 
+=======
+    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/obs1.world"/> 
+>>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
+>>>>>>> 0e27acf573d72a2318ce8d65bdc41b9b3ec872a8
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>
