@@ -67,13 +67,8 @@ class robot(object):
 
         self.obsplot.bot_id = self.namespace
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-<<<<<<< HEAD
-        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     # f.write("time,goal_x,goal_y,x,y\n" )
-=======
         # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
         #     f.write("time,goal_x,goal_y,x,y\n" )
->>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
 
     def update_Odom(self,odom):
         """ Odometry of current bot"""        
@@ -152,11 +147,7 @@ class robot(object):
     def set_goal(self): #,random=False
         """outputs required = goal, input = neighbour set, using mean(self+ neighbour_set/2)"""
         # self.scanner()
-<<<<<<< HEAD
-        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-=======
         # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
->>>>>>> 911cc092ad112a3c26a65dd7d8ac3e8a3cf1778a
         #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         no_neigh = len(self.obs)
