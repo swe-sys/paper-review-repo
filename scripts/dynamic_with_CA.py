@@ -30,7 +30,7 @@ class robot(object):
         self.delij = []
         self.neigh = []      
         self.bearing = [0]
-        self.goal = Point(np.random.uniform(-6,6), np.random.uniform(-6,6), 0.0)
+        self.goal = Point(np.random.uniform(0,6), np.random.uniform(0,-5), 0.0)
         self.odom = Odometry()
         self.initial_no = -1
         # self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
@@ -84,14 +84,15 @@ class robot(object):
             self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
         else:
-            if self.goal.x == 6.0 and self.goal.y == 6.0:
-                self.goal.x = np.random.uniform(-6,6)
-                self.goal.y = np.random.uniform(-6,6)
+            if self.goal.x == 3.0 and self.goal.y == -2.0:
+                print("called", self.namespace)
+                self.goal.x = np.random.uniform(0,6)
+                self.goal.y = np.random.uniform(0,3)
         
     def control(self,k):
         """control law for bot"""
  
-        self.set_goal(3.5,(2*pi/3))        
+        self.set_goal(2,(2*pi/3))        
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
 
@@ -107,12 +108,13 @@ class robot(object):
         # Gradient of Bearing
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
-        # Define wall positions and radii
+        # Define wall positions
         wall_positions = [(-7.433189, self.y), (8.187240, self.y), (self.x, -3.801140), (self.x, 3.665870), (self.x, 0.820250), (self.x, -6.520260)]  # Example wall positions
-        
+        wall_radius = 0.3
+
         #Static Obstacles
-        obstacle_positions = [(-4.890534, 1.979073), (-2.257440, 1.979570), (-6.030783,-0.194047), (-3.652753, -0.278107), (-1.195860,-0.255087), (-5.061280,-2.457077), (-2.397236, -2.385923)] 
-        obstacle_radius = 1.0
+        obstacle_positions = [(-5.50, 1.50), (-2.20, 1.50), (-5.50,-1.50), (-2.20,-1.50)] 
+        obstacle_radius = 0.875
 
         # Combine wall positions with other obstacles
         obstacle_positions += wall_positions
@@ -128,21 +130,28 @@ class robot(object):
                     if z >= 0.775 and obstacle_distance > obstacle_radius:
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
-                        print(z,self.delij[i]*(180/pi),i,self.namespace,'1',self.goal)                                         
+                        # print(z,self.delij[i]*(180/pi),i,self.namespace,'1',self.goal, obstacle_distance)
+                        print("Free",self.namespace, "Goal", self.goal)
+                    # elif obstacle_distance < wall_radius:
+                    #     self.speed.angular.z = -0.2
+                    #     self.speed.linear.x = 0.0
+                    #     print("Wall Following", obstacle_distance, self.namespace)                                                                   
                     else:
-                        t = rospy.get_time()
-                        self.goal = Point(-self.goal.x,self.goal.y, 0.0)
+                        # self.speed.linear.x = 0.01
+                        # self.speed.angular.z = K*np.sign(self.delij[i])
+                        t = rospy.get_time()                       
                         self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
                         temp.append(self.speed.angular.z)
                         vap.append(self.speed.linear.x)
-                        print(z,self.delij[i]*(180/pi),i,self.namespace,'2',self.goal)
+                        # print(z,self.delij[i]*(180/pi),i,self.namespace,'2',self.goal, obstacle_distance)
                 if temp:
                     self.speed.angular.z = np.mean(temp)
                     self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
         else:
             if len(self.neigh) < 2: 
-                self.goal = Point(6.0,6.0,0)
+                self.goal = Point(3,-2,0)
+                print("Alone",self.namespace)
             else:
                 # if obstacle_distance < 1.5*obstacle_radius:
                 #     self.goal = Point(6.0,6.0,0.0)                            
@@ -151,7 +160,8 @@ class robot(object):
                 # print("Aggreated")
                 # print(rospy.get_time())
                 # print(self.x,self.goal.x,'x')
-                # print(self.y,self.goal.y,'y')
+                # print(self.y,self.goal.y,'y')       
+        
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)
