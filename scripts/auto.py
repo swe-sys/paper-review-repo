@@ -70,16 +70,16 @@ class robot(object):
         dst = 0.5
         # while True:
         if min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst: # front wall  
-            self.speed.angular.z = 0.2
+            self.speed.angular.z = -0.2
             self.speed.linear.x = 0.0                   
         elif min(self.ranges[deg:120]) < dst: # left wall 
             self.speed.angular.z = 0.0
             self.speed.linear.x = 0.2            
         #elif abs(dist([self.x,self.y],[self.goal.x,self.goal.y]) - min(self.odom_counter)) < 0.17:
             #self.go2goal()      
-        else:
-            self.speed.angular.z = 0.1
-            self.speed.linear.x = 0.02                       
+        # else:
+        #     self.speed.angular.z = 0.1
+        #     self.speed.linear.x = 0.02                       
 
     def set_goal(self,r,ca):
         """ sets goal for bot"""
@@ -147,14 +147,14 @@ class robot(object):
         obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)
         wall_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(wall)) for wall in wall_positions)   
         
-        if (self.dis_err) >= 0.85:
+        if (self.dis_err) >= 0.75:
             temp = []
             vap = []
             excluded_bot = [self.cur_bot_id_indx]
             # print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
                 if i not in excluded_bot:
-                    if z >= 0.75 and obstacle_distance > obstacle_radius:
+                    if z >= 0.65 and obstacle_distance > obstacle_radius:
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
                         # print(z,self.delij[i]*(180/pi),i,self.namespace,'1',self.goal, obstacle_distance)
@@ -176,11 +176,12 @@ class robot(object):
         else:
             if len(self.neigh) < 2 or obstacle_distance < 2.0*obstacle_radius or wall_distance < 2*wall_radius: 
                 self.goal = Point(3.0, -2.0, 0.0)
+                self.wall_following()
                 print("Alone",self.namespace)            
             else:                                            
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
-                print("Aggreated", self.namespace, obstacle_distance)
+                print("Aggreated", self.namespace, 'w', wall_distance, 'o', obstacle_distance)
                 # print(rospy.get_time())
                 # print(self.x,self.goal.x,'x')
                 # print(self.y,self.goal.y,'y')       
