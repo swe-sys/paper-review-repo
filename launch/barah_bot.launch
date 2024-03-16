@@ -91,14 +91,14 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg first_tb3) -x $(arg first_tb3_x_pos) -y $(arg first_tb3_y_pos) -z $(arg first_tb3_z_pos) -Y $(arg first_tb3_yaw) -param robot_description" />
-    <!-- <node pkg="swarm_aggregation" type="obs.py" name="multi_bot1" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot1" output="screen">
       <remap from="/odom" to="/$(arg first_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg first_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg first_tb3)/goal"/>
       <remap from="/scan" to="/$(arg first_tb3)/scan"/>
       <remap from="/radius" to="/$(arg first_tb3)/radius"/>
       <remap from="/obs" to="/$(arg first_tb3)/obs"/>
-    </node> -->
+    </node>
   </group>
 
 
@@ -111,14 +111,14 @@
     </node>
 
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg second_tb3) -x $(arg second_tb3_x_pos) -y $(arg second_tb3_y_pos) -z $(arg second_tb3_z_pos) -Y $(arg second_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot2" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot2" output="screen">
       <remap from="/odom" to="/$(arg second_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg second_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg second_tb3)/goal"/>
       <remap from="/scan" to="/$(arg second_tb3)/scan"/>
       <remap from="/radius" to="/$(arg second_tb3)/radius"/>
       <remap from="/obs" to="/$(arg second_tb3)/obs"/>
-    </node>-->
+    </node>
   </group>
 
   <group ns = "$(arg third_tb3)">
@@ -130,14 +130,14 @@
     </node>
 
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg third_tb3) -x $(arg third_tb3_x_pos) -y $(arg third_tb3_y_pos) -z $(arg third_tb3_z_pos) -Y $(arg third_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot3" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot3" output="screen">
       <remap from="/odom" to="/$(arg third_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg third_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg third_tb3)/goal"/>
       <remap from="/scan" to="/$(arg third_tb3)/scan"/>
       <remap from="/radius" to="/$(arg third_tb3)/radius"/>
       <remap from="/obs" to="/$(arg third_tb3)/obs"/>
-    </node>-->
+    </node>
   </group>
 
   <group ns = "$(arg fourth_tb3)">
@@ -149,14 +149,14 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg fourth_tb3) -x $(arg fourth_tb3_x_pos) -y $(arg fourth_tb3_y_pos) -z $(arg fourth_tb3_z_pos) -Y $(arg fourth_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot4" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot4" output="screen">
       <remap from="/odom" to="/$(arg fourth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg fourth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg fourth_tb3)/goal"/>
       <remap from="/scan" to="/$(arg fourth_tb3)/scan"/>
       <remap from="/radius" to="/$(arg fourth_tb3)/radius"/>
       <remap from="/obs" to="/$(arg fourth_tb3)/obs"/>
-    </node>-->
+    </node>
   </group>
 
   <group ns = "$(arg fifth_tb3)">
@@ -168,14 +168,14 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg fifth_tb3) -x $(arg fifth_tb3_x_pos) -y $(arg fifth_tb3_y_pos) -z $(arg fifth_tb3_z_pos) -Y $(arg fifth_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot5" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot5" output="screen">
       <remap from="/odom" to="/$(arg fifth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg fifth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg fifth_tb3)/goal"/>
       <remap from="/scan" to="/$(arg fifth_tb3)/scan"/>
       <remap from="/radius" to="/$(arg fifth_tb3)/radius"/>
       <remap from="/obs" to="/$(arg fifth_tb3)/obs"/>
-    </node>-->
+    </node>
   </group>
 
   <group ns = "$(arg sixth_tb3)">
@@ -187,14 +187,14 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg sixth_tb3) -x $(arg sixth_tb3_x_pos) -y $(arg sixth_tb3_y_pos) -z $(arg sixth_tb3_z_pos) -Y $(arg sixth_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot6" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot6" output="screen">
       <remap from="/odom" to="/$(arg sixth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg sixth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg sixth_tb3)/goal"/>
       <remap from="/scan" to="/$(arg sixth_tb3)/scan"/>
       <remap from="/radius" to="/$(arg sixth_tb3)/radius"/>
       <remap from="/obs" to="/$(arg sixth_tb3)/obs"/>
-    </node>-->
+    </node>
   </group> 
 
   <group ns = "$(arg seventh_tb3)">
@@ -206,14 +206,14 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg seventh_tb3) -x $(arg seventh_tb3_x_pos) -y $(arg seventh_tb3_y_pos) -z $(arg seventh_tb3_z_pos) -Y $(arg seventh_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot7" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot7" output="screen">
       <remap from="/odom" to="/$(arg seventh_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg seventh_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg seventh_tb3)/goal"/>
       <remap from="/scan" to="/$(arg seventh_tb3)/scan"/>
       <remap from="/radius" to="/$(arg seventh_tb3)/radius"/>
       <remap from="/obs" to="/$(arg seventh_tb3)/obs"/>
-    </node>-->
+    </node>
   </group> 
 
   <group ns = "$(arg eighth_tb3)">
@@ -225,14 +225,14 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg eighth_tb3) -x $(arg eighth_tb3_x_pos) -y $(arg eighth_tb3_y_pos) -z $(arg eighth_tb3_z_pos) -Y $(arg eighth_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot8" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot8" output="screen">
       <remap from="/odom" to="/$(arg eighth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg eighth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg eighth_tb3)/goal"/>
       <remap from="/scan" to="/$(arg eighth_tb3)/scan"/>
       <remap from="/radius" to="/$(arg eighth_tb3)/radius"/>
       <remap from="/obs" to="/$(arg eighth_tb3)/obs"/>
-    </node>-->
+    </node>
   </group> 
 
   <group ns = "$(arg nineth_tb3)">
@@ -244,14 +244,14 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg nineth_tb3) -x $(arg nineth_tb3_x_pos) -y $(arg nineth_tb3_y_pos) -z $(arg nineth_tb3_z_pos) -Y $(arg nineth_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot9" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot9" output="screen">
       <remap from="/odom" to="/$(arg nineth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg nineth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg nineth_tb3)/goal"/>
       <remap from="/scan" to="/$(arg nineth_tb3)/scan"/>
       <remap from="/radius" to="/$(arg nineth_tb3)/radius"/>
       <remap from="/obs" to="/$(arg nineth_tb3)/obs"/>
-    </node>-->
+    </node>
   </group>
 
   <group ns = "$(arg tenth_tb3)">
@@ -263,14 +263,14 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg tenth_tb3) -x $(arg tenth_tb3_x_pos) -y $(arg tenth_tb3_y_pos) -z $(arg tenth_tb3_z_pos) -Y $(arg tenth_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot10" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot10" output="screen">
       <remap from="/odom" to="/$(arg tenth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg tenth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg tenth_tb3)/goal"/>
       <remap from="/scan" to="/$(arg tenth_tb3)/scan"/>
       <remap from="/radius" to="/$(arg tenth_tb3)/radius"/>
       <remap from="/obs" to="/$(arg tenth_tb3)/obs"/>
-    </node>-->
+    </node>
   </group>
 
   <group ns = "$(arg eleventh_tb3)">
@@ -282,14 +282,14 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg eleventh_tb3) -x $(arg eleventh_tb3_x_pos) -y $(arg eleventh_tb3_y_pos) -z $(arg eleventh_tb3_z_pos) -Y $(arg eleventh_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot11" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot11" output="screen">
       <remap from="/odom" to="/$(arg eleventh_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg eleventh_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg eleventh_tb3)/goal"/>
       <remap from="/scan" to="/$(arg eleventh_tb3)/scan"/>
       <remap from="/radius" to="/$(arg eleventh_tb3)/radius"/>
       <remap from="/obs" to="/$(arg eleventh_tb3)/obs"/>
-    </node>-->
+    </node>
   </group>
 
   <group ns = "$(arg twelfth_tb3)">
@@ -301,17 +301,18 @@
     </node>
     
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg twelfth_tb3) -x $(arg twelfth_tb3_x_pos) -y $(arg twelfth_tb3_y_pos) -z $(arg twelfth_tb3_z_pos) -Y $(arg twelfth_tb3_yaw) -param robot_description" />
-    <!--<node pkg="swarm_aggregation" type="obs.py" name="multi_bot12" output="screen">
+    <node pkg="swarm_aggregation" type="obs.py" name="multi_bot12" output="screen">
       <remap from="/odom" to="/$(arg twelfth_tb3)/odom"/>
       <remap from="/cmd_vel" to="/$(arg twelfth_tb3)/cmd_vel"/>
       <remap from="/goal" to="/$(arg twelfth_tb3)/goal"/>
       <remap from="/scan" to="/$(arg twelfth_tb3)/scan"/>
       <remap from="/radius" to="/$(arg twelfth_tb3)/radius"/>
       <remap from="/obs" to="/$(arg twelfth_tb3)/obs"/>
-    </node>-->
+    </node>
   </group>
 
   <!-- <node pkg="swarm_aggregation" type="detect_bot.py" name="obs_data"/>
   <node pkg="swarm_aggregation" type="plott.py" name="animator"/> -->
+  <node pkg="swarm_aggregation" type="synerzied.py" name="convergence_checker" output="screen"/> 
 
 </launch>

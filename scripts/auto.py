@@ -134,13 +134,15 @@ class robot(object):
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
         # Define wall positions
-        wall_positions = [(-7.25, self.y), (8.0000, self.y), (self.x < 0.9, -3.65), (self.x, 3.40), (self.x>0.0, 0.65), (self.x, -6.25), (0.0, self.y > 0.5), (0.9, self.y < -3.25)]  # Example wall positions
+        wall_positions = [(-7.433189, self.y), (8.187240, self.y), (self.x < 0.9, -3.801140), (self.x, 3.665870), (self.x > 0.0, 0.820250), (self.x, -6.576820), (0.477467, self.y > 0.5), (0.422073, self.y < -3.25)]  # Example wall positions
         # wall_positions = [(-7.25, self.y), (8.0000, self.y), (self.x, -3.65), (self.x, 3.40), (self.x, 0.65), (self.x, -6.25), (0.0, self.y), (0.9, self.y)]
-        wall_radius = 0.6
+        wall_radius = 0.7
+        deg = 50
+        dst = 0.7
 
         #Static Obstacles
         obstacle_positions = [(-5.50, 1.50), (-2.20, 1.50), (-4.0,0.0), (-5.50,-1.50), (-2.20,-1.50)] 
-        obstacle_radius = 0.6
+        obstacle_radius = 0.7
 
         # Combine wall positions with other obstacles
         # obstacle_positions += wall_positions
@@ -154,14 +156,14 @@ class robot(object):
             # print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
                 if i not in excluded_bot:
-                    if z >= 0.65 and obstacle_distance > obstacle_radius:
+                    if min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst or obstacle_distance <= obstacle_radius or wall_distance <= wall_radius:
+                        self.wall_following()
+                        print("Wall Following", obstacle_distance, self.namespace)
+                    elif z >= 0.65 and obstacle_distance > obstacle_radius:
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
                         # print(z,self.delij[i]*(180/pi),i,self.namespace,'1',self.goal, obstacle_distance)
-                        print("Free", self.namespace, 'w', wall_distance, 'o', obstacle_distance)
-                    elif wall_distance <= wall_radius :
-                        self.wall_following()
-                        print("Wall Following", obstacle_distance, self.namespace)                    
+                        print("Free", self.namespace, 'w', wall_distance, 'o', obstacle_distance)                                        
                     else:                        
                         t = rospy.get_time()                       
                         self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    

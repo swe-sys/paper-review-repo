@@ -66,8 +66,8 @@ class robot(object):
         self.obs_pub = rospy.Publisher('/obs',obs, queue_size=1)
 
         self.obsplot.bot_id = self.namespace
-        self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        # self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
+        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
         #     f.write("time,goal_x,goal_y,x,y\n" )
 
     def update_Odom(self,odom):
@@ -90,12 +90,14 @@ class robot(object):
         # creating the pairs
         for i in range(len(self.range)):
             if not isinf(self.range[i]):
-                if i <= 180:
-                    j=i
-                else:
-                    j= i -360
-                pairs.append([j,self.range[i]])        
-        # spliting the pairs into the cones
+                j=i-abs(self.ang_max)*180/pi
+                pairs.append([self.ang_inc*j,self.range[i]]) 
+                # if i<= 180:
+                #     j = i
+                # else:
+                #     j = i-360
+                # pairs.append([j,self.range[i]])       
+        # spliting the pairs into the cones        
 
         self.cones = self.split_list(pairs)        
         try:
@@ -103,7 +105,7 @@ class robot(object):
                 angle = np.mean(np.array(i)[:,0])*(pi/180)
                 distance = np.mean(np.array(i)[:,1])
                 min_dis = np.min(np.array(i)[:,1])
-                if distance < 3 and ( -60*pi/180 < angle < 60*pi/180):
+                if distance < 3 and (-60*pi/180 < angle < 60*pi/180):
                     obs_x = distance*cos(angle)
                     obs_y = distance*sin(angle)
                     global_x = self.x + (obs_x*cos(-self.yaw) + obs_y*sin(-self.yaw))
@@ -123,13 +125,13 @@ class robot(object):
 
         # return any(dis <= radius)    
                         
-    def split_list(self,input_list):        
+    def split_list(self,input_list):                                                                                                                                                                                                                                                                                                                
         sublists = []
         sublist = []
         prev_degree = None
         try:
             for item in input_list:
-                degree, _ = item
+                degree, _ = item                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 
                 if prev_degree is None or abs(degree - prev_degree) <= self.ang_inc*3:
                     sublist.append(item)
@@ -145,9 +147,9 @@ class robot(object):
         return sublists
 
     def set_goal(self): #,random=False
-        """outputs required = goal, input = neighbour set, using mean(self+ neighbour_set/2)"""
+        """outputs required = goal, input = neighbour set, using mean(self+ neigh       bour_set/2)"""
         # self.scanner()
-        # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
         #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         no_neigh = len(self.obs)
@@ -196,7 +198,7 @@ class robot(object):
             self.disij.append(dist)
             self.delij.append(ang)  
 
-        if (self.dis_err) >= 1:
+        if (self.dis_err) >= 0.850:
             #print("loop",self.disij)
             temp = []
             vap = []            
@@ -205,7 +207,7 @@ class robot(object):
                 self.speed.angular.z = K*np.sign(self.dtheta)
             else:
                 for i,z in enumerate(self.disij):
-                    if z >= 0.85:
+                    if z >= 0.75:
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
                         # print('Free')                                         
@@ -250,11 +252,10 @@ if __name__ == '__main__':
     bot = robot(6)     
     rospy.sleep(6)
     # bot.set_goal()
-    while not rospy.is_shutdown() and k < 5000:
+    while not rospy.is_shutdown() and k < 500000:
         k = k+1
         h = 0.25
         K = 0.3
         l.append((k+1)/10) # Time
         bot.controller(k)            
         rate.sleep()
-        
