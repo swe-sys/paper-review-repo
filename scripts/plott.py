@@ -71,10 +71,10 @@ if __name__ == '__main__':
                 plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",markersize=100, alpha=0.2,color=col[i])
                 plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",color=col[i])
                 plt.plot(y.goal[i].x,y.goal[i].y,"x",color=col[i])
-                plt.quiver(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,cos(yaw),sin(yaw),units='xy',width=0.05,headwidth=2.,headlength=1.,color=col[i])
+                # plt.quiver(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,cos(yaw),sin(yaw),units='xy',width=0.05,headwidth=2.,headlength=1.,color=col[i])
         except KeyError:
             print("chalna aage")
-        plt.ylim([-20,20])
-        plt.xlim([-20,20])
+        plt.ylim([-12,12])
+        plt.xlim([-12,12])
         plt.pause(0.01)        
         rate.sleep()

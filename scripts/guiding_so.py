@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from sensor_msgs.msg import LaserScan
 from swarm_aggregation.msg import bot, botPose
 import rospkg
+import os
 
 class robot(object):
     def __init__(self,no_of_bots): 
@@ -31,14 +32,19 @@ class robot(object):
         self.disij = []
         self.delij = []
         self.neigh = []      
-        self.bearing = [0]
+        self.bearing = [0]        
         self.ranges = LaserScan()
         self.goal = Point(np.random.uniform(1,6), np.random.uniform(-6,0), 0.0)
         self.odom = Odometry()
         self.initial_no = -1
-        # self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("time, goal_x, goal_y, x, y \n" )
+        self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
+        self.iters = rospy.get_param("iteration")
+        try:
+            os.makedirs(f'./Data{self.iters}')
+        except FileExistsError:
+            pass
+        with open('{}/scripts/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("time, goal_x, goal_y, x, y \n" )
         
     def update_Odom(self,msg):
         """ Odometry of current bot"""
@@ -87,8 +93,8 @@ class robot(object):
         self.disij = []
         self.delij = []
 
-        # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
+        with open('{}/scripts/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         # Distance between bots   
         for odom in self.bot_odom:
@@ -110,7 +116,7 @@ class robot(object):
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
         else:
             if self.goal.x == 3.0 and self.goal.y == -2.0:
-                print("called", self.namespace)
+                # print("called", self.namespace)
                 self.goal.x = np.random.uniform(1,6)
                 self.goal.y = np.random.uniform(-6,0)
         
@@ -163,14 +169,14 @@ class robot(object):
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
                         # print(z,self.delij[i]*(180/pi),i,self.namespace,'1',self.goal, obstacle_distance)
-                        print("Free", self.namespace, 'w', wall_distance, 'o', obstacle_distance)                                        
+                        # print("Free", self.namespace, 'w', wall_distance, 'o', obstacle_distance)                                        
                     else:                        
                         t = rospy.get_time()                       
                         self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
                         temp.append(self.speed.angular.z)
                         vap.append(self.speed.linear.x)
-                        print("Engaged", self.namespace, obstacle_distance)
+                        # print("Engaged", self.namespace, obstacle_distance)
                         # print(z,self.delij[i]*(180/pi),i,self.namespace,'2',self.goal, obstacle_distance)
                 if temp:
                     self.speed.angular.z = np.mean(temp)
@@ -179,16 +185,12 @@ class robot(object):
             if len(self.neigh) < 2 or obstacle_distance < 2.0*obstacle_radius or wall_distance < 2*wall_radius: 
                 self.goal = Point(3.0, -2.0, 0.0)
                 self.wall_following()
-                print("Alone",self.namespace)            
+                # print("Alone",self.namespace)            
             else:                                            
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
-                print("Aggreated", self.namespace, 'w', wall_distance, 'o', obstacle_distance)
-                # print(rospy.get_time())
-                # print(self.x,self.goal.x,'x')
-                # print(self.y,self.goal.y,'y')       
-        
-
+                print("Aggreated", self.namespace, self.speed.linear.x, self.speed.angular.z)
+                
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)
 
@@ -200,7 +202,7 @@ if __name__ == '__main__':
     bot = robot(6)
     rospy.sleep(10)     
 
-    while not rospy.is_shutdown() and k < 4000:
+    while not rospy.is_shutdown():
         k = k+1
         h = 0.25
         K = 0.3

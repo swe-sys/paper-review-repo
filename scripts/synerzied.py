@@ -24,20 +24,19 @@ def callback_step(data,bot_id):
 if __name__ == '__main__':
     rospy.init_node("obstacle_controller")
     rospy.loginfo("Chal Gye badde")
+    count = 1
     dirname = rospkg.RosPack().get_path('swarm_aggregation')
     rate = rospy.Rate(10)
     total_bots = 6
     converged = np.zeros(total_bots).astype(bool)
     cmd_vels = [rospy.Subscriber(f"/tb3_{i+1}/cmd_vel",Twist,callback_step,i) for i in range(total_bots)]
     rospy.sleep(6)
-    stop_server = rospy.ServiceProxy('/gazebo/pause_physics',Empty)
+    # stop_server = rospy.ServiceProxy('/gazebo/reset_world',Empty)    
     while not rospy.is_shutdown():
         # print(converged)
         if converged.all():
             os.system('notify-send " {} SINNED {}"'.format(rospy.get_rostime().secs,rospy.get_rostime()))
             with open(f'{dirname}/scripts/time.csv',"a+") as f:
-                f.write(f"{total_bots}, {rospy.get_rostime()},{rospy.get_rostime().secs},{rospy.get_rostime().nsecs}")
-            rospy.wait_for_service('/gazebo/pause_physics')
-            stop_server()
-            break
+                f.write(f"{count}, {total_bots}, {rospy.get_rostime()},{rospy.get_rostime().secs},{rospy.get_rostime().nsecs}\n")           
+            break 
         rate.sleep()
