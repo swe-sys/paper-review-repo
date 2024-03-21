@@ -6,7 +6,7 @@ from nav_msgs.msg import Odometry
 from std_msgs.msg import String
 from tf.transformations import euler_from_quaternion
 from math import atan2, sqrt, pi
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from sensor_msgs.msg import LaserScan
 from swarm_aggregation.msg import bot, botPose
 import rospkg
@@ -32,18 +32,19 @@ class robot(object):
         self.disij = []
         self.delij = []
         self.neigh = []      
-        self.bearing = [0]        
+        self.bearing = [0]
         self.ranges = LaserScan()
         self.goal = Point(np.random.uniform(1,6), np.random.uniform(-6,0), 0.0)
         self.odom = Odometry()
         self.initial_no = -1
+        self.iter = rospy.get_param("/iteration/")
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        self.iters = rospy.get_param("iteration")
         try:
-            os.makedirs(f'./Data{self.iters}')
+            os.makedirs(f'{self.dirname}/scripts/Data{self.iter}')
         except FileExistsError:
             pass
-        with open('{}/scripts/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+        rospy.sleep(2)
+        with open('{}/scripts/Data{}/{}.csv'.format(self.dirname,self.iter,self.namespace.split("/")[1]),'a+') as f:
             f.write("time, goal_x, goal_y, x, y \n" )
         
     def update_Odom(self,msg):
@@ -73,7 +74,7 @@ class robot(object):
         Turn Right by default or rotate on CCW fashion"""
         # print("Wall following")
         deg = 50
-        dst = 0.5
+        dst = 0.7
         # while True:
         if min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst: # front wall  
             self.speed.angular.z = -0.2
@@ -93,7 +94,7 @@ class robot(object):
         self.disij = []
         self.delij = []
 
-        with open('{}/scripts/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+        with open('{}/scripts/Data{}/{}.csv'.format(self.dirname,self.iter,self.namespace.split("/")[1]),'a+') as f:
             f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         # Distance between bots   
@@ -143,7 +144,7 @@ class robot(object):
         wall_positions = [(-7.433189, self.y), (8.187240, self.y), (self.x < 0.9, -3.801140), (self.x, 3.665870), (self.x > 0.0, 0.820250), (self.x, -6.576820), (0.477467, self.y > 0.5), (0.422073, self.y < -3.25)]  # Example wall positions
         # wall_positions = [(-7.25, self.y), (8.0000, self.y), (self.x, -3.65), (self.x, 3.40), (self.x, 0.65), (self.x, -6.25), (0.0, self.y), (0.9, self.y)]
         wall_radius = 0.7
-        deg = 50
+        deg = 30
         dst = 0.7
 
         #Static Obstacles
@@ -162,8 +163,9 @@ class robot(object):
             # print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
                 if i not in excluded_bot:
-                    if min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst or obstacle_distance <= obstacle_radius or wall_distance <= wall_radius:
+                    if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst or obstacle_distance <= obstacle_radius or wall_distance <= wall_radius) and z >= 0.65: 
                         self.wall_following()
+                        self.goal = Point(3.0, -2.0, 0.0)                        
                         print("Wall Following", obstacle_distance, self.namespace)
                     elif z >= 0.65 and obstacle_distance > obstacle_radius:
                         self.speed.linear.x = 0.18
@@ -189,8 +191,12 @@ class robot(object):
             else:                                            
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
-                print("Aggreated", self.namespace, self.speed.linear.x, self.speed.angular.z)
-                
+                print("Aggreated", self.namespace, self.speed.linear.x, self.speed.angular.z )
+                # print(rospy.get_time())
+                # print(self.x,self.goal.x,'x')
+                # print(self.y,self.goal.y,'y')       
+        
+
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)
 
