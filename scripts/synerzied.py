@@ -23,8 +23,7 @@ def callback_step(data,bot_id):
         
 if __name__ == '__main__':
     rospy.init_node("Synergy_node")
-    rospy.loginfo("Chal Gye badde")
-    count = 1
+    rospy.loginfo("Chal Gye badde")    
     dirname = rospkg.RosPack().get_path('swarm_aggregation')
     rate = rospy.Rate(10)
     total_bots = 6

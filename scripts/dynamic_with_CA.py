@@ -8,7 +8,7 @@ from tf.transformations import euler_from_quaternion
 from math import atan2, sqrt, pi
 import matplotlib.pyplot as plt
 from swarm_aggregation.msg import bot, botPose
-import rospkg
+import rospkg, os
 
 class robot(object):
     def __init__(self,no_of_bots): 
@@ -30,12 +30,18 @@ class robot(object):
         self.delij = []
         self.neigh = []      
         self.bearing = [0]
-        self.goal = Point(np.random.uniform(-12,12), np.random.uniform(-12,12), 0.0)
+        self.goal = Point(np.random.uniform(-6,6), np.random.uniform(-6,6), 0.0)
         self.odom = Odometry()
         self.initial_no = -1
-        # self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("time, goal_x, goal_y, x, y \n" )
+        self.iter = rospy.get_param("/iteration/")
+        self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
+        try:
+            os.makedirs(f'{self.dirname}/scripts/Data{self.iter}')
+        except FileExistsError:
+            pass
+        rospy.sleep(2)
+        with open('{}/scripts/Data{}/{}.csv'.format(self.dirname,self.iter,self.namespace.split("/")[1]),'a+') as f:
+            f.write("time, goal_x, goal_y, x, y \n" )
         
     def update_Odom(self,msg):
         """ Odometry of current bot"""
@@ -62,9 +68,8 @@ class robot(object):
         self.disij = []
         self.delij = []
 
-        # with open('{}/scripts/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
-
+        with open('{}/scripts/Data{}/{}.csv'.format(self.dirname,self.iter,self.namespace.split("/")[1]),'a+') as f:
+            f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
         # Distance between bots   
         for odom in self.bot_odom:
             self.disij.append(sqrt((odom.pose.pose.position.y - self.y)**2 + (odom.pose.pose.position.x - self.x)**2))
@@ -86,8 +91,8 @@ class robot(object):
         else:
             if self.goal.x == 0.0 and self.goal.y == 0.0:
                 print("called", self.namespace)
-                self.goal.x = np.random.uniform(-12,12)
-                self.goal.y = np.random.uniform(-12,12)
+                self.goal.x = np.random.uniform(-6,6)
+                self.goal.y = np.random.uniform(-6,6)
         
     def control(self,k):
         """control law for bot"""
@@ -108,17 +113,17 @@ class robot(object):
         # Gradient of Bearing
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
-        # Define wall positions
-        wall_positions = [(-7.433189, self.y), (8.187240, self.y), (self.x, -3.801140), (self.x, 3.665870), (self.x, 0.820250), (self.x, -6.520260)]  # Example wall positions
-        wall_radius = 0.3
+        # # Define wall positions
+        # wall_positions = [(-7.433189, self.y), (8.187240, self.y), (self.x, -3.801140), (self.x, 3.665870), (self.x, 0.820250), (self.x, -6.520260)]  # Example wall positions
+        # wall_radius = 0.3
 
-        #Static Obstacles
-        obstacle_positions = [(-5.50, 1.50), (-2.20, 1.50), (-5.50,-1.50), (-2.20,-1.50)] 
-        obstacle_radius = 0.875
+        # #Static Obstacles
+        # obstacle_positions = [(-5.50, 1.50), (-2.20, 1.50), (-5.50,-1.50), (-2.20,-1.50)] 
+        # obstacle_radius = 0.875
 
-        # Combine wall positions with other obstacles
-        obstacle_positions += wall_positions
-        obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)    
+        # # Combine wall positions with other obstacles
+        # obstacle_positions += wall_positions
+        # obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)    
         
         if (self.dis_err) >= 0.875:
             temp = []
@@ -170,10 +175,10 @@ if __name__ == '__main__':
     l = [] #l is time
     rospy.init_node("Task2_controller")
     rate = rospy.Rate(4)
-    bot = robot(20)
+    bot = robot(6)
     rospy.sleep(10)     
 
-    while not rospy.is_shutdown() and k < 4000:
+    while not rospy.is_shutdown():
         k = k+1
         h = 0.25
         K = 0.3

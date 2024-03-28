@@ -36,6 +36,7 @@ class robot(object):
         self.ranges = LaserScan()
         self.goal = Point(np.random.uniform(1,6), np.random.uniform(-6,0), 0.0)
         self.odom = Odometry()
+        self.count = 0
         self.initial_no = -1
         self.iter = rospy.get_param("/iteration/")
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
@@ -74,7 +75,7 @@ class robot(object):
         Turn Right by default or rotate on CCW fashion"""
         # print("Wall following")
         deg = 50
-        dst = 0.7
+        dst = 0.65
         # while True:
         if min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst: # front wall  
             self.speed.angular.z = -0.2
@@ -84,9 +85,9 @@ class robot(object):
             self.speed.linear.x = 0.2            
         #elif abs(dist([self.x,self.y],[self.goal.x,self.goal.y]) - min(self.odom_counter)) < 0.17:
             #self.go2goal()      
-        # else:
-        #     self.speed.angular.z = 0.1
-        #     self.speed.linear.x = 0.02                       
+        elif self.count >= 4:
+            self.speed.angular.z = 0.01
+            self.speed.linear.x = 0.1                       
 
     def set_goal(self,r,ca):
         """ sets goal for bot"""
@@ -143,13 +144,13 @@ class robot(object):
         # Define wall positions
         wall_positions = [(-7.433189, self.y), (8.187240, self.y), (self.x < 0.9, -3.801140), (self.x, 3.665870), (self.x > 0.0, 0.820250), (self.x, -6.576820), (0.477467, self.y > 0.5), (0.422073, self.y < -3.25)]  # Example wall positions
         # wall_positions = [(-7.25, self.y), (8.0000, self.y), (self.x, -3.65), (self.x, 3.40), (self.x, 0.65), (self.x, -6.25), (0.0, self.y), (0.9, self.y)]
-        wall_radius = 0.7
+        wall_radius = 0.65
         deg = 30
-        dst = 0.7
+        dst = 0.65
 
         #Static Obstacles
         obstacle_positions = [(-5.50, 1.50), (-2.20, 1.50), (-4.0,0.0), (-5.50,-1.50), (-2.20,-1.50)] 
-        obstacle_radius = 0.7
+        obstacle_radius = 0.65
 
         # Combine wall positions with other obstacles
         # obstacle_positions += wall_positions
@@ -164,6 +165,7 @@ class robot(object):
             for i,z in enumerate(self.disij):
                 if i not in excluded_bot:
                     if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst or obstacle_distance <= obstacle_radius or wall_distance <= wall_radius) and z >= 0.65: 
+                        self.count += 1
                         self.wall_following()
                         self.goal = Point(3.0, -2.0, 0.0)                        
                         print("Wall Following", obstacle_distance, self.namespace)
