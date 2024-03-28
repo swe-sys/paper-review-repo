@@ -6,6 +6,9 @@
   <arg name="fourth_tb3"  default="tb3_4"/>
   <arg name="fifth_tb3"  default="tb3_5"/>
   <arg name="sixth_tb3"  default="tb3_6"/>
+  <arg name="seventh_tb3"  default="tb3_7"/>
+  <arg name="eighth_tb3"  default="tb3_8"/>
+  <arg name="ninth_tb3"  default="tb3_9"/>
 
   <arg name="first_tb3_x_pos" default=" -6.31"/>
   <arg name="first_tb3_y_pos" default=" 0.35"/>
@@ -32,10 +35,25 @@
   <arg name="fifth_tb3_z_pos" default=" 0.0"/>
   <arg name="fifth_tb3_yaw"   default=" 0.67"/>
 
-  <arg name="sixth_tb3_x_pos" default=" 3.29"/>
+  <arg name="sixth_tb3_x_pos" default=" -9.29"/>
   <arg name="sixth_tb3_y_pos" default=" -2.11"/>
   <arg name="sixth_tb3_z_pos" default=" 0.0"/>
   <arg name="sixth_tb3_yaw"   default=" -0.89"/>
+
+  <arg name="seventh_tb3_x_pos" default=" -9.72"/>
+  <arg name="seventh_tb3_y_pos" default=" 2.52"/>
+  <arg name="seventh_tb3_z_pos" default=" 0.0"/>
+  <arg name="seventh_tb3_yaw"   default=" -0.89"/>
+
+  <arg name="eighth_tb3_x_pos" default=" -9.274"/>
+  <arg name="eighth_tb3_y_pos" default=" 0.186"/>
+  <arg name="eighth_tb3_z_pos" default=" 0.0"/>
+  <arg name="eighth_tb3_yaw"   default=" -0.89"/>
+
+  <arg name="ninth_tb3_x_pos" default=" 3.29"/>
+  <arg name="ninth_tb3_y_pos" default=" -2.11"/>
+  <arg name="ninth_tb3_z_pos" default=" 0.0"/>
+  <arg name="ninth_tb3_yaw"   default=" -0.89"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find swarm_aggregation)/worlds/obs3.world"/> 
@@ -156,6 +174,63 @@
       <remap from="/scan" to="/$(arg sixth_tb3)/scan"/>
       <remap from="/radius" to="/$(arg sixth_tb3)/radius"/>
       <remap from="/obs" to="/$(arg sixth_tb3)/obs"/>
+    </node>
+  </group>
+
+  <group ns = "$(arg seventh_tb3)">
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
+      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="tf_prefix" value="$(arg seventh_tb3)" />
+    </node>
+    
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg seventh_tb3) -x $(arg seventh_tb3_x_pos) -y $(arg seventh_tb3_y_pos) -z $(arg seventh_tb3_z_pos) -Y $(arg seventh_tb3_yaw) -param robot_description" />
+    <node pkg="swarm_aggregation" type="guiding_so.py" name="multi_bot7" output="screen" >
+      <remap from="/odom" to="/$(arg seventh_tb3)/odom"/>
+      <remap from="/cmd_vel" to="/$(arg seventh_tb3)/cmd_vel"/>
+      <remap from="/goal" to="/$(arg seventh_tb3)/goal"/>
+      <remap from="/scan" to="/$(arg seventh_tb3)/scan"/>
+      <remap from="/radius" to="/$(arg seventh_tb3)/radius"/>
+      <remap from="/obs" to="/$(arg seventh_tb3)/obs"/>
+    </node>
+  </group>
+
+  <group ns = "$(arg eighth_tb3)">
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
+      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="tf_prefix" value="$(arg eighth_tb3)" />
+    </node>
+    
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg eighth_tb3) -x $(arg eighth_tb3_x_pos) -y $(arg eighth_tb3_y_pos) -z $(arg eighth_tb3_z_pos) -Y $(arg eighth_tb3_yaw) -param robot_description" />
+    <node pkg="swarm_aggregation" type="guiding_so.py" name="multi_bot8" output="screen" >
+      <remap from="/odom" to="/$(arg eighth_tb3)/odom"/>
+      <remap from="/cmd_vel" to="/$(arg eighth_tb3)/cmd_vel"/>
+      <remap from="/goal" to="/$(arg eighth_tb3)/goal"/>
+      <remap from="/scan" to="/$(arg eighth_tb3)/scan"/>
+      <remap from="/radius" to="/$(arg eighth_tb3)/radius"/>
+      <remap from="/obs" to="/$(arg eighth_tb3)/obs"/>
+    </node>
+  </group>
+
+  <group ns = "$(arg ninth_tb3)">
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" >
+      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="tf_prefix" value="$(arg ninth_tb3)" />
+    </node>
+    
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg ninth_tb3) -x $(arg ninth_tb3_x_pos) -y $(arg ninth_tb3_y_pos) -z $(arg ninth_tb3_z_pos) -Y $(arg ninth_tb3_yaw) -param robot_description" />
+    <node pkg="swarm_aggregation" type="guiding_so.py" name="multi_bot9" output="screen" >
+      <remap from="/odom" to="/$(arg ninth_tb3)/odom"/>
+      <remap from="/cmd_vel" to="/$(arg ninth_tb3)/cmd_vel"/>
+      <remap from="/goal" to="/$(arg ninth_tb3)/goal"/>
+      <remap from="/scan" to="/$(arg ninth_tb3)/scan"/>
+      <remap from="/radius" to="/$(arg ninth_tb3)/radius"/>
+      <remap from="/obs" to="/$(arg ninth_tb3)/obs"/>
     </node>
   </group>
 

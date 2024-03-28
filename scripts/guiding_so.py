@@ -142,7 +142,7 @@ class robot(object):
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
         # Define wall positions
-        wall_positions = [(-7.433189, self.y), (8.187240, self.y), (self.x < 0.9, -3.801140), (self.x, 3.665870), (self.x > 0.0, 0.820250), (self.x, -6.576820), (0.477467, self.y > 0.5), (0.422073, self.y < -3.25)]  # Example wall positions
+        wall_positions = [(-10.578274, self.y), (8.187240, self.y), (self.x < 0.9, -3.801140), (self.x, 3.665870), (self.x > 0.0, 0.820250), (self.x, -6.576820), (0.477467, self.y > 0.5), (0.422073, self.y < -3.25)]  # Example wall positions
         # wall_positions = [(-7.25, self.y), (8.0000, self.y), (self.x, -3.65), (self.x, 3.40), (self.x, 0.65), (self.x, -6.25), (0.0, self.y), (0.9, self.y)]
         wall_radius = 0.65
         deg = 30
@@ -207,7 +207,7 @@ if __name__ == '__main__':
     l = [] #l is time
     rospy.init_node("Task2_controller")
     rate = rospy.Rate(4)
-    bot = robot(6)
+    bot = robot(9)
     rospy.sleep(10)     
 
     while not rospy.is_shutdown():
