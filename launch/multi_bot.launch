@@ -514,6 +514,6 @@
 
   <node pkg="swarm_aggregation" type="detect_bot.py" name="obs_data"/>
   <!-- <node pkg="swarm_aggregation" type="plott.py" name="animator"/> -->
-  <node pkg="swarm_aggregation" type="synerzied.py" name="convergence_checker" output="screen"/> 
+  <!-- <node pkg="swarm_aggregation" type="synerzied.py" name="convergence_checker" output="screen"/>  -->
 
 </launch>

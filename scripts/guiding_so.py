@@ -41,11 +41,11 @@ class robot(object):
         self.iter = rospy.get_param("/iteration/")
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
         try:
-            os.makedirs(f'{self.dirname}/scripts/Data{self.iter}')
+            os.makedirs(f'{self.dirname}/Data/nine_obs_const/Data{self.iter}')
         except FileExistsError:
             pass
         rospy.sleep(2)
-        with open('{}/scripts/Data{}/{}.csv'.format(self.dirname,self.iter,self.namespace.split("/")[1]),'a+') as f:
+        with open('{}/Data/nine_obs_const/Data{}/{}.csv'.format(self.dirname,self.iter,self.namespace.split("/")[1]),'a+') as f:
             f.write("time, goal_x, goal_y, x, y \n" )
         
     def update_Odom(self,msg):
@@ -59,6 +59,50 @@ class robot(object):
         self.yaw = euler[2]
         if self.yaw < 0:
             self.yaw += 2 * pi
+
+    def find_patches(data, max_patch_length=28, diff_threshold=0.1):
+        patches = []
+        current_patch = []
+        start_indices = []
+
+        for i in range(1, len(data)):
+            if abs(data[i] - data[i - 1]) > diff_threshold:
+                if current_patch:
+                    if len(current_patch) <= max_patch_length:
+                        patches.append((current_patch, start_indices[0]))
+                    current_patch = []
+                    start_indices = []
+            current_patch.append(data[i])
+            start_indices.append(i)
+
+        # Append the last patch if it exists and meets the length criteria
+        if current_patch and len(current_patch) <= max_patch_length:
+            patches.append((current_patch, start_indices[0]))
+
+        return patches, len(patches)
+
+    def process_lidar_data(data):
+        patches, count = find_patches(data.ranges, diff_threshold=0.1)
+        angle_increment = data.angle_increment
+        angle_min = data.angle_min
+
+        bot_count = 0
+        for i, (patch, start_index) in enumerate(patches):
+            if len(patch) == 0:
+                continue
+
+            patch_no_a = patch[0]
+            patch_no_b = patch[-1]
+            patch_no_distance = patch[len(patch) // 2]
+            deg = (len(patch) )/3.0
+
+            # Calculate the start angle in radians
+            start_angle = start_index * angle_increment + angle_min
+
+            # Apply cosine rule
+            c_squared = patch_no_a ** 2 + patch_no_b ** 2 - 2 * patch_no_a * patch_no_b * math.cos(math.radians(deg))
+            c = math.sqrt(c_squared)
+            ratio = c / patch_no_distance
 
     def detect_bots(self,data):
         """ Odometry of all bots"""
@@ -95,7 +139,7 @@ class robot(object):
         self.disij = []
         self.delij = []
 
-        with open('{}/scripts/Data{}/{}.csv'.format(self.dirname,self.iter,self.namespace.split("/")[1]),'a+') as f:
+        with open('{}/Data/nine_obs_const/Data{}/{}.csv'.format(self.dirname,self.iter,self.namespace.split("/")[1]),'a+') as f:
             f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         # Distance between bots   
@@ -160,16 +204,18 @@ class robot(object):
         if (self.dis_err) >= 0.75:
             temp = []
             vap = []
-            excluded_bot = [self.cur_bot_id_indx]
+            excluded_bot = [self.cur_bot_id_indx]            
             # print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
                 if i not in excluded_bot:
-                    if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst or obstacle_distance <= obstacle_radius or wall_distance <= wall_radius) and z >= 0.65: 
+                    # if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst or obstacle_distance <= obstacle_radius or wall_distance <= wall_radius) and z >= 0.65:
+                    if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst) and z >= 0.65:  
                         self.count += 1
                         self.wall_following()
                         self.goal = Point(3.0, -2.0, 0.0)                        
                         print("Wall Following", obstacle_distance, self.namespace)
-                    elif z >= 0.65 and obstacle_distance > obstacle_radius:
+                    # elif z >= 0.65 and obstacle_distance > obstacle_radius:
+                    elif z >= 0.65:
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)
                         # print(z,self.delij[i]*(180/pi),i,self.namespace,'1',self.goal, obstacle_distance)
@@ -186,18 +232,15 @@ class robot(object):
                     self.speed.angular.z = np.mean(temp)
                     self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
         else:
-            if len(self.neigh) < 2 or obstacle_distance < 2.0*obstacle_radius or wall_distance < 2*wall_radius: 
-                self.goal = Point(3.0, -2.0, 0.0)
-                self.wall_following()
-                # print("Alone",self.namespace)            
+            # if len(self.neigh) < 2 or obstacle_distance < 2.0*obstacle_radius or wall_distance < 2*wall_radius:
+            if len(self.neigh) < 3:                
+                    self.goal = Point(3.0, -2.0, 0.0)
+                    self.wall_following()
+                    print("Obstacle Near",self.namespace)          
             else:                                            
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
-                print("Aggreated", self.namespace, self.speed.linear.x, self.speed.angular.z )
-                # print(rospy.get_time())
-                # print(self.x,self.goal.x,'x')
-                # print(self.y,self.goal.y,'y')       
-        
+                print("Aggreated", self.namespace,min(self.ranges),min(self.disij))                        
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)

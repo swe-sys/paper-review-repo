@@ -111,6 +111,7 @@ class robot(object):
                     global_x = self.x + (obs_x*cos(-self.yaw) + obs_y*sin(-self.yaw))
                     global_y = self.y + (-obs_x*sin(-self.yaw) + obs_y*cos(-self.yaw))
                     self.obs.append(obstacle(global_x,global_y,angle,distance,min_dis))
+                    print(self.obs, self.namespace, 'Obs')
                     sobs.append(Point(global_x,global_y,angle)) 
                     self.obsplot.obspose = sobs        
             self.hist.append([self.obs])
@@ -170,7 +171,7 @@ class robot(object):
                 # self.safe_zone = [0,0,0]
         except (AttributeError):
             print(AttributeError)
-        print(self.goal,"goal",self.namespace)
+        # print(self.goal,"goal",self.namespace)
 
     def controller(self,k):
         """control law for bot inputs required = disij, delij"""     
@@ -224,14 +225,14 @@ class robot(object):
             #     self.speed.linear.x = np.mean(vap)               
         else:
             # if self.is_inside_circle(self.safe_zone[0:2],self.safe_zone[2]):
-            if len(self.obs) >= 4: 
+            if len(self.obs) >= 3: 
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
                 print("Aggreated")                
             else:               
                 # self.set_goal()
                 self.goal = Point(0.0,0.0,0.0)
-                print("Alone", len(self.obs),self.namespace)
+                # print("Alone", len(self.obs),self.namespace)
             # else: 
             #     if self.dis_err < 0.50:
             #         self.set_goal(random=True)
