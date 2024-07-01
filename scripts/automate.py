@@ -6,6 +6,6 @@ import rospkg
 
 for i in range(1):
     dirname = rospkg.RosPack().get_path('swarm_aggregation')
-    os.system(f"rm -rf {dirname}/Data/nine_obs_const/Data{i}/*")
+    os.system(f"rm -rf {dirname}/Data/Data{i}/*")
     os.system(f"rosparam set /iteration/ {i}")
     os.system("roslaunch swarm_aggregation nine.launch")
