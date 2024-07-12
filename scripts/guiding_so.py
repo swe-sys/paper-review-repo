@@ -5,7 +5,7 @@ from geometry_msgs.msg import Point, Twist
 from nav_msgs.msg import Odometry
 from std_msgs.msg import String
 from tf.transformations import euler_from_quaternion
-from math import atan2, sqrt, pi
+from math import atan2, sqrt, pi, radians, cos, sin , isinf
 import matplotlib.pyplot as plt
 from sensor_msgs.msg import LaserScan
 from swarm_aggregation.msg import bot, botPose
@@ -15,7 +15,9 @@ import os
 class robot(object):
     def __init__(self,no_of_bots): 
         self.x = 0
-        self.y = 0              
+        self.y = 0
+        self.ratio = 0
+        self.bot_count = 0             
         self.cur_bot_id_indx = 0
         self.node_name = rospy.get_name()
         self.namespace = rospy.get_namespace()
@@ -24,9 +26,8 @@ class robot(object):
         self.botpose = rospy.Subscriber('/obs_data',botPose,self.detect_bots)
         self.odom_sub = rospy.Subscriber("/odom",Odometry,self.update_Odom)
         self.cmd_vel = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
-        self.obstacle_detector = rospy.Subscriber('/scan',LaserScan, self.obstacle_detector)
-        #self.pubo = rospy.Publisher('/'+self.namespace +'/odom2',Odometry,queue_size=10)
-        self.pubg = rospy.Publisher('/goal', Point,queue_size=10)
+        self.object_detector = rospy.Subscriber('/scan',LaserScan, self.obstacle_detector)
+        self.pubg = rospy.Publisher('/goal', Point, queue_size=1)
         self.bot_odom = [Odometry() for i in range(self.total_bots)]
         self.yaw = [0 for i in range(self.total_bots)]
         self.count = 0
@@ -35,16 +36,16 @@ class robot(object):
         self.neigh = []      
         self.bearing = [0]        
         self.ranges = LaserScan()
-        self.goal = Point(np.random.uniform(1,6), np.random.uniform(-6,0), 0.0)
+        self.goal = Point(np.random.uniform(-1,9), np.random.uniform(-9,-2), 0.0)
         self.odom = Odometry()
         self.initial_no = -1
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
         self.iters = rospy.get_param("/iteration/")
         try:
-            os.makedirs(f'{self.dirname}/Data{self.iters}')
+            os.makedirs(f'{self.dirname}/Data/eight_obs/Data{self.iters}')
         except FileExistsError:
             pass
-        with open('{}/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+        with open('{}/Data/eight_obs/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
             f.write("time, goal_x, goal_y, x, y \n" )
         
     def update_Odom(self,msg):
@@ -64,32 +65,86 @@ class robot(object):
         bot_id = data.bot_id
         odoms = data.botpose
         self.bot_odom = odoms
-        self.cur_bot_id_indx = bot_id.index(self.namespace)
+        self.cur_bot_id_indx = bot_id.index(self.namespace)    
 
+    def split_list(self,input_list):                                                                                                                                                                                                                                                                                                                
+        sublists = []
+        sublist = []
+        prev_degree = None
+        try:
+            for item in input_list:
+                degree, _ = item                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+                if prev_degree is None or abs(degree - prev_degree) <= self.ang_inc*3:
+                    sublist.append(item)
+                else:
+                    sublists.append(sublist)
+                    sublist = [item]
+                prev_degree = degree
+
+            sublists.append(sublist)
+        except (ValueError, TypeError) as e:
+            print("Error occurred while splitting the list:", str(e))
+
+        return sublists
+    
     def obstacle_detector(self,msg):
         self.ranges = msg.ranges
-    
+        self.ang_max = msg.angle_max
+        self.ang_inc = msg.angle_increment
+        pairs = []
+        for i in range(len(self.ranges)):
+            if not isinf(self.ranges[i]):
+                j = i - abs(self.ang_max)*180/pi
+                pairs.append([self.ang_inc*j,self.ranges[i]])
+        self.cones = self.split_list(pairs)                
+
+    def calculate_ratio(self, lidar_data):
+        self.ratio = []
+            
+        for obj in lidar_data:
+            if len(obj) >= 2:
+                a = obj[0][1]  # Starting range
+                b = obj[-1][1]  # Ending range
+                theta = abs(obj[0][0] - obj[-1][0])  # Absolute difference of starting and ending angle
+                
+                # Convert theta from degrees to radians
+                theta_rad = radians(theta)
+                
+                # Calculate c
+                c = a**2 + b**2 - 2*a*b*cos(theta_rad)
+                
+                # Calculate the median distance to the object
+                distances = [reading[1] for reading in obj]
+                d = np.median(distances)
+                
+                # Calculate the ratio c/d
+                results = c / d
+                self.ratio.append(results)
+            else:
+                self.ratio.append(None)  # Not enough data to calculate c and ratio
+        
+        return self.ratio                
+            
     def wall_following(self):
         """funct to follow wall boundary
         Turn Right by default or rotate on CCW fashion"""
         # print("Wall following")
-        deg = 50
+        deg = 30
         dst = 0.65
         # while True:
         if min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst: # front wall  
-            self.speed.angular.z = -0.2
+            self.speed.angular.z = 0.2
             self.speed.linear.x = 0.0
-            print("Front Wall")                  
+            # print("Front Wall")                  
         elif min(self.ranges[deg:120]) < dst: # left wall 
             self.speed.angular.z = 0.0
             self.speed.linear.x = 0.2
-            print("Left wall")           
-        #elif abs(dist([self.x,self.y],[self.goal.x,self.goal.y]) - min(self.odom_counter)) < 0.17:
-            #self.go2goal()      
-        elif self.count >= 4:
-            self.speed.angular.z = 0.01
-            self.speed.linear.x = 0.1
-            print("Phasa")
+            # print("Left wall")            
+        # elif self.count >= 4:
+        #     self.speed.angular.z = 0.01
+        #     self.speed.linear.x = 0.1
+        #     print("Phasa")    
 
     def set_goal(self,r,ca):
         """ sets goal for bot"""
@@ -97,7 +152,7 @@ class robot(object):
         self.disij = []
         self.delij = []
 
-        with open('{}/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+        with open('{}/Data/eight_obs/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
             f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         # Distance between bots   
@@ -108,26 +163,30 @@ class robot(object):
             #     if m < 0:
             #         m += 2 * pi
 
+        deg = 30
+        dst = 0.7
+
         # Neighbour Set
-        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i] <= r and self.disij[i]>0.1 and self.delij[i] <= ca and self.delij[i] >= -ca ]
+        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i] <= r and self.disij[i]>0.7 and self.delij[i] <= ca and self.delij[i] >= -ca ]
         self.neigh.append(self.odom)
         # print(len(self.neigh),self.namespace)
         no_neigh = len(self.neigh)
 
-        if no_neigh >= 2:
+        if no_neigh >= 2 and (min(self.ranges[0:deg]) >= dst or min(self.ranges[(359-deg):]) >= dst):
             self.initial_no = no_neigh
             self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
         else:
             if self.goal.x == 3.0 and self.goal.y == -2.0:
                 # print("called", self.namespace)
-                self.goal.x = np.random.uniform(1,6)
-                self.goal.y = np.random.uniform(-6,0)
+                self.goal.x = np.random.uniform(-1,9)
+                self.goal.y = np.random.uniform(-9,-2)
         
     def control(self,k):
         """control law for bot"""
  
-        self.set_goal(3,(pi/2))        
+        self.set_goal(3,(pi/2))
+        self.calculate_ratio(self.cones)               
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
 
@@ -143,23 +202,9 @@ class robot(object):
         # Gradient of Bearing
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
-        # Define wall positions
-        # wall_positions = [(-10.578274, self.y), (8.187240, self.y), (self.x < 0.9, -3.801140), (self.x, 3.665870), (self.x > 0.0, 0.820250), (self.x, -6.576820), (0.477467, self.y > 0.5), (0.422073, self.y < -3.25)]  # Example wall positions
-        # wall_positions = [(-7.433189, self.y), (8.187240, self.y), (self.x < 0.9, -3.801140), (self.x, 3.665870), (self.x > 0.0, 0.820250), (self.x, -6.576820), (0.477467, self.y > 0.5), (0.422073, self.y < -3.25)]  # Example wall positions
-        # wall_positions = [(-7.25, self.y), (8.0000, self.y), (self.x, -3.65), (self.x, 3.40), (self.x, 0.65), (self.x, -6.25), (0.0, self.y), (0.9, self.y)]
-        # wall_radius = 0.7
         deg = 30
         dst = 0.7
 
-        #Static Obstacles
-        # obstacle_positions = [(-5.50, 1.50), (-2.20, 1.50), (-4.0,0.0), (-5.50,-1.50), (-2.20,-1.50)] 
-        # obstacle_radius = 0.7
-
-        # # Combine wall positions with other obstacles
-        # # obstacle_positions += wall_positions
-        # obstacle_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(obstacle)) for obstacle in obstacle_positions)
-        # wall_distance = min(np.linalg.norm(np.array([self.x, self.y]) - np.array(wall)) for wall in wall_positions)   
-        
         if (self.dis_err) >= 0.85:
             temp = []
             vap = []
@@ -167,36 +212,36 @@ class robot(object):
             # print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
                 if i not in excluded_bot:
-                    if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst) and z >= dst:
+                    if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst) and z >= 0.7:
                         # or obstacle_distance <= obstacle_radius or wall_distance <= wall_radius 
                         self.wall_following()
                         self.goal = Point(3.0, -2.0, 0.0)                                                
-                        print("Wall Following", self.namespace, self.goal, len(self.neigh))
+                        print("Wall Following", self.namespace, self.goal, self.ratio, len(self.neigh))
                     elif z >= 0.7 :
                         # and (min(self.ranges[0:deg]) >= 1.25*dst or min(self.ranges[(359-deg):]) >= 1.25*dst)
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)                        
-                        print("Free", self.namespace, self.goal, len(self.neigh))                                       
-                    elif z < 0.7:                        
+                        print("Free", self.namespace, self.goal, self.ratio, len(self.neigh))                                       
+                    elif z < 0.35:                        
                         t = rospy.get_time()                       
                         self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
-                        # temp.append(self.speed.angular.z)
-                        # vap.append(self.speed.linear.x)
-                        print("Engaged", self.namespace, self.goal, len(self.neigh))
-                        # print(z,self.delij[i]*(180/pi),i,self.namespace,'2',self.goal, obstacle_distance)
+                    #     # temp.append(self.speed.angular.z)
+                    #     # vap.append(self.speed.linear.x)
+                        print("Engaged", self.namespace, self.goal, self.ratio, len(self.neigh))                        
                 # if temp:
                 #     self.speed.angular.z = np.mean(temp)
                 #     self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
         else:
             if len(self.neigh) < 2:
-                self.goal = Point(3.0, -2.0, 0.0)                
+                # or (min(self.ranges[0:deg]) <= 1.0 or min(self.ranges[(359-deg):]) <= 1.0)
+                self.goal = Point(3.0, -2.0, 0.0)
                 self.wall_following()
-                print("Alone",self.namespace, self.dis_err, len(self.neigh))                                            
-            else:                                            
+                print("Alone", self.namespace, self.dis_err, self.ratio, len(self.neigh))                                            
+            else:                
                 self.speed.linear.x = 0.0
-                self.speed.angular.z = 0.0
-                print("Aggreated", self.namespace, self.dis_err, len(self.neigh))
+                self.speed.angular.z = 0.0        
+                print("Aggreated",self.namespace, self.dis_err, self.ratio, len(self.neigh))
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)

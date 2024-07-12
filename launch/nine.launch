@@ -15,8 +15,8 @@
   <arg name="first_tb3_z_pos" default=" 0.0"/>
   <arg name="first_tb3_yaw"   default=" 1.23"/>
 
-  <arg name="second_tb3_x_pos" default=" -4.02"/>
-  <arg name="second_tb3_y_pos" default=" -1.33"/>
+  <arg name="second_tb3_x_pos" default=" -6.695"/>
+  <arg name="second_tb3_y_pos" default=" 3.939"/>
   <arg name="second_tb3_z_pos" default=" 0.0"/>
   <arg name="second_tb3_yaw"   default=" -1.23"/>
 
@@ -25,8 +25,8 @@
   <arg name="third_tb3_z_pos" default=" 0.0"/>
   <arg name="third_tb3_yaw"   default=" 2.0"/>
 
-  <arg name="fourth_tb3_x_pos" default=" -6.04"/>
-  <arg name="fourth_tb3_y_pos" default=" -2.5"/>
+  <arg name="fourth_tb3_x_pos" default=" -7.04"/>
+  <arg name="fourth_tb3_y_pos" default=" -2.55"/>
   <arg name="fourth_tb3_z_pos" default=" 0.0"/>
   <arg name="fourth_tb3_yaw"   default=" 0.020660"/>
 
@@ -38,7 +38,7 @@
   <arg name="sixth_tb3_x_pos" default=" -9.29"/>
   <arg name="sixth_tb3_y_pos" default=" -2.11"/>
   <arg name="sixth_tb3_z_pos" default=" 0.0"/>
-  <arg name="sixth_tb3_yaw"   default=" -0.89"/>
+  <arg name="sixth_tb3_yaw"   default=" 1.02"/>
 
   <arg name="seventh_tb3_x_pos" default=" -9.72"/>
   <arg name="seventh_tb3_y_pos" default=" 2.52"/>
@@ -50,13 +50,13 @@
   <arg name="eighth_tb3_z_pos" default=" 0.0"/>
   <arg name="eighth_tb3_yaw"   default=" -0.89"/>
 
-  <arg name="ninth_tb3_x_pos" default=" 3.29"/>
-  <arg name="ninth_tb3_y_pos" default=" -2.11"/>
+  <arg name="ninth_tb3_x_pos" default=" -1.22"/>
+  <arg name="ninth_tb3_y_pos" default=" 3.62"/>
   <arg name="ninth_tb3_z_pos" default=" 0.0"/>
   <arg name="ninth_tb3_yaw"   default=" -0.89"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find swarm_aggregation)/worlds/obs3.world"/> 
+    <arg name="world_name" value="$(find swarm_aggregation)/worlds/hexagon.world"/> 
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>

@@ -90,13 +90,13 @@ class robot(object):
         # creating the pairs
         for i in range(len(self.range)):
             if not isinf(self.range[i]):
-                j=i-abs(self.ang_max)*180/pi
+                j = i - abs(self.ang_max)*180/pi
                 pairs.append([self.ang_inc*j,self.range[i]]) 
                 # if i<= 180:
                 #     j = i
                 # else:
                 #     j = i-360
-                # pairs.append([j,self.range[i]])       
+                pairs.append([j,self.range[i]])       
         # spliting the pairs into the cones        
 
         self.cones = self.split_list(pairs)        
