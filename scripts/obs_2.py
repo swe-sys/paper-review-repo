@@ -36,7 +36,7 @@ class robot(object):
         self.neigh = []      
         self.bearing = [0]        
         self.ranges = LaserScan()
-        self.goal = Point(np.random.uniform(-1,9), np.random.uniform(-9,-2), 0.0)
+        self.goal = Point(np.random.uniform(-1,6), np.random.uniform(-6,-2), 0.0)
         self.odom = Odometry()
         self.initial_no = -1
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
@@ -135,9 +135,15 @@ class robot(object):
         deg = 30
         dst = 0.65
         # while True:
-        if min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst: # front wall  
-            self.speed.angular.z = 0.2
-            self.speed.linear.x = 0.0
+        if min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst: # front wall
+            # self.speed.angular.z = -0.2
+            # self.speed.linear.x = 0.0
+            if min(self.ranges[deg:40]) <= dst: 
+                self.speed.angular.z = -0.2 #left
+                self.speed.linear.x = 0.0
+            elif min(self.ranges[320:340]) <= 0.6:
+                self.speed.angular.z = 0.2 #right
+                self.speed.linear.x = 0.0
             # print("Front Wall")                  
         elif min(self.ranges[deg:120]) < dst: # left wall 
             self.speed.angular.z = 0.0
@@ -169,23 +175,24 @@ class robot(object):
         dst = 0.7
 
         # Neighbour Set
-        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i] <= r and self.disij[i]>0.7 and self.delij[i] <= ca and self.delij[i] >= -ca ]
+        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i] <= r and self.disij[i] > 0.1 and self.delij[i] <= ca and self.delij[i] >= -ca ]
         self.neigh.append(self.odom)
         # print(len(self.neigh),self.namespace)
         no_neigh = len(self.neigh)
 
-        if no_neigh >= 2 and (min(self.ranges[0:deg]) >= dst or min(self.ranges[(359-deg):]) >= dst):
+        if no_neigh >= 2:
             self.initial_no = no_neigh
             self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
         else:
             if self.goal.x == 3.0 and self.goal.y == -2.0:
                 # print("called", self.namespace)
-                self.goal.x = np.random.uniform(-1,9)
-                self.goal.y = np.random.uniform(-9,-2)
+                self.goal.x = np.random.uniform(-1,6)
+                self.goal.y = np.random.uniform(-6,-2)
         
     def control(self,k):
         """control law for bot"""
+        self.head_err = []
  
         self.set_goal(3,(pi/2))
         self.ratio = self.calculate_ratio(self.cones)               
@@ -204,48 +211,52 @@ class robot(object):
         # Gradient of Bearing
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
+        # Heading Error
+        # self.head_err = self.bearing - self.yaw
+
+        # self.head_err = (self.head_err + pi) % (2 * pi) - pi
+
         deg = 30
         dst = 0.7
-
-        if (self.dis_err) >= 0.85:
-            temp = []
-            vap = []
-            excluded_bot = [self.cur_bot_id_indx]
-            # print(self.cur_bot_id_indx)
-            for i,z in enumerate(self.disij):
-                if i not in excluded_bot:
-                    for j, x in enumerate(self.ratio):
-                        if x is not None:
-                            if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst) and z >= 0.7 and self.ratio[j] > 0.2:
+        for j, x in enumerate(self.ratio):
+            if x is not None:
+                if (self.dis_err) >= 0.85:                    
+                    excluded_bot = [self.cur_bot_id_indx]                    
+                    for i,z in enumerate(self.disij):
+                        if i not in excluded_bot:                    
+                            if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst) or x > 0.162:
                                 # or obstacle_distance <= obstacle_radius or wall_distance <= wall_radius 
                                 self.wall_following()
-                                self.goal = Point(3.0, -2.0, 0.0)                                                
-                                print("Wall Following", self.namespace, len(self.disij), len(self.ratio), len(self.neigh))
-                            elif z >= 0.7 and self.ratio[j] < 0.16:
+                                # self.goal = Point(3.0, -2.0, 0.0)                                                
+                                print("Wall Following", self.namespace, z , x , self.goal, len(self.neigh))
+                            elif (0.7 < z <= 3)  or (0.7 <= z <= 1.7 and 0.06 <= x <= 0.162) or (1.7 < z <= 2.7 and 0.03 <= x < 0.06):
                                 # and (min(self.ranges[0:deg]) >= 1.25*dst or min(self.ranges[(359-deg):]) >= 1.25*dst)
+                                self.set_goal(3,(pi/2))
                                 self.speed.linear.x = 0.18
                                 self.speed.angular.z = K*np.sign(self.dtheta)                        
-                                print("Free", self.namespace, len(self.disij), len(self.ratio), len(self.neigh))                                       
-                            elif z < 0.35:                        
+                                print("Robot", self.namespace, z , x , self.goal, len(self.neigh))                                       
+                            elif z < 0.7:                        
                                 t = rospy.get_time()                       
                                 self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
-                                self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
-                            #     # temp.append(self.speed.angular.z)
-                            #     # vap.append(self.speed.linear.x)
-                                print("Engaged", self.namespace, len(self.disij), len(self.ratio), len(self.neigh))                        
-                # if temp:
-                #     self.speed.angular.z = np.mean(temp)
-                #     self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
-        else:
-            if len(self.neigh) < 2:
-                # or (min(self.ranges[0:deg]) <= 1.0 or min(self.ranges[(359-deg):]) <= 1.0)
-                self.goal = Point(3.0, -2.0, 0.0)
-                self.wall_following()
-                print("Alone", self.namespace, len(self.disij), len(self.ratio), len(self.neigh))                                            
-            else:                
-                self.speed.linear.x = 0.0
-                self.speed.angular.z = 0.0        
-                print("Aggreated",self.namespace, self.dis_err, len(self.disij), len(self.ratio), len(self.neigh))
+                                self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])                            
+                                print("Engaged", self.namespace, z , x, self.goal, len(self.neigh))
+                            # else:
+                            #     self.speed.linear.x = 0.18
+                            #     self.speed.angular.z = K*np.sign(self.dtheta)
+                            #     print("Free", self.namespace, z, x, self.dis_err)                                
+                else:            
+                    if len(self.neigh) >= 2 and x < 0.162:
+                        # or (min(self.ranges[0:deg]) <= 1.0 or min(self.ranges[(359-deg):]) <= 1.0)
+                        self.speed.linear.x = 0.0
+                        self.speed.angular.z = 0.0        
+                        print("Aggreated",self.namespace, self.dis_err, x, len(self.neigh))
+                    elif x < 0.162:
+                        self.wall_following()
+                        print("Pta nahi", self.namespace)
+                    else:                
+                        self.goal = Point(np.random.uniform(-1,6), np.random.uniform(-6,-2), 0.0)
+                        # self.wall_following()
+                        print("Alone", self.namespace, len(self.disij), x, len(self.neigh))
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)

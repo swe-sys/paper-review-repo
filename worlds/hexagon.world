@@ -88,85 +88,95 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <state world_name='default'>
-      <sim_time>4 799000000</sim_time>
-      <real_time>4 807665709</real_time>
-      <wall_time>1720092953 170074265</wall_time>
-      <iterations>4799</iterations>
+      <sim_time>10 255000000</sim_time>
+      <real_time>10 268090388</real_time>
+      <wall_time>1721130535 229534861</wall_time>
+      <iterations>10255</iterations>
       <model name='brick_box_3x1x3'>
-        <pose>-3.75472 -2.42674 -0.046633 -0.006018 0 -1.55366</pose>
+        <pose>-3.50219 -3.46084 -0.046633 -0.006018 0 -1.55366</pose>
         <scale>1 1 1</scale>
         <link name='chassis'>
-          <pose>-3.74569 -2.42659 1.45334 -0.006018 0 -1.55366</pose>
+          <pose>-3.49317 -3.46069 1.45334 -0.006018 0 -1.55366</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='brick_box_3x1x3_clone'>
-        <pose>-9.2604 5.51544 0 0 0 -1.55366</pose>
+        <pose>-8.7706 5.5865 0 0 0 -1.55366</pose>
         <scale>1 1 1</scale>
         <link name='chassis'>
-          <pose>-9.2604 5.51544 1.5 0 0 -1.55366</pose>
+          <pose>-8.7706 5.5865 1.5 0 0 -1.55366</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='brick_box_3x1x3_clone_0'>
+        <pose>-11.4972 -3.48047 -0.046633 -0.006018 0 -1.55366</pose>
+        <scale>1 1 1</scale>
+        <link name='chassis'>
+          <pose>-11.4882 -3.48032 1.45334 -0.006018 0 -1.55366</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='brick_box_3x1x3_clone_clone'>
-        <pose>-10.2328 4.26417 0 0 -0 0.024605</pose>
+        <pose>-10.4939 4.55939 0 0 -0 0.024605</pose>
         <scale>1 1 1</scale>
         <link name='chassis'>
-          <pose>-10.2328 4.26417 1.5 0 -0 0.024605</pose>
+          <pose>-10.4939 4.55939 1.5 0 -0 0.024605</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='brick_box_3x1x3_clone_clone_clone'>
-        <pose>-7.59345 6.55593 0 0 0 -0.006809</pose>
+        <pose>-6.80899 6.59754 0 0 0 -0.006809</pose>
         <scale>1 1 1</scale>
         <link name='chassis'>
-          <pose>-7.59345 6.55593 1.5 0 0 -0.006809</pose>
+          <pose>-6.80899 6.59754 1.5 0 0 -0.006809</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='grey_wall'>
-        <pose>-11.6554 -0.165819 0 0 0 -1.57182</pose>
+        <pose>-11.9009 1.26466 0 0 0 -1.57182</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-11.6554 -0.165819 1.4 0 0 -1.57182</pose>
+          <pose>-11.9009 1.26466 1.4 0 0 -1.57182</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='grey_wall_clone'>
-        <pose>-7.88238 -3.79274 0 0 -0 0</pose>
+        <pose>-7.26649 -4.90154 0 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-7.88238 -3.79274 1.4 0 -0 0</pose>
+          <pose>-7.26649 -4.90154 1.4 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='grey_wall_clone_0'>
-        <pose>-2.46304 6.17111 0 0 -0 0</pose>
+        <pose>-1.70221 6.98255 0 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-2.46304 6.17111 1.4 0 -0 0</pose>
+          <pose>-1.70221 6.98255 1.4 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='grey_wall_clone_clone'>
-        <pose>1.33178 2.42015 0.041493 -0.02354 0.030124 1.58206</pose>
+        <pose>2.19088 3.25119 0.062868 -0.02354 0.030124 1.58206</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>1.29835 2.46193 1.44047 -0.02354 0.030124 1.58206</pose>
+          <pose>2.15745 3.29297 1.46185 -0.02354 0.030124 1.58206</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -183,120 +193,120 @@
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone'>
-        <pose>-10 3e-06 0.992555 0 0 -0.007208</pose>
+        <pose>-10 4e-06 0.992555 0 0 -0.007171</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-10 3e-06 0.992555 0 0 -0.007208</pose>
+          <pose>-10 4e-06 0.992555 0 0 -0.007171</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_0'>
-        <pose>-5.5 2.598 0.992555 0 0 -0.011116</pose>
+        <pose>-5.5 2.598 0.992555 0 0 -0.01108</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-5.5 2.598 0.992555 0 0 -0.011116</pose>
+          <pose>-5.5 2.598 0.992555 0 0 -0.01108</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_2'>
-        <pose>-8.49996 2.59801 0.992556 0 0 -0.009219</pose>
+        <pose>-8.49996 2.59801 0.992555 0 0 -0.009198</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-8.49996 2.59801 0.992556 0 0 -0.009219</pose>
+          <pose>-8.49996 2.59801 0.992555 0 0 -0.009198</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_2_clone'>
-        <pose>-7.00375 -0.014756 0.992556 0 0 -0.0096</pose>
+        <pose>-7.00375 -0.014755 0.992555 0 0 -0.009578</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-7.00375 -0.014756 0.992556 0 0 -0.0096</pose>
+          <pose>-7.00375 -0.014755 0.992555 0 0 -0.009578</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_2_clone_0'>
-        <pose>-2.41616 2.64892 0.992559 0 0 -0.009665</pose>
+        <pose>-2.41615 2.64892 0.992555 0 0 -0.009877</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-2.41616 2.64892 0.992559 0 0 -0.009665</pose>
+          <pose>-2.41615 2.64892 0.992555 0 0 -0.009877</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_clone'>
-        <pose>-3.97359 4.89546 0.992556 0 0 -0.010498</pose>
+        <pose>-3.97359 4.89546 0.992555 0 0 -0.010471</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-3.97359 4.89546 0.992556 0 0 -0.010498</pose>
+          <pose>-3.97359 4.89546 0.992555 0 0 -0.010471</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_clone_clone'>
-        <pose>-3.99994 1.5e-05 0.992555 0 0 -0.014577</pose>
+        <pose>-3.99994 1.6e-05 0.992555 0 0 -0.014542</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-3.99994 1.5e-05 0.992555 0 0 -0.014577</pose>
+          <pose>-3.99994 1.6e-05 0.992555 0 0 -0.014542</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_clone_clone_0'>
-        <pose>-8.5 -2.598 0.992555 0 0 -0.008378</pose>
+        <pose>-8.5 -2.598 0.992555 0 0 -0.008341</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-8.5 -2.598 0.992555 0 0 -0.008378</pose>
+          <pose>-8.5 -2.598 0.992555 0 0 -0.008341</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_clone_clone_0_clone'>
-        <pose>-5.5 -2.598 0.992556 0 0 -0.006935</pose>
+        <pose>-5.5 -2.598 0.992555 0 0 -0.006912</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-5.5 -2.598 0.992556 0 0 -0.006935</pose>
+          <pose>-5.5 -2.598 0.992555 0 0 -0.006912</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_clone_clone_0_clone_1'>
-        <pose>-1.00818 4.89416 0.992554 0 -0 -0.012427</pose>
+        <pose>-1.00818 4.89416 0.992556 0 0 -0.012404</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-1.00818 4.89416 0.992554 0 -0 -0.012427</pose>
+          <pose>-1.00818 4.89416 0.992556 0 0 -0.012404</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_clone_clone_0_clone_2'>
-        <pose>0.500015 2.59801 0.992556 0 -0 0.047175</pose>
+        <pose>0.500016 2.59801 0.992555 0 -0 0.047201</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>0.500015 2.59801 0.992556 0 -0 0.047175</pose>
+          <pose>0.500016 2.59801 0.992555 0 -0 0.047201</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder_0_clone_clone_clone_clone_clone'>
-        <pose>-0.999996 1e-06 0.99256 0 0 -0.014711</pose>
+        <pose>-0.99996 9e-06 0.992555 0 0 -0.015306</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>-0.999996 1e-06 0.99256 0 0 -0.014711</pose>
+          <pose>-0.99996 9e-06 0.992555 0 0 -0.015306</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
@@ -308,7 +318,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>-1.70501 0.680521 28.0586 -4.9e-05 1.5698 1.58221</pose>
+        <pose>-5.49444 0.195551 24.7914 -3.1e-05 1.5698 1.59014</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -1332,6 +1342,51 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
+    </model>
+    <model name='brick_box_3x1x3_clone_0'>
+      <static>1</static>
+      <link name='chassis'>
+        <pose>0 0 1.5 0 -0 0</pose>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>3 1 3</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://brick_box_3x1x3/meshes/simple_box.dae</uri>
+              <scale>3 1 3</scale>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://brick_box_3x1x3/materials/scripts</uri>
+              <uri>model://brick_box_3x1x3/materials/textures</uri>
+              <name>BrickBox/Diffuse</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose>-11.5627 -3.53103 -0.046633 -0.006018 0 -1.55366</pose>
     </model>
   </world>
 </sdf>

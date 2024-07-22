@@ -36,16 +36,16 @@ class robot(object):
         self.neigh = []      
         self.bearing = [0]        
         self.ranges = LaserScan()
-        self.goal = Point(np.random.uniform(-1,9), np.random.uniform(-9,-2), 0.0)
+        self.goal = Point(np.random.uniform(-1,6), np.random.uniform(-6,-2), 0.0)
         self.odom = Odometry()
         self.initial_no = -1
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
         self.iters = rospy.get_param("/iteration/")
         try:
-            os.makedirs(f'{self.dirname}/Data/eight_obs/Data{self.iters}')
+            os.makedirs(f'{self.dirname}/Data/Threshold_0.7/Data{self.iters}')
         except FileExistsError:
             pass
-        with open('{}/Data/eight_obs/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+        with open('{}/Data/Threshold_0.7/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
             f.write("time, goal_x, goal_y, x, y \n" )
         
     def update_Odom(self,msg):
@@ -131,16 +131,24 @@ class robot(object):
         Turn Right by default or rotate on CCW fashion"""
         # print("Wall following")
         deg = 30
-        dst = 0.65
+        dst = 0.7
         # while True:
         if min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst: # front wall  
-            self.speed.angular.z = 0.2
+            self.speed.angular.z = -0.2
             self.speed.linear.x = 0.0
-            # print("Front Wall")                  
+            print("Front Wall")
+            # if min(self.ranges[deg:40]) <= dst: 
+            #     self.speed.angular.z = -0.2 #left
+            #     self.speed.linear.x = 0.0
+            #     print("left", self.namespace)
+            # elif min(self.ranges[320:340]) < 0.6:
+            #     self.speed.angular.z = 0.2 #right
+            #     self.speed.linear.x = 0.0
+            #     print("right", self.namespace)                 
         elif min(self.ranges[deg:120]) < dst: # left wall 
             self.speed.angular.z = 0.0
             self.speed.linear.x = 0.2
-            # print("Left wall")            
+            print("Left wall", self.namespace)            
         # elif self.count >= 4:
         #     self.speed.angular.z = 0.01
         #     self.speed.linear.x = 0.1
@@ -152,7 +160,7 @@ class robot(object):
         self.disij = []
         self.delij = []
 
-        with open('{}/Data/eight_obs/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+        with open('{}/Data/Threshold_0.7/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
             f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         # Distance between bots   
@@ -163,24 +171,21 @@ class robot(object):
             #     if m < 0:
             #         m += 2 * pi
 
-        deg = 30
-        dst = 0.7
-
         # Neighbour Set
-        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i] <= r and self.disij[i]>0.7 and self.delij[i] <= ca and self.delij[i] >= -ca ]
+        self.neigh = [odom for i,odom in enumerate(self.bot_odom) if self.disij[i] <= r and self.disij[i] > 0.1 and self.delij[i] <= ca and self.delij[i] >= -ca ]
         self.neigh.append(self.odom)
         # print(len(self.neigh),self.namespace)
         no_neigh = len(self.neigh)
 
-        if no_neigh >= 2 and (min(self.ranges[0:deg]) >= dst or min(self.ranges[(359-deg):]) >= dst):
+        if no_neigh >= 2:
             self.initial_no = no_neigh
             self.goal.x = np.mean([odom.pose.pose.position.x for odom in self.neigh])
             self.goal.y = np.mean([odom.pose.pose.position.y for odom in self.neigh])
         else:
             if self.goal.x == 3.0 and self.goal.y == -2.0:
                 # print("called", self.namespace)
-                self.goal.x = np.random.uniform(-1,9)
-                self.goal.y = np.random.uniform(-9,-2)
+                self.goal.x = np.random.uniform(-1,6)
+                self.goal.y = np.random.uniform(-6,-2)
         
     def control(self,k):
         """control law for bot"""
@@ -192,9 +197,9 @@ class robot(object):
 
         # Bearing of bot
         self.bearing.append(atan2(self.incy,self.incx))
-        for i,b in enumerate(self.bearing):
-            if b < 0:
-                b += 2 * pi
+        # for i,b in enumerate(self.bearing):
+        #     if b < 0:
+        #         b += 2 * pi
 
         # Distance Error
         self.dis_err = (sqrt(self.incx**2+self.incy**2))        
@@ -212,23 +217,31 @@ class robot(object):
             # print(self.cur_bot_id_indx)
             for i,z in enumerate(self.disij):
                 if i not in excluded_bot:
-                    if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst) and z >= 0.7:
+                    if (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst):
                         # or obstacle_distance <= obstacle_radius or wall_distance <= wall_radius 
-                        self.wall_following()
-                        self.goal = Point(3.0, -2.0, 0.0)                                                
-                        print("Wall Following", self.namespace, self.goal, self.ratio, len(self.neigh))
-                    elif z >= 0.7 :
-                        # and (min(self.ranges[0:deg]) >= 1.25*dst or min(self.ranges[(359-deg):]) >= 1.25*dst)
+                        if len(self.neigh) < 2:
+                            self.wall_following()                                                                        
+                            print("Wall Following", self.namespace, self.goal, len(self.neigh))
+                        elif len(self.neigh) >= 2 and (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst):
+                            t = rospy.get_time()                       
+                            self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
+                            self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])                  
+                            print("Engaged", self.namespace, self.goal, len(self.neigh)) 
+                    # elif  len(self.neigh) >= 2 and (min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst):
+                    # #     # and (min(self.ranges[0:deg]) >= 1.25*dst or min(self.ranges[(359-deg):]) >= 1.25*dst)
+                    # #     self.speed.linear.x = 0.18
+                    # #     self.speed.angular.z = K*np.sign(self.dtheta)                        
+                    # #     print("Free", self.namespace, self.goal, len(self.neigh))                                       
+                    # elif z < 0.7:                        
+                    #     t = rospy.get_time()                       
+                    #     self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
+                    #     self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])                  
+                    #     print("Engaged", self.namespace, self.goal, len(self.neigh))
+                    else:
+                    #     # and (min(self.ranges[0:deg]) >= 1.25*dst or min(self.ranges[(359-deg):]) >= 1.25*dst)
                         self.speed.linear.x = 0.18
                         self.speed.angular.z = K*np.sign(self.dtheta)                        
-                        print("Free", self.namespace, self.goal, self.ratio, len(self.neigh))                                       
-                    elif z < 0.35:                        
-                        t = rospy.get_time()                       
-                        self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
-                        self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
-                    #     # temp.append(self.speed.angular.z)
-                    #     # vap.append(self.speed.linear.x)
-                        print("Engaged", self.namespace, self.goal, self.ratio, len(self.neigh))                        
+                        print("Free", self.namespace, self.goal, len(self.neigh))                       
                 # if temp:
                 #     self.speed.angular.z = np.mean(temp)
                 #     self.speed.linear.x = np.mean(vap)   #/len(self.neigh)                
@@ -236,12 +249,13 @@ class robot(object):
             if len(self.neigh) < 2:
                 # or (min(self.ranges[0:deg]) <= 1.0 or min(self.ranges[(359-deg):]) <= 1.0)
                 self.goal = Point(3.0, -2.0, 0.0)
-                self.wall_following()
-                print("Alone", self.namespace, self.dis_err, self.ratio, len(self.neigh))                                            
+                self.set_goal(3,(pi/2))
+                # self.wall_following()
+                print("Alone", self.namespace, self.dis_err, len(self.neigh))                                            
             else:                
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0        
-                print("Aggreated",self.namespace, self.dis_err, self.ratio, len(self.neigh))
+                print("Aggreated",self.namespace, self.dis_err, len(self.neigh))
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)
