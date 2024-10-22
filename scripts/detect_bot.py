@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from math import sqrt
 import rospy
 import math
@@ -43,9 +42,9 @@ class Obstacles:
         self.obs['/tb3_4/'] = Odometry()
         self.obs['/tb3_5/'] = Odometry()
         self.obs['/tb3_6/'] = Odometry()
-        self.obs['/tb3_7/'] = Odometry()
-        self.obs['/tb3_8/'] = Odometry()
-        self.obs['/tb3_9/'] = Odometry()
+        # self.obs['/tb3_7/'] = Odometry()
+        # self.obs['/tb3_8/'] = Odometry()
+        # self.obs['/tb3_9/'] = Odometry()
         # self.obs['/tb3_10/'] = Odometry()
         # self.obs['/tb3_11/'] = Odometry()
         # self.obs['/tb3_12/'] = Odometry()
@@ -99,7 +98,7 @@ class Obstacles:
 if __name__ == '__main__':
     rospy.init_node('collision_cone_obstacles', anonymous = True)
     s = Obstacles()
-    r = rospy.Rate(4)
+    r = rospy.Rate(10)
     while not rospy.is_shutdown():
         obs = []
         bot_id = []

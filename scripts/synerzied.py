@@ -26,10 +26,10 @@ if __name__ == '__main__':
     rospy.loginfo("Chal Gye badde")    
     dirname = rospkg.RosPack().get_path('swarm_aggregation')
     rate = rospy.Rate(10)
-    total_bots = 9
+    total_bots = 6
     converged = np.zeros(total_bots).astype(bool)
     cmd_vels = [rospy.Subscriber(f"/tb3_{i+1}/cmd_vel",Twist,callback_step,i) for i in range(total_bots)]
-    rospy.sleep(6)
+    rospy.sleep(10)
     iteration = rospy.get_param("/iteration/")
     # stop_server = rospy.ServiceProxy('/gazebo/reset_world',Empty)    
     while not rospy.is_shutdown():

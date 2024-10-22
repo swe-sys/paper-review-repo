@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
-import rospy
-import numpy as np
+import rospy 
 from geometry_msgs.msg import Point, Twist, Pose2D
-from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
-from std_msgs.msg import String
-from tf.transformations import euler_from_quaternion, quaternion_from_euler
-from math import atan2, sqrt, pi, cos, sin,inf,isinf
+import numpy as np
 from collections import deque
-import math as m
+from math import *
 from swarm_aggregation.msg import obs
-import rospkg
+from tf.transformations import euler_from_quaternion
+from nav_msgs.msg import Odometry
+import matplotlib.pyplot as plt
 
 class obstacle(Pose2D):
-    def __init__(self, x,y,theta,dist,min_dis):
+    def __init__(self,x,y,theta,dist,min_dis):
         super().__init__(x,y,theta)
         self.static = False
         self.detected_time = rospy.get_time()
@@ -30,7 +28,7 @@ class obstacle(Pose2D):
             return False
 
 class robot:
-    def __init__(self,no_of_bots):
+    def __init__(self,no_of_bots): 
         self.total_bots = no_of_bots 
         self.x = 0
         self.y = 0        
@@ -50,26 +48,19 @@ class robot:
         self.initial_no = -1                      
         self.goal = Point(np.random.uniform(-6,6), np.random.uniform(-6,6), 0.0)
         self.odom = Odometry()
-        self.obsplot = obs()
-        self.speed = Twist()        
-        self.hist = deque(maxlen=20)
-        # self.safezone_active = False
         self.namespace = rospy.get_namespace()
+        self.speed = Twist()
+        self.hist = deque(maxlen=20)
 
-        # Publishers and Subscribers
         self.object_detector = rospy.Subscriber('/scan',LaserScan, self.scanner)
         self.odom_sub = rospy.Subscriber("/odom",Odometry,self.update_Odom) 
 
         self.cmd_vel = rospy.Publisher("/cmd_vel", Twist, queue_size=1)    
         self.pubg = rospy.Publisher('/goal', Point, queue_size=1)
         self.rad_pub = rospy.Publisher('/radius', Point, queue_size=1)
-        self.obs_pub = rospy.Publisher('/obs',obs, queue_size=1)
-
-        self.obsplot.bot_id = self.namespace
-        # self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("time,goal_x,goal_y,x,y\n" )
-
+        self.obs_pub = rospy.Publisher('/obs',obs, queue_size=1)      
+        
+        
     def update_Odom(self,odom):
         """ Odometry of current bot"""        
         self.x = odom.pose.pose.position.x 
@@ -84,22 +75,14 @@ class robot:
         self.range = msg.ranges
         self.ang_max = msg.angle_max
         self.ang_inc = msg.angle_increment
-        self.obs = []
+        self.obs = []        
         pairs = []
-        sobs = []   
-        # creating the pairs
         for i in range(len(self.range)):
             if not isinf(self.range[i]):
-                j = i - abs(self.ang_max)*180/pi
-                pairs.append([self.ang_inc*j,self.range[i]]) 
-                # if i<= 180:
-                #     j = i
-                # else:
-                #     j = i-360
-                # pairs.append([j,self.range[i]])       
-        # spliting the pairs into the cones        
+                j = i - 360
+                pairs.append([j,self.range[i]])
+        self.cones = self.split_list(pairs)
 
-        self.cones = self.split_list(pairs)        
         try:
             for i in self.cones:
                 angle = np.mean(np.array(i)[:,0])*(pi/180)
@@ -111,21 +94,11 @@ class robot:
                     global_x = self.x + (obs_x*cos(-self.yaw) + obs_y*sin(-self.yaw))
                     global_y = self.y + (-obs_x*sin(-self.yaw) + obs_y*cos(-self.yaw))
                     self.obs.append(obstacle(global_x,global_y,angle,distance,min_dis))
-                    print(self.obs, self.namespace, 'Obs')
-                    sobs.append(Point(global_x,global_y,angle)) 
-                    self.obsplot.obspose = sobs        
+                    print(self.obs, self.namespace, 'Obs')                           
             self.hist.append([self.obs])
         except (IndexError):
             self.obs = []
-        #print("obs",self.obs,self.namespace)
 
-    # def is_inside_circle(self, center_position, radius):
-    #     """Checks if a robot's position is inside a circular region """  
-    #     dis = [sqrt((center_position[0] - i.x)**2 + (center_position[1] - i.y)**2) for i in self.obs]        
-    #     print("distance between goal and other bot",dis)
-
-        # return any(dis <= radius)    
-                        
     def split_list(self,input_list):                                                                                                                                                                                                                                                                                                                
         sublists = []
         sublist = []
@@ -146,35 +119,31 @@ class robot:
             print("Error occurred while splitting the list:", str(e))
 
         return sublists
-
-    def set_goal(self): #,random=False
-        """outputs required = goal, input = neighbour set, using mean(self+ neigh       bour_set/2)"""
-        # self.scanner()
-        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
-
-        no_neigh = len(self.obs)
-        try:  
-            if no_neigh >= 1: #and not random:
-                self.goal.x = (self.x + np.mean([i.x for i in self.obs]))/2
-                self.goal.y = (self.y + np.mean([i.y for i in self.obs]))/2
-                # now activating the safe zone and then getting the co-ordinates for circular zone
-                # self.safezone_active = True
-                # nearest = np.argmin([i.min_dis for i in self.obs])
-                # self.safe_zone = [self.goal.x, self.goal.y, (self.obs[nearest].min_dis/2)*0.75] 
-            else :
-                if self.goal.x == 0 and self.goal.y == 0:
-                    print("andar gya")
-                    self.goal.x = np.random.uniform(-6,6)
-                    self.goal.y = np.random.uniform(-6,6)
-                # self.safezone_active = False
-                # self.safe_zone = [0,0,0]
-        except (AttributeError):
-            print(AttributeError)
-        # print(self.goal,"goal",self.namespace)
+    
+    def wall_following(self):
+        """funct to follow wall boundary
+        Turn Right by default or rotate on CCW fashion"""
+        # print("Wall following")
+        deg = 30
+        dst = 0.5
+        # while True:
+        if min(self.ranges[0:deg]) <= dst or min(self.ranges[(359-deg):]) <= dst: # front wall
+            self.speed.angular.z = -0.2
+            self.speed.linear.x = 0.0
+        elif min(self.ranges[deg:120]) < dst: # left wall 
+            self.speed.angular.z = 0.0
+            self.speed.linear.x = 0.2
+            # print("Left wall")
+        else:
+            self.speed.angular.z = 0.1
+            self.speed.linear.x = 0.2
+    
+    def set_goal(self):
+        """write code for identification based goal update of robot"""
+        """If robot -> update goal
+        If obstacle -> wall following"""
 
     def controller(self,k):
-        """control law for bot inputs required = disij, delij"""     
         self.set_goal()
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
@@ -200,50 +169,17 @@ class robot:
             self.delij.append(ang)  
 
         if (self.dis_err) >= 0.850:
-            #print("loop",self.disij)
-            temp = []
-            vap = []            
-            if len(self.disij) == 0:
-                self.speed.linear.x = 0.18
+            """write code to control movement of robots based on conditions satisfied"""
+            """No obstacle detected -> self.speed.linear.x = 0.18
                 self.speed.angular.z = K*np.sign(self.dtheta)
-            else:
-                for i,z in enumerate(self.disij):
-                    if z >= 0.75:
-                        self.speed.linear.x = 0.18
-                        self.speed.angular.z = K*np.sign(self.dtheta)
-                        # print('Free')                                         
-                    else:
-                        t = rospy.get_time()
+                
+                Robot Near -> t = rospy.get_time()
                         self.speed.linear.x = max((0.18 -(5000-t)*0.0001),0)                    
-                        self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
-                        # temp.append(self.speed.angular.z)
-                        # vap.append(self.speed.linear.x)
-                        # print('Engaged')                    
-            #print(temp)        
-            # if temp:
-            #     self.speed.angular.z = np.mean(temp)
-            #     self.speed.linear.x = np.mean(vap)               
-        else:
-            # if self.is_inside_circle(self.safe_zone[0:2],self.safe_zone[2]):
-            if len(self.obs) >= 3: 
-                self.speed.linear.x = 0.0
-                self.speed.angular.z = 0.0
-                print("Aggreated")                
-            else:               
-                # self.set_goal()
-                self.goal = Point(0.0,0.0,0.0)
-                # print("Alone", len(self.obs),self.namespace)
-            # else: 
-            #     if self.dis_err < 0.50:
-            #         self.set_goal(random=True)
-            #     self.speed.linear.x = 0.18
-            #     self.speed.angular.z = K*np.sign(self.dtheta)
+                        self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])"""
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)
-        # self.rad_pub.publish(self.safe_zone[2], 0.0, 0.0)
-        # self.obs_pub.publish(self.obsplot)
-        
+
 if __name__ == '__main__':
     rospy.init_node("obstacle_controller")
     rospy.loginfo("Chal Gye badde")

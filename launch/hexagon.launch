@@ -7,8 +7,8 @@
   <arg name="fifth_tb3"  default="tb3_5"/>
   <arg name="sixth_tb3"  default="tb3_6"/>
 
-  <arg name="first_tb3_x_pos" default="-8.31"/>
-  <arg name="first_tb3_y_pos" default="1.35"/>
+  <arg name="first_tb3_x_pos" default="-6.31"/>
+  <arg name="first_tb3_y_pos" default="1.05"/>
   <arg name="first_tb3_z_pos" default="0.0"/>
   <arg name="first_tb3_yaw"   default="1.23"/>
 
@@ -23,7 +23,7 @@
   <arg name="third_tb3_yaw"   default="2.0"/>
 
   <arg name="fourth_tb3_x_pos" default="-6.04"/>
-  <arg name="fourth_tb3_y_pos" default="-2.5"/>
+  <arg name="fourth_tb3_y_pos" default="-1.5"/>
   <arg name="fourth_tb3_z_pos" default="0.0"/>
   <arg name="fourth_tb3_yaw"   default="0.020660"/>
 
@@ -32,9 +32,9 @@
   <arg name="fifth_tb3_z_pos" default="0.0"/>
   <arg name="fifth_tb3_yaw"   default="0.67"/>
 
-  <arg name="sixth_tb3_x_pos" default="3.29"/>
-  <arg name="sixth_tb3_y_pos" default="-3.11"/>
-  <arg name="sixth_tb3_z_pos" default="0.0"/>
+  <arg name="sixth_tb3_x_pos" default="-6.29"/>
+  <arg name="sixth_tb3_y_pos" default=" 2.51"/>
+  <arg name="sixth_tb3_z_pos" default=" 0.0"/>
   <arg name="sixth_tb3_yaw"   default="-0.89"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -60,7 +60,6 @@
       <remap from="/goal" to="/$(arg first_tb3)/goal"/>
       <remap from="/scan" to="/$(arg first_tb3)/scan"/>
       <remap from="/radius" to="/$(arg first_tb3)/radius"/>
-      <remap from="/obs" to="/$(arg first_tb3)/obs"/>
     </node>
   </group>
 
@@ -160,7 +159,7 @@
   </group>
 
  <node pkg="swarm_aggregation" type="detect_bot.py" name="obs_data"/>
- <node pkg="swarm_aggregation" type="synerzied.py" name="convergence_checker" output="screen" required="true"/> 
+ <!-- <node pkg="swarm_aggregation" type="synerzied.py" name="convergence_checker" output="screen" required="true"/>  -->
  <!-- <node pkg="swarm_aggregation" type="visual.py" name="animator"/> -->
 
 </launch>
