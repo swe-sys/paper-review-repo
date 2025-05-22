@@ -254,7 +254,7 @@ class robot(object):
         self.head_err = []
  
         self.set_goal()
-        self.ratio = self.calculate_ratio(self.cones)               
+        # self.ratio = self.calculate_ratio(self.cones)               
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
 
@@ -270,15 +270,15 @@ class robot(object):
         # Gradient of Bearing
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
-        # for obs_element in self.obs:
-        #     x_diff = obs_element.x -self.x
-        #     y_diff = obs_element.y -self.y
+        for obs_element in self.obs:
+            x_diff = obs_element.x -self.x
+            y_diff = obs_element.y -self.y
             
-        #     dist = sqrt(x_diff**2 + y_diff**2)
-        #     ang = atan2(y_diff, x_diff)
+            dist = sqrt(x_diff**2 + y_diff**2)
+            ang = atan2(y_diff, x_diff)
             
-        #     self.disij.append(dist)
-        #     self.delij.append(ang)
+            self.disij.append(dist)
+            self.delij.append(ang)
 
         # Heading Error
         # self.head_err = self.bearing - self.yaw
@@ -289,92 +289,32 @@ class robot(object):
         dst = 3
         excluded_bot = [self.cur_bot_id_indx]
 
-        # if self.dis_err >= 0.885:
-        #     if len(self.disij) == 0:
-        #         self.speed.linear.x = 0.18
-        #         self.speed.angular.z = K*np.sign(self.dtheta)
-        #         # print("No neighbor", self.namespace)
-        #     elif len(self.obs) == 0 and min(self.ranges[0:30]) <= 0.7 or min(self.ranges[330:360]) <= 0.7:
-        #         self.wall_following()
-        #         # print("Wall Following", self.namespace)
-        #     for i,z in enumerate(self.disij):
-        #         if z >= 0.7:
-        #             self.speed.linear.x = 0.18
-        #             self.speed.angular.z = K*np.sign(self.dtheta)
-        #             # print("Free", self.namespace)
-        #         else:
-        #             t = rospy.get_time()
-        #             self.speed.linear.x = max((0.18 -(5000-t)*0.0001),0)                    
-        #             self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
-        #             # print("Engaged", self.namespace)
-        # else:
-        #     if len(self.obs) >= 1:
-        #         self.speed.linear.x = 0.0
-        #         self.speed.angular.z = 0.0
-        #         print("Aggregated", self.namespace)
-        #     else:
-        #         self.goal = Point(3.0,-2.0,0.0)
-        #         # print("Alone", self.namespace)
-
-        if (self.dis_err) >= 0.85:                   
-                                
+        if self.dis_err >= 0.885:
+            if len(self.disij) == 0:
+                self.speed.linear.x = 0.18
+                self.speed.angular.z = K*np.sign(self.dtheta)
+                # print("No neighbor", self.namespace)
+            elif len(self.obs) == 0 and min(self.ranges[0:30]) <= 0.7 or min(self.ranges[330:360]) <= 0.7:
+                self.wall_following()
+                # print("Wall Following", self.namespace)
             for i,z in enumerate(self.disij):
-                if i not in excluded_bot:
-                    # for j, x in enumerate(self.ratio):
-                    #     if x is not None:
-                            # If an object is detected
-                            if z >= 0.75:
-                                self.speed.linear.x = 0.18
-                                self.speed.angular.z = K*np.sign(self.dtheta)                                                  
-                                # if (0.7 <= z <= 1.7 and 0.06 <= x <= 0.162) or (1.7 < z <= 2.7 and 0.03 <= x < 0.06):
-                                if (min(self.ranges[0:30]) <= 0.5 or min(self.ranges[(359-30):]) <= 0.5):
-                                        # and (min(self.ranges[0:deg]) >= 1.25*dst or min(self.ranges[(359-deg):]) >= 1.25*dst)
-                                        # self.set_goal()
-                                #         self.speed.linear.x = 0.18
-                                #         self.speed.angular.z = K*np.sign(self.dtheta)                                                             
-                                #         print("Robot", self.namespace, z , x , self.goal, len(self.neigh))                      
-                                # else:
-                                    self.wall_following()
-                                    # self.goal = Point(3.0, -2.0, 0.0)                                                
-                                    print("Wall Following", self.namespace, z , self.goal, len(self.neigh))
-                            else:                                                       
-                                t = rospy.get_time()                       
-                                self.speed.linear.x = max((0.12 -(4000-t)*0.00001),0)                    
-                                self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
-                                self.goal = Point(3.0,-2.0, 0.0)                            
-                                print("Engaged", self.namespace, z ,  self.goal, len(self.neigh))
-                        # else:
-                        #     if (min(self.ranges[0:30]) <= 0.7 or min(self.ranges[(359-30):]) <= 0.7):
-                        #         self.wall_following()
-                        #         print("Wall Following", self.namespace)
-                        #     else:
-                        #         self.speed.linear.x = 0.18
-                        #         self.speed.angular.z = K*np.sign(self.dtheta)                                                             
-                        #         print("Robot1", self.namespace, z , x , self.goal, len(self.neigh))
+                if z >= 0.7:
+                    self.speed.linear.x = 0.18
+                    self.speed.angular.z = K*np.sign(self.dtheta)
+                    # print("Free", self.namespace)
+                else:
+                    t = rospy.get_time()
+                    self.speed.linear.x = max((0.18 -(5000-t)*0.0001),0)                    
+                    self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
+                    # print("Engaged", self.namespace)
         else:
-            for i,z in enumerate(self.disij):
-                if i not in excluded_bot:
-                    # for j, x in enumerate(self.ratio):
-                    #     if x is not None:            
-                            if len(self.neigh) >= 2:
-                            # if (0.7 <= z <= 1.7 and 0.06 <= x <= 0.162) or (1.7 < z <= 2.7 and 0.03 <= x < 0.06):                        
-                                self.speed.linear.x = 0.0
-                                self.speed.angular.z = 0.0        
-                                print("Aggreated",self.namespace, self.dis_err,  len(self.neigh))
-                            # else:
-                            #     self.wall_following()                    
-                            else:                
-                                self.goal = Point(3.0,-2.0, 0.0)
-                                # self.wall_following()
-                                print("Alone", self.namespace, len(self.disij),  len(self.neigh))
-                        # else:
-                        #     if len(self.neigh) >= 2:
-                        #         self.speed.linear.x = 0.0
-                        #         self.speed.angular.z = 0.0
-                        #         print("Aggreated1",self.namespace)
-                        #     else:
-                        #         self.goal = Point(3.0,-2.0, 0.0)
-                        #         print("Alone1", self.namespace)
+            if len(self.obs) >= 1:
+                self.speed.linear.x = 0.0
+                self.speed.angular.z = 0.0
+                print("Aggregated", self.namespace)
+            else:
+                self.goal = Point(3.0,-2.0,0.0)
+                # print("Alone", self.namespace)
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)

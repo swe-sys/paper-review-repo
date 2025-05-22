@@ -10,13 +10,16 @@ from math import cos, sin, pi
 import numpy as np
 #import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
 
 plt.ion()
 class yolo():
     def __init__(self):
         self.odom = {}
         self.goal = {}
+        self.initial_positions = {}  # Store initial positions for boundary circles
         self.bot_id = []
+        self.boundary_radius = 20.0  # Change as needed
         rospy.Subscriber('/obs_data', botPose, self.pose_listener)
         # rospy.Subscriber('/obs_data', botPose, self.store_data)
         rospy.Subscriber('/tb3_0/goal',Point,self.goal_listener,'/tb3_0/')
@@ -57,24 +60,79 @@ if __name__ == '__main__':
 
     y=yolo()
     #print(y.goal)
-    rate = rospy.Rate(4) # 4hz    
+    rate = rospy.Rate(6) # 4hz 
+       
     
+    # while not rospy.is_shutdown():
+    #     plt.clf()        
+    #     col = {'/tb3_0/':'r','/tb3_1/':'c','/tb3_2/':'b','/tb3_3/':'g','/tb3_4/':'y','/tb3_5/':'m','/tb3_6/':'k','/tb3_7/':'tab:orange', '/tb3_8/':'tab:purple','/tb3_9/':'tab:olive','/tb3_10/':'tab:gray','/tb3_11/':'tab:pink', '/tb3_12/':'#c9eb34','/tb3_13/':'tab:cyan','/tb3_14/':'aquamarine','/tb3_15/':'mediumseagreen','/tb3_16/':'#FC5A50','/tb3_17/':'#DDA0DD','/tb3_18/':'#FBDD7E','/tb3_19/':'#DBB40C'}
+    #     try:
+    #         for i in y.bot_id:
+    #             euler = euler_from_quaternion([y.odom[i].pose.pose.orientation.x,y.odom[i].pose.pose.orientation.y,y.odom[i].pose.pose.orientation.z,y.odom[i].pose.pose.orientation.w])        
+    #             yaw = euler[2]
+    #             if yaw < 0:
+    #                 yaw += 2 * pi
+    #             # plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",markersize=100, alpha=0.2,color=col[i])
+    #             plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",color=col[i])
+    #             plt.plot(y.goal[i].x,y.goal[i].y,"x",color=col[i])
+    #             # plt.quiver(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,cos(yaw),sin(yaw),units='xy',width=0.05,headwidth=2.,headlength=1.,color=col[i])
+    #     except KeyError:
+    #         print("chalna aage")
+    #     plt.ylim([-20,20])
+    #     plt.xlim([-20,20])
+    #     plt.pause(0.01)        
+    #     rate.sleep()
+
     while not rospy.is_shutdown():
         plt.clf()        
+        fig = plt.gcf()
+        ax = plt.gca()
         col = {'/tb3_0/':'r','/tb3_1/':'c','/tb3_2/':'b','/tb3_3/':'g','/tb3_4/':'y','/tb3_5/':'m','/tb3_6/':'k','/tb3_7/':'tab:orange', '/tb3_8/':'tab:purple','/tb3_9/':'tab:olive','/tb3_10/':'tab:gray','/tb3_11/':'tab:pink', '/tb3_12/':'#c9eb34','/tb3_13/':'tab:cyan','/tb3_14/':'aquamarine','/tb3_15/':'mediumseagreen','/tb3_16/':'#FC5A50','/tb3_17/':'#DDA0DD','/tb3_18/':'#FBDD7E','/tb3_19/':'#DBB40C'}
+
         try:
             for i in y.bot_id:
-                euler = euler_from_quaternion([y.odom[i].pose.pose.orientation.x,y.odom[i].pose.pose.orientation.y,y.odom[i].pose.pose.orientation.z,y.odom[i].pose.pose.orientation.w])        
+                euler = euler_from_quaternion([y.odom[i].pose.pose.orientation.x,
+                                            y.odom[i].pose.pose.orientation.y,
+                                            y.odom[i].pose.pose.orientation.z,
+                                            y.odom[i].pose.pose.orientation.w])        
                 yaw = euler[2]
                 if yaw < 0:
                     yaw += 2 * pi
-                plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",markersize=100, alpha=0.2,color=col[i])
-                plt.plot(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,"o",color=col[i])
-                plt.plot(y.goal[i].x,y.goal[i].y,"x",color=col[i])
-                # plt.quiver(y.odom[i].pose.pose.position.x,y.odom[i].pose.pose.position.y,cos(yaw),sin(yaw),units='xy',width=0.05,headwidth=2.,headlength=1.,color=col[i])
+
+                x = y.odom[i].pose.pose.position.x
+                y_pos = y.odom[i].pose.pose.position.y
+                gx = y.goal[i].x
+                gy = y.goal[i].y
+                plt.plot(x, y_pos, "o", color=col[i])
+                plt.plot(gx,gy,"x", color=col[i])
+
+                # Store initial position once per robot
+                if i not in y.initial_positions:
+                    y.initial_positions[i] = (x, y_pos)
+
+                # Retrieve fixed initial position
+                x0, y0 = y.initial_positions[i]
+
+                # Plot fixed boundary circle centered at initial position
+                circle = Circle((x0, y0), y.boundary_radius, color=col[i],
+                                fill=False, linestyle='--', linewidth=1.5, alpha=0.7)
+                ax.add_patch(circle)
+
+
+                # Plot robot and goal
+                # plt.plot(x, y_pos, "o", markersize=100, alpha=0.2, color=col[i])
+                
+                # plt.plot(gx, gy, "x", color=col[i])
+
+                # # Plot boundary circle at goal
+                # circle = Circle((x[0], y_pos[0]), y.boundary_radius, color=col[i], fill=False, linestyle='--', linewidth=1.5, alpha=0.7)
+                # ax.add_patch(circle)
+
         except KeyError:
             print("chalna aage")
-        plt.ylim([-12,12])
-        plt.xlim([-12,12])
+
+        plt.ylim([-40,40])
+        plt.xlim([-40,40])
+        plt.gca().set_aspect('equal', adjustable='box')
         plt.pause(0.01)        
         rate.sleep()

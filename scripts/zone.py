@@ -158,24 +158,28 @@ class robot:
         # Gradient of Bearing
         self.dtheta = (self.bearing[k] - self.bearing[k-1])/h
 
-        for obs_element in self.obs:
-            x_diff = obs_element.x -self.x
-            y_diff = obs_element.y -self.y
+        # for obs_element in self.obs:
+        #     x_diff = obs_element.x -self.x
+        #     y_diff = obs_element.y -self.y
             
-            dist = sqrt(x_diff**2 + y_diff**2)
-            ang = atan2(y_diff, x_diff)
+        #     dist = sqrt(x_diff**2 + y_diff**2)
+        #     ang = atan2(y_diff, x_diff)
             
-            self.disij.append(dist)
-            self.delij.append(ang)  
+        #     self.disij.append(dist)
+        #     self.delij.append(ang)  
 
         if (self.dis_err) >= 0.850:
             """write code to control movement of robots based on conditions satisfied"""
-            """No obstacle detected -> self.speed.linear.x = 0.18
+            """No obstacle detected -> 
+                self.speed.linear.x = 0.18
                 self.speed.angular.z = K*np.sign(self.dtheta)
                 
                 Robot Near -> t = rospy.get_time()
                         self.speed.linear.x = max((0.18 -(5000-t)*0.0001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])"""
+            
+        self.speed.linear.x = 0.18
+        self.speed.angular.z = K*np.sign(self.dtheta)
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)

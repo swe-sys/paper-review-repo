@@ -55,6 +55,7 @@ class robot:
         self.hist = deque(maxlen=20)
         # self.safezone_active = False
         self.namespace = rospy.get_namespace()
+        self.obs = []
 
         # Publishers and Subscribers
         self.object_detector = rospy.Subscriber('/scan',LaserScan, self.scanner)
@@ -66,9 +67,9 @@ class robot:
         self.obs_pub = rospy.Publisher('/obs',obs, queue_size=1)
 
         self.obsplot.bot_id = self.namespace
-        # self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("time,goal_x,goal_y,x,y\n" )
+        self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
+        with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+            f.write("time,goal_x,goal_y,x,y,er_x,er_y\n" )
 
     def update_Odom(self,odom):
         """ Odometry of current bot"""        
@@ -112,12 +113,14 @@ class robot:
                     global_y = self.y + (-obs_x*sin(-self.yaw) + obs_y*cos(-self.yaw))
                     self.obs.append(obstacle(global_x,global_y,angle,distance,min_dis))
                     print(self.obs, self.namespace, 'Obs')
-                    sobs.append(Point(global_x,global_y,angle)) 
-                    self.obsplot.obspose = sobs        
+                    # sobs.append(Point(global_x,global_y,angle)) 
+                    # self.obsplot.obspose = sobs        
             self.hist.append([self.obs])
         except (IndexError):
             self.obs = []
-        #print("obs",self.obs,self.namespace)
+        print("obs",self.obs,self.namespace)
+        
+        
 
     # def is_inside_circle(self, center_position, radius):
     #     """Checks if a robot's position is inside a circular region """  
@@ -149,9 +152,9 @@ class robot:
 
     def set_goal(self): #,random=False
         """outputs required = goal, input = neighbour set, using mean(self+ neigh       bour_set/2)"""
-        # self.scanner()
+        # self.scanner(self.range)
         # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
+        #     f.write("{},{},{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         no_neigh = len(self.obs)
         try:  
@@ -176,6 +179,13 @@ class robot:
     def controller(self,k):
         """control law for bot inputs required = disij, delij"""     
         self.set_goal()
+        if len(self.obs) >= 1:
+            with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+                f.write("{},{},{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y, self.obs[0].x, self.obs[0].y) + '\n')
+        else:
+            with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+                f.write("time, goal_x, goal_y, x, y \n" )
+
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
 
@@ -225,7 +235,7 @@ class robot:
             #     self.speed.linear.x = np.mean(vap)               
         else:
             # if self.is_inside_circle(self.safe_zone[0:2],self.safe_zone[2]):
-            if len(self.obs) >= 3: 
+            if len(self.obs) >= 1: 
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
                 print("Aggreated")                
