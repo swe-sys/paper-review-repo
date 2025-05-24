@@ -71,8 +71,8 @@ class robot:
 
         self.obsplot.bot_id = self.namespace
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-            f.write("time,goal_x,goal_y,x,y\n" )
+        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #     f.write("time,goal_x,goal_y,x,y\n" )
 
     def update_Odom(self,odom):
         """ Odometry of current bot"""        
@@ -108,12 +108,7 @@ class robot:
         for i in range(len(self.range)):
             if not isinf(self.range[i]):
                 j = i - abs(self.ang_max)*180/pi
-                pairs.append([self.ang_inc*j,self.range[i]]) 
-                # if i<= 180:
-                #     j = i
-                # else:
-                #     j = i-360
-                # pairs.append([j,self.range[i]])       
+                pairs.append([self.ang_inc*j,self.range[i]])                      
         # spliting the pairs into the cones        
 
         self.cones = self.split_list(pairs)        
@@ -160,27 +155,39 @@ class robot:
     def set_goal(self): #,random=False
         """outputs required = goal, input = neighbour set, using mean(self+ neigh       bour_set/2)"""
         # self.scanner(self.range)
-        with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-            f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
+        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #     f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         no_neigh = len(self.obs)
         try:  
             if no_neigh >= 1: #and not random:
-                self.goal.x = (self.x + np.mean([i.x for i in self.obs]))/2
-                self.goal.y = (self.y + np.mean([i.y for i in self.obs]))/2
-                # now activating the safe zone and then getting the co-ordinates for circular zone
-                # self.safezone_active = True
-                # nearest = np.argmin([i.min_dis for i in self.obs])
-                # self.safe_zone = [self.goal.x, self.goal.y, (self.obs[nearest].min_dis/2)*0.75] 
+                gx = (self.x + np.mean([i.x for i in self.obs]))/2
+                gy = (self.y + np.mean([i.y for i in self.obs]))/2                
             else :
                 if self.goal.x == 0 and self.goal.y == 0:
                     # print("andar gya")
-                    self.goal.x = np.random.uniform(-(self.x+10),self.x+10)
-                    self.goal.y = np.random.uniform(-(self.y+10),self.y+10)
-                # self.safezone_active = False
-                # self.safe_zone = [0,0,0]
-        except (AttributeError):
-            print(AttributeError)
+                    gx = np.random.uniform(-10,10)
+                    gy = np.random.uniform(-10,10)
+                else:
+                    gx = self.goal.x
+                    gy = self.goal.y
+
+            # Clamp goal to remain within boundary
+            if self.boundary_center is not None:
+                dx = gx - self.boundary_center[0]
+                dy = gy - self.boundary_center[1]
+                dist = sqrt(dx**2 + dy**2)
+
+                if dist > self.boundary_radius:
+                    scale = self.boundary_radius / dist
+                    gx = self.boundary_center[0] + dx * scale
+                    gy = self.boundary_center[1] + dy * scale
+
+            self.goal.x = gx
+            self.goal.y = gy                
+           
+        except AttributeError as e:
+            rospy.logwarn(f"[{self.namespace}] AttributeError in set_goal: {str(e)}")
         # print(self.goal,"goal",self.namespace)
 
     def controller(self,k):
@@ -215,9 +222,6 @@ class robot:
             
             self.disij.append(dist)
             self.delij.append(ang)
-
-        # future_x = self.x + self.speed.linear.x * cos(self.yaw) * 0.25  # assuming 0.25s timestep
-        # future_y = self.y + self.speed.linear.x * sin(self.yaw) * 0.25
         
         if not self.inside_boundary():
             rospy.logwarn(f"[{self.namespace}] Outside boundary! Stop the movement")
@@ -244,29 +248,21 @@ class robot:
                     else:
                         t = rospy.get_time()
                         self.speed.linear.x = max((0.18 -(5000-t)*0.0001),0)                    
-                        self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
-                        # temp.append(self.speed.angular.z)
-                        # vap.append(self.speed.linear.x)
-                        # print('Engaged')                    
-            #print(temp)        
-            # if temp:
-            #     self.speed.angular.z = np.mean(temp)
-            #     self.speed.linear.x = np.mean(vap)               
-        else:
-            # if self.is_inside_circle(self.safe_zone[0:2],self.safe_zone[2]):
-            if len(self.obs) >= 1: 
+                        self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])                                      
+        else:            
+            # Filter close neighbors
+            # STOPPING CONDITION
+            close_neighbors = [o for o in self.obs if o.min_dis < 0.75]
+            too_close = any([o.min_dis < 0.3 for o in close_neighbors])
+
+            if len(close_neighbors) >= 1 and not too_close:
                 self.speed.linear.x = 0.0
                 self.speed.angular.z = 0.0
-                print("Aggreated",self.namespace)                
-            else:               
-                # self.set_goal()
-                self.goal = Point(0.0,0.0,0.0)
-                # print("Alone", len(self.obs),self.namespace)
-            # else: 
-            #     if self.dis_err < 0.50:
-            #         self.set_goal(random=True)
-            #     self.speed.linear.x = 0.18
-            #     self.speed.angular.z = K*np.sign(self.dtheta)
+                print("Aggregated", self.namespace)
+            else:
+                # keep moving or searching
+                self.goal = Point(0.0, 0.0, 0.0)
+                print("Alone", len(self.obs),self.namespace)            
 
         self.cmd_vel.publish(self.speed)
         self.pubg.publish(self.goal)
@@ -279,7 +275,7 @@ if __name__ == '__main__':
     k = 0
     l = [] #l is time
     rate = rospy.Rate(4)
-    bot = robot(12)     
+    bot = robot(20)     
     rospy.sleep(6)
     # bot.set_goal()
     while not rospy.is_shutdown() and k < 500000:
