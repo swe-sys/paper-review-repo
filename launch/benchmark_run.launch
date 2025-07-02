@@ -1,0 +1,13 @@
+<launch>
+    <arg name="algo" default="algo1"/>
+    <arg name="save_name" default="algo1"/>
+
+    <include file="$(find swarm_aggregation)/launch/$(arg algo).launch"/>
+
+    <node pkg="swarm_aggregation"
+          type="inter_robot_logger.py"
+          name="inter_robot_logger"
+          output="screen">
+        <param name="save_path" value="$(arg save_name)_distances.csv"/>
+    </node>
+</launch>
