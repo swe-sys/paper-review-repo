@@ -8,7 +8,7 @@ from tf.transformations import euler_from_quaternion
 from sensor_msgs.msg import LaserScan
 from math import atan2, sqrt, cos, sin, pi
 from swarm_aggregation.msg import botPose
-import random
+import random, os, rospkg
 
 class BeeclustRobot:
     def __init__(self, robot_id, total_bots):
@@ -46,6 +46,15 @@ class BeeclustRobot:
 
         self.no_neighbor_counter = 0
         self.no_neighbor_threshold = 200
+
+        self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
+        self.iters = rospy.get_param("/iteration", 0)
+        try:
+            os.makedirs(f'{self.dirname}/Data/BeeClust/Data{self.iters}')
+        except FileExistsError:
+            pass
+        with open('{}/Data/BeeClust/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("time, x, y\n" )        
 
     def update_odom(self, msg):
         self.odom = msg
@@ -87,7 +96,7 @@ class BeeclustRobot:
                 angle += 2 * pi
             if angle > pi:
                 angle -= 2 * pi
-            if abs(angle) <= pi / 3 and dist < 3:
+            if abs(angle) <= pi / 3 and 0.1 < dist < 3:
                 lidar_idx = int((angle - self.angle_min) / self.angle_increment)
                 if 0 <= lidar_idx < len(self.ranges):
                     if self.ranges[lidar_idx] > dist - 0.1:
@@ -102,6 +111,9 @@ class BeeclustRobot:
         rospy.loginfo(f"[{self.namespace}] Stopping due to neighbor. Temp: {temp:.2f}, Stop timer: {self.stop_timer}")
 
     def control(self):
+        with open('{}/Data/BeeClust/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("{},{},{}".format(rospy.get_time(),self.x, self.y) + '\n')
+        
         if not self.received_odom:
             rospy.logwarn(f"[{self.namespace}] Waiting for odometry...")
             return
@@ -109,7 +121,8 @@ class BeeclustRobot:
         twist = Twist()
         closest_neighbor_dist = self.get_closest_visible_neighbor_distance()
 
-        if closest_neighbor_dist < 0.5 and not self.currently_stopping:
+        if closest_neighbor_dist < 0.85 and not self.currently_stopping:
+            rospy.loginfo(f"[{self.namespace}] Neighbor detected within 0.5m, initiating stop.")
             self.stop_based_on_temperature()
             self.no_neighbor_counter = 0
         elif closest_neighbor_dist >= float('inf'):

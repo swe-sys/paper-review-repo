@@ -8,7 +8,7 @@ from tf.transformations import euler_from_quaternion
 from sensor_msgs.msg import LaserScan
 from math import atan2, sqrt, cos, sin, pi
 from swarm_aggregation.msg import botPose
-import random
+import random, rospkg, os
 
 class PSOClusterRobot:
     def __init__(self, robot_id, total_bots):
@@ -36,13 +36,21 @@ class PSOClusterRobot:
         self.personal_best = np.array([0.0, 0.0])
 
         self.cluster_goals = [
-            np.array([random.uniform(-5, 5), random.uniform(-5, 5)]) for _ in range(3)
+            np.array([random.uniform(-6, 6), random.uniform(-6, 6)]) for _ in range(3)
         ]
         self.assigned_cluster = self.cluster_goals[self.id % len(self.cluster_goals)]
 
         self.inertia = 0.5
         self.cognitive = 1.5
         self.social = 1.5
+        self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
+        self.iters = rospy.get_param("/iteration/")
+        try:
+            os.makedirs(f'{self.dirname}/Data/PSO/Data{self.iters}')
+        except FileExistsError:
+            pass
+        with open('{}/Data/PSO/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("time, x, y\n" )
 
     def update_odom(self, msg):
         self.odom = msg
@@ -68,6 +76,8 @@ class PSOClusterRobot:
 
     def control(self):
         twist = Twist()
+        with open('{}/Data/PSO/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("{},{},{}".format(rospy.get_time(),self.x, self.y) + '\n')
 
         pos = np.array([self.x, self.y])
         if np.linalg.norm(pos - self.personal_best) < 0.1:
@@ -90,7 +100,7 @@ class PSOClusterRobot:
         if angle_to_goal < -pi:
             angle_to_goal += 2 * pi
 
-        if sqrt(dx**2 + dy**2) > 0.1:
+        if sqrt(dx**2 + dy**2) > 0.85:
             twist.linear.x = 0.15
             twist.angular.z = 0.5 * angle_to_goal
         else:

@@ -30,7 +30,7 @@ class robot(object):
         self.dtheta = []
         self.bearing = [0]
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        with open('{}/scripts/Kmeans/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        with open('{}/Data/Kmeans/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
             f.write("time,goal_x,goal_y,x,y\n" )
 
         
@@ -81,7 +81,7 @@ class robot(object):
         """control law for bot"""        
         # Distance between goal and bot position
         self.set_goal()
-        with open('{}/scripts/Kmeans/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        with open('{}/Data/Kmeans/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
             f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         print(self.goal, self.namespace)

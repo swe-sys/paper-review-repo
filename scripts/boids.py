@@ -8,6 +8,8 @@ from tf.transformations import euler_from_quaternion
 from sensor_msgs.msg import LaserScan
 from math import atan2, sqrt, cos, sin, pi
 from swarm_aggregation.msg import botPose
+import rospkg
+import os
 
 class BoidsRobot:
     def __init__(self, robot_id, total_bots):
@@ -31,10 +33,18 @@ class BoidsRobot:
         self.angle_min = 0.0
         self.angle_increment = 0.0
 
-        self.min_x, self.max_x = -7.0, 7.0
-        self.min_y, self.max_y = -5.0, 5.0
+        self.min_x, self.max_x = -6.0, 6.0
+        self.min_y, self.max_y = -6.0, 6.0
 
         self.stop_threshold = 0.4  # stop if neighbor is closer than this
+        self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
+        self.iters = rospy.get_param("/iteration/")
+        try:
+            os.makedirs(f'{self.dirname}/Data/boids/Data{self.iters}')
+        except FileExistsError:
+            pass
+        with open('{}/Data/boids/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("time, x, y\n" )
 
     def update_odom(self, msg):
         self.odom = msg
@@ -80,6 +90,9 @@ class BoidsRobot:
     def boids_control(self):
         neighbors = self.get_neighbors()
         twist = Twist()
+
+        with open('{}/Data/boids/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("{},{},{}".format(rospy.get_time(),self.x, self.y) + '\n')
 
         # rospy.loginfo(f"[{self.namespace}] Current Pos: ({self.x:.2f}, {self.y:.2f}), Yaw: {self.yaw:.2f}, Neighbors: {len(neighbors)}")
 
@@ -128,7 +141,7 @@ class BoidsRobot:
             dy = centroid[1] - self.y + by
             angle_to_centroid = atan2(dy, dx) - self.yaw
             distance = sqrt((self.x-centroid[0])**2 + (self.y -centroid[1])**2)            
-            if distance > 0.5:
+            if distance > 0.75:
                 if angle_to_centroid > pi:
                     angle_to_centroid -= 2 * pi
                 if angle_to_centroid < -pi:

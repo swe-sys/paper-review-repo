@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import rospy
+import rospy, rospkg, os
 import numpy as np
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
@@ -7,7 +7,7 @@ from tf.transformations import euler_from_quaternion
 
 class PSOAgent:
     def __init__(self, name):
-        self.name = name
+        self.namespace = name
         self.position = np.zeros(2)
         self.velocity = np.zeros(2)
         self.pbest = np.zeros(2)
@@ -15,6 +15,14 @@ class PSOAgent:
 
         self.cmd_pub = rospy.Publisher(f"{name}/cmd_vel", Twist, queue_size=1)
         rospy.Subscriber(f"{name}/odom", Odometry, self.odom_callback)
+        self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
+        self.iters = rospy.get_param("/iteration", 0)
+        try:
+            os.makedirs(f'{self.dirname}/Data/PSO/Data{self.iters}')
+        except FileExistsError:
+            pass
+        with open('{}/Data/PSO/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("time, x, y\n" )
 
     def odom_callback(self, msg):
         self.position[0] = msg.pose.pose.position.x
@@ -59,6 +67,7 @@ class SwarmClustering:
         return np.mean(pbests, axis=0)
 
     def run(self):
+        
         rate = rospy.Rate(10)  # 10Hz
         while not rospy.is_shutdown():
             gbest = self.compute_gbest()

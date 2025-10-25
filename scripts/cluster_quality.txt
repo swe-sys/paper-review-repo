@@ -1,0 +1,204 @@
+#####PSO########
+
+[INFO] Trial 0: points=6, clusters=0, silhouette=nan, dunn=nan
+[INFO] Trial 1: points=6, clusters=1, silhouette=0.391, dunn=nan
+[INFO] Trial 2: points=6, clusters=1, silhouette=0.405, dunn=nan
+[INFO] Trial 3: points=6, clusters=1, silhouette=0.104, dunn=nan
+[INFO] Trial 4: points=6, clusters=1, silhouette=-0.064, dunn=nan
+[INFO] Trial 5: points=6, clusters=2, silhouette=0.373, dunn=1.839
+[INFO] Trial 6: points=6, clusters=1, silhouette=0.277, dunn=nan
+[INFO] Trial 7: points=6, clusters=1, silhouette=0.026, dunn=nan
+[INFO] Trial 8: points=6, clusters=1, silhouette=0.236, dunn=nan
+[INFO] Trial 9: points=6, clusters=2, silhouette=0.473, dunn=1.324
+[INFO] Trial 10: points=6, clusters=1, silhouette=0.046, dunn=nan
+[INFO] Trial 11: points=6, clusters=2, silhouette=0.462, dunn=0.770
+[INFO] Trial 12: points=6, clusters=1, silhouette=0.023, dunn=nan
+[INFO] Trial 13: points=6, clusters=0, silhouette=nan, dunn=nan
+[INFO] Trial 14: points=6, clusters=1, silhouette=0.110, dunn=nan
+[INFO] Trial 15: points=6, clusters=0, silhouette=nan, dunn=nan
+[INFO] Trial 16: points=6, clusters=2, silhouette=0.411, dunn=1.006
+[INFO] Trial 17: points=6, clusters=1, silhouette=0.400, dunn=nan
+[INFO] Trial 18: points=6, clusters=1, silhouette=0.241, dunn=nan
+[INFO] Trial 19: points=6, clusters=1, silhouette=0.216, dunn=nan
+[INFO] Trial 20: points=6, clusters=1, silhouette=0.277, dunn=nan
+[INFO] Trial 21: points=6, clusters=2, silhouette=0.357, dunn=2.278
+[INFO] Trial 22: points=6, clusters=1, silhouette=0.090, dunn=nan
+[INFO] Trial 23: points=6, clusters=1, silhouette=0.195, dunn=nan
+[INFO] Trial 24: points=6, clusters=1, silhouette=0.242, dunn=nan
+[INFO] Trial 25: points=6, clusters=0, silhouette=nan, dunn=nan
+[INFO] Trial 26: points=6, clusters=1, silhouette=0.191, dunn=nan
+[INFO] Trial 27: points=6, clusters=1, silhouette=0.179, dunn=nan
+[INFO] Trial 28: points=6, clusters=0, silhouette=nan, dunn=nan
+[INFO] Trial 29: points=6, clusters=1, silhouette=nan, dunn=nan
+
+=== AGGREGATED METRICS ACROSS TRIALS ===
+avg_compactness     : mean = 2.0489, sd = 1.3857, 95% CI ± 0.5174
+avg_cohesion        : mean = 1.2086, sd = 0.9227, 95% CI ± 0.3445
+avg_dispersion      : mean = 0.5847, sd = 0.6264, 95% CI ± 0.2339
+avg_coverage        : mean = 5.0311, sd = 10.3964, 95% CI ± 3.8821
+silhouette          : mean = 0.2359, sd = 0.1519, 95% CI ± 0.0642
+dunn                : mean = 1.4434, sd = 0.6149, 95% CI ± 0.7634
+Clustering time     : mean = 35.48, sd = 7.36, 95% CI ± 2.63
+
+#######BeeClust#########
+
+[INFO] Trial 0: points=6, clusters=1, silhouette=0.674, dunn=nan
+[INFO] Trial 1: points=6, clusters=2, silhouette=0.691, dunn=5.490
+[INFO] Trial 2: points=6, clusters=2, silhouette=0.453, dunn=1.098
+[INFO] Trial 3: points=6, clusters=1, silhouette=0.357, dunn=nan
+[INFO] Trial 4: points=6, clusters=2, silhouette=0.578, dunn=1.894
+[INFO] Trial 5: points=6, clusters=1, silhouette=0.549, dunn=nan
+[INFO] Trial 6: points=6, clusters=2, silhouette=0.651, dunn=1.167
+[INFO] Trial 7: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 8: points=6, clusters=1, silhouette=0.375, dunn=nan
+[INFO] Trial 9: points=6, clusters=0, silhouette=nan, dunn=nan
+[INFO] Trial 10: points=6, clusters=2, silhouette=0.501, dunn=1.072
+[INFO] Trial 11: points=6, clusters=2, silhouette=0.643, dunn=2.395
+[INFO] Trial 12: points=6, clusters=2, silhouette=0.777, dunn=2.241
+[INFO] Trial 13: points=6, clusters=2, silhouette=0.360, dunn=4.210
+[INFO] Trial 14: points=6, clusters=2, silhouette=0.597, dunn=1.247
+[INFO] Trial 15: points=6, clusters=3, silhouette=0.705, dunn=1.798
+[INFO] Trial 16: points=6, clusters=1, silhouette=-0.008, dunn=nan
+[INFO] Trial 17: points=6, clusters=2, silhouette=0.614, dunn=2.725
+[INFO] Trial 18: points=6, clusters=2, silhouette=0.487, dunn=1.345
+[INFO] Trial 19: points=6, clusters=1, silhouette=0.267, dunn=nan
+[INFO] Trial 20: points=6, clusters=2, silhouette=0.609, dunn=9.632
+[INFO] Trial 21: points=6, clusters=2, silhouette=0.478, dunn=1.205
+[INFO] Trial 22: points=6, clusters=2, silhouette=0.583, dunn=1.156
+[INFO] Trial 23: points=6, clusters=1, silhouette=0.431, dunn=nan
+[INFO] Trial 24: points=6, clusters=2, silhouette=0.464, dunn=0.980
+[INFO] Trial 25: points=6, clusters=1, silhouette=0.344, dunn=nan
+[INFO] Trial 26: points=6, clusters=3, silhouette=0.802, dunn=2.324
+[INFO] Trial 27: points=6, clusters=2, silhouette=0.672, dunn=3.542
+[INFO] Trial 28: points=6, clusters=1, silhouette=0.233, dunn=nan
+[INFO] Trial 29: points=6, clusters=1, silhouette=0.496, dunn=nan
+
+=== AGGREGATED METRICS ACROSS TRIALS ===
+avg_compactness     : mean = 1.2857, sd = 0.9503, 95% CI ± 0.3549
+avg_cohesion        : mean = 0.7334, sd = 0.6205, 95% CI ± 0.2317
+avg_dispersion      : mean = 0.3167, sd = 0.4815, 95% CI ± 0.1798
+avg_coverage        : mean = 1.6521, sd = 6.4414, 95% CI ± 2.4053
+silhouette          : mean = 0.5136, sd = 0.1790, 95% CI ± 0.0694
+dunn                : mean = 2.5292, sd = 2.1598, 95% CI ± 1.0740
+Clustering time     : mean = 336.13, sd = 140.13, 95% CI ± 53.85
+
+###Boids###
+
+[INFO] Trial 0: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 1: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 2: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 3: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 4: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 5: points=6, clusters=2, silhouette=0.830, dunn=3.194
+[INFO] Trial 6: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 7: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 8: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 9: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 10: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 11: points=6, clusters=2, silhouette=0.833, dunn=3.327
+[INFO] Trial 12: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 13: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 14: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 15: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 16: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 17: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 18: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 19: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 20: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 21: points=6, clusters=2, silhouette=0.832, dunn=3.228
+[INFO] Trial 22: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 23: points=6, clusters=2, silhouette=0.829, dunn=3.529
+[INFO] Trial 24: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 25: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 26: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 27: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 28: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 29: points=6, clusters=1, silhouette=nan, dunn=nan
+
+=== AGGREGATED METRICS ACROSS TRIALS ===
+avg_compactness     : mean = 0.7014, sd = 0.0993, 95% CI ± 0.0371
+avg_cohesion        : mean = 0.4609, sd = 0.0806, 95% CI ± 0.0301
+avg_dispersion      : mean = 0.3257, sd = 0.0783, 95% CI ± 0.0292
+avg_coverage        : mean = 0.4888, sd = 0.1780, 95% CI ± 0.0665
+silhouette          : mean = 0.8311, sd = 0.0021, 95% CI ± 0.0034
+dunn                : mean = 3.3196, sd = 0.1505, 95% CI ± 0.2394
+Clustering time     : mean = 437.44, sd = 388.13, 95% CI ± 138.90
+
+###Proposed###
+
+[INFO] Trial 0: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 1: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 2: points=6, clusters=2, silhouette=0.695, dunn=1.407
+[INFO] Trial 3: points=6, clusters=2, silhouette=0.798, dunn=2.281
+[INFO] Trial 4: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 5: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 6: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 7: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 8: points=6, clusters=2, silhouette=0.619, dunn=1.384
+[INFO] Trial 9: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 10: points=6, clusters=2, silhouette=0.783, dunn=2.360
+[INFO] Trial 11: points=6, clusters=3, silhouette=0.656, dunn=1.369
+[INFO] Trial 12: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 13: points=6, clusters=2, silhouette=0.731, dunn=2.069
+[INFO] Trial 14: points=6, clusters=2, silhouette=0.574, dunn=0.895
+[INFO] Trial 15: points=6, clusters=2, silhouette=0.599, dunn=1.131
+[INFO] Trial 16: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 17: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 18: points=6, clusters=2, silhouette=0.698, dunn=1.132
+[INFO] Trial 19: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 20: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 21: points=6, clusters=2, silhouette=0.775, dunn=2.587
+[INFO] Trial 22: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 23: points=6, clusters=2, silhouette=0.602, dunn=1.052
+[INFO] Trial 24: points=6, clusters=2, silhouette=0.720, dunn=1.975
+[INFO] Trial 25: points=6, clusters=2, silhouette=0.694, dunn=1.515
+[INFO] Trial 26: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 27: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 28: points=6, clusters=2, silhouette=0.675, dunn=1.413
+[INFO] Trial 29: points=6, clusters=2, silhouette=0.778, dunn=2.243
+
+=== AGGREGATED METRICS ACROSS TRIALS ===
+avg_compactness     : mean = 1.6703, sd = 0.3207, 95% CI ± 0.1198
+avg_cohesion        : mean = 1.0090, sd = 0.2439, 95% CI ± 0.0911
+avg_dispersion      : mean = 0.5130, sd = 0.2890, 95% CI ± 0.1079
+avg_coverage        : mean = 1.7967, sd = 1.2371, 95% CI ± 0.4619
+silhouette          : mean = 0.6930, sd = 0.0726, 95% CI ± 0.0402
+dunn                : mean = 1.6542, sd = 0.5452, 95% CI ± 0.3019
+Clustering time     : mean = 96.13,  sd = 46.77 , 95% CI ± 16.21
+
+#######Proposed 2 (Better)##########
+
+[INFO] Trial 0: points=6, clusters=2, silhouette=0.669, dunn=1.781
+[INFO] Trial 1: points=6, clusters=3, silhouette=0.607, dunn=1.317
+[INFO] Trial 2: points=6, clusters=2, silhouette=0.689, dunn=1.548
+[INFO] Trial 3: points=6, clusters=2, silhouette=0.849, dunn=3.092
+[INFO] Trial 4: points=6, clusters=1, silhouette=nan, dunn=nan
+[INFO] Trial 5: points=6, clusters=2, silhouette=0.616, dunn=1.245
+[INFO] Trial 6: points=6, clusters=2, silhouette=0.682, dunn=1.276
+[INFO] Trial 7: points=6, clusters=2, silhouette=0.616, dunn=1.031
+[INFO] Trial 8: points=6, clusters=2, silhouette=0.737, dunn=1.940
+[INFO] Trial 9: points=6, clusters=2, silhouette=0.642, dunn=1.128
+[INFO] Trial 10: points=6, clusters=2, silhouette=0.640, dunn=1.197
+[INFO] Trial 11: points=6, clusters=2, silhouette=0.635, dunn=1.321
+[INFO] Trial 12: points=6, clusters=2, silhouette=0.681, dunn=1.487
+[INFO] Trial 13: points=6, clusters=2, silhouette=0.521, dunn=5.240
+[INFO] Trial 14: points=6, clusters=2, silhouette=0.608, dunn=1.080
+[INFO] Trial 15: points=6, clusters=2, silhouette=0.784, dunn=2.009
+[INFO] Trial 16: points=6, clusters=2, silhouette=0.761, dunn=2.573
+[INFO] Trial 17: points=6, clusters=2, silhouette=0.712, dunn=1.557
+[INFO] Trial 18: points=6, clusters=2, silhouette=0.669, dunn=1.632
+[INFO] Trial 19: points=6, clusters=3, silhouette=0.745, dunn=2.318
+[INFO] Trial 20: points=6, clusters=1, silhouette=0.279, dunn=nan
+[INFO] Trial 21: points=6, clusters=2, silhouette=0.708, dunn=1.399
+[INFO] Trial 22: points=6, clusters=3, silhouette=0.684, dunn=1.958
+[INFO] Trial 23: points=6, clusters=3, silhouette=0.675, dunn=1.497
+[INFO] Trial 24: points=6, clusters=1, silhouette=0.238, dunn=nan
+
+=== AGGREGATED METRICS ACROSS TRIALS ===
+avg_compactness     : mean = 1.5409, sd = 0.3626, 95% CI ± 0.1497
+avg_cohesion        : mean = 0.8524, sd = 0.2104, 95% CI ± 0.0868
+avg_dispersion      : mean = 0.3907, sd = 0.2689, 95% CI ± 0.1110
+avg_coverage        : mean = 0.5067, sd = 0.4281, 95% CI ± 0.1767
+silhouette          : mean = 0.6436, sd = 0.1367, 95% CI ± 0.0577
+dunn                : mean = 1.8011, sd = 0.9239, 95% CI ± 0.4097
+Clustering time     : mean = 134.13,  sd = 92.13 , 95% CI ± 36.13

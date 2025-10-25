@@ -11,6 +11,7 @@ from collections import deque
 import math as m
 from swarm_aggregation.msg import obs
 import rospkg
+import os
 
 class obstacle(Pose2D):
     def __init__(self, x,y,theta,dist,min_dis):
@@ -68,8 +69,15 @@ class robot:
 
         self.obsplot.bot_id = self.namespace
         self.dirname = rospkg.RosPack().get_path('swarm_aggregation')
-        with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-            f.write("time,goal_x,goal_y,x,y,er_x,er_y\n" )
+        self.iters = rospy.get_param("/iteration/")
+        try:
+            os.makedirs(f'{self.dirname}/Data/Data{self.iters}')
+        except FileExistsError:
+            pass
+        with open('{}/Data/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("time, goal_x, goal_y, x, y \n" )
+        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #     f.write("time,goal_x,goal_y,x,y,er_x,er_y\n" )
 
     def update_Odom(self,odom):
         """ Odometry of current bot"""        
@@ -106,7 +114,7 @@ class robot:
                 angle = np.mean(np.array(i)[:,0])*(pi/180)
                 distance = np.mean(np.array(i)[:,1])
                 min_dis = np.min(np.array(i)[:,1])
-                if distance < 3 and (-60*pi/180 < angle < 60*pi/180):
+                if distance < 3.5 and (-60*pi/180 < angle < 60*pi/180):
                     obs_x = distance*cos(angle)
                     obs_y = distance*sin(angle)
                     global_x = self.x + (obs_x*cos(-self.yaw) + obs_y*sin(-self.yaw))
@@ -153,8 +161,8 @@ class robot:
     def set_goal(self): #,random=False
         """outputs required = goal, input = neighbour set, using mean(self+ neigh       bour_set/2)"""
         # self.scanner(self.range)
-        # with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-        #     f.write("{},{},{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
+        with open('{}/Data/Data{}/{}.csv'.format(self.dirname,self.iters,self.namespace.split("/")[1]),'a+') as f:
+            f.write("{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y) + '\n')
 
         no_neigh = len(self.obs)
         try:  
@@ -179,12 +187,12 @@ class robot:
     def controller(self,k):
         """control law for bot inputs required = disij, delij"""     
         self.set_goal()
-        if len(self.obs) >= 1:
-            with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-                f.write("{},{},{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y, self.obs[0].x, self.obs[0].y) + '\n')
-        else:
-            with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
-                f.write("time, goal_x, goal_y, x, y \n" )
+        # if len(self.obs) >= 1:
+        #     with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #         f.write("{},{},{},{},{},{},{}".format(rospy.get_time(),self.goal.x,self.goal.y,self.x, self.y, self.obs[0].x, self.obs[0].y) + '\n')
+        # else:
+        #     with open('{}/Data/{}.csv'.format(self.dirname,self.namespace.split("/")[1]),'a+') as f:
+        #         f.write("time, goal_x, goal_y, x, y \n" )
 
         self.incx = (self.goal.x - self.x)
         self.incy = (self.goal.y - self.y)
@@ -214,17 +222,17 @@ class robot:
             temp = []
             vap = []            
             if len(self.disij) == 0:
-                self.speed.linear.x = 0.18
+                self.speed.linear.x = 0.22
                 self.speed.angular.z = K*np.sign(self.dtheta)
             else:
                 for i,z in enumerate(self.disij):
                     if z >= 0.75:
-                        self.speed.linear.x = 0.18
+                        self.speed.linear.x = 0.22
                         self.speed.angular.z = K*np.sign(self.dtheta)
                         # print('Free')                                         
                     else:
                         t = rospy.get_time()
-                        self.speed.linear.x = max((0.18 -(5000-t)*0.0001),0)                    
+                        self.speed.linear.x = max((0.22 -(5000-t)*0.0001),0)                    
                         self.speed.angular.z = K*np.sign(self.dtheta)- 0.866*np.sign(self.delij[i])
                         # temp.append(self.speed.angular.z)
                         # vap.append(self.speed.linear.x)

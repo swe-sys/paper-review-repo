@@ -30,13 +30,13 @@ if __name__ == '__main__':
     converged = np.zeros(total_bots).astype(bool)
     cmd_vels = [rospy.Subscriber(f"/tb3_{i+1}/cmd_vel",Twist,callback_step,i) for i in range(total_bots)]
     rospy.sleep(10)
-    iteration = rospy.get_param("/iteration/")
-    # stop_server = rospy.ServiceProxy('/gazebo/reset_world',Empty)    
+    iteration = rospy.get_param("/iteration", 0)
+    stop_server = rospy.ServiceProxy('/gazebo/reset_world',Empty)    
     while not rospy.is_shutdown():
         # print(converged)
         if converged.all():
             os.system('notify-send " {} SINNED {}"'.format(rospy.get_rostime().secs,rospy.get_rostime()))
             with open(f'{dirname}/scripts/time.csv',"a+") as f:
-                f.write(f"{iteration}, {rospy.get_time()}\n")           
-            break 
+                f.write(f"{iteration}, {rospy.get_time()}\n")                       
+            break        
         rate.sleep()
