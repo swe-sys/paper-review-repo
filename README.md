@@ -1,2 +1,2 @@
 # swarm_aggregation
-In this repository, a swarm of robots are aggregated to different goal locations.
+In this repository, the code and the data associated with the research article "Swarm Self-Clustering for Communication-denied Environments without Global Positioning" is provided.
